@@ -26,13 +26,29 @@ if(params.help){
 
 
          Options: ADDITIONAL
-              --umi_errors                    Indicate to the pipeline whether fastq files are SE reads in "*.fastq.gz" format. [default: off]
+              --umi_errors                    Max differences between UMI in read and UMI pattern [default: 3]
 
-              --FastQC                        Generate FastQC report of trimmed reads. [default: off]
+              --min_reads_per_cluster         Min number of reads required for a consensus read [default: 20]
 
-              --bamQC                         Generate bamQC report of alignments. [default: off]
+              --max_reads_per_cluster         Max number of 1D used for a consensus read [default: 60]
 
-              --keepReads                     Keep trimmed fastq reads. [default: off]
+              --min_overlap                   Min overlap with target region [default: 0.90]
+
+              --balance_strands               Balance forward and reverse 1D reads in clusters [default: true]
+
+              --medaka_model                  Medaka model used to compute consensus reads [default: "r941_min_high_g360"]
+
+              --fwd_universal_primer          Forward tail of primer (Ftail...UMI...primer) [default: "GTATCGTGTAGAGACTGCGTAGG"]
+
+              --rev_universal_primer          Reverse tail of primer (Rtail...UMI...primer) [default: "AGTGATCGAGTCAGTGCGAGTG"]
+
+              --fwd_umi                       Forward UMI (Ftail...UMI...primer) [default: "TTTVVVVTTVVVVTTVVVVTTVVVVTTT"]
+
+              --rev_umi                       Reverse UMI (Rtail...UMI...primer) [default: "AAABBBBAABBBBAABBBBAABBBBAAA"]
+
+              --min_length                    Minimum combined UMI length [default: 40]
+
+              --max_length                    Maximum combined UMI length [default: 60]
 
 
          Options: TRIMMING
