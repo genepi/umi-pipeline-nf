@@ -1,10 +1,26 @@
-name: DNAseq
+name: nf_umi_pipeline
 channels:
+  - defaults
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
-  - _libgcc_mutex=0.1
+// Dependencies used in the original pipeline-umi-amplicon
+  - python>=3.6
+  - snakemake-minimal
+  - minimap2
+  - samtools
+  - seqkit
+  - pysam
+  - bedtools
+  - vsearch
+  - varscan
+  - medaka==1.1.3
+  - pip
+  - pip:
+    - catfishq
+    - numpy==1.19.5
+// Dependencies used in the template pipeline from EQseq
+  /*- _libgcc_mutex=0.1
   - _openmp_mutex=4.5
   - _r-mutex=1.0.1
   - binutils_impl_linux-64=2.35.1
@@ -149,4 +165,4 @@ dependencies:
   - xorg-xproto=7.0.31
   - xz=5.2.5
   - zlib=1.2.11
-  - zstd=1.4.9
+  - zstd=1.4.9*/
