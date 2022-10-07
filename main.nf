@@ -7,10 +7,6 @@ nextflow.enable.dsl=2
 if(params.help){
     println """\
 
-         ===============================================
-          Nextflow UMI amplicon Pipeline
-         ===============================================
-         ~ version ${workflow.manifest.version}
 
          Usage: 
               nextflow run umi-pipeline-nf [OPTIONS]...
@@ -94,15 +90,13 @@ log.info ""
 log.info "         input dir    : ${workflow.profile.tokenize(",").contains("test") ? "-" : "${params.input}"}"
 log.info "         reference    : ${params.reference}"
 log.info "         output dir   : ${params.output}"
-log.info "         mode         : ${params.SE ? "single-end" : "paired-end"}"
 log.info ""
 log.info "         ==============================================="
 log.info "         RUN NAME: ${workflow.runName}"
 log.info ""
 
 
-
-include { UMI_PIPELINE } from './workflows/umi-pipeline'
+include { UMI_PIPELINE } from './lib/workflows/umi-pipeline.nf'
 
 workflow {
     UMI_PIPELINE()

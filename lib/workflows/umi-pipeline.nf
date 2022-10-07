@@ -1,10 +1,13 @@
 nextflow.enable.dsl = 2
 
 // adapt input parameters
-params.input = "${launchDir}${params.input}"
-params.bed = "${launchDir}${params.bed}"
-params.reference = "${launchDir}${params.reference}"
+params.input = "$baseDir${params.input}"
+params.bed = "$baseDir${params.bed}"
+params.reference = "$baseDir${params.reference}"
 
+println "${projectDir}"
+println "${launchDir}"
+println "${baseDir}"
 
 // DEFINE PATHS
 bed = file("${params.bed}", checkIfExists: true)
@@ -12,6 +15,7 @@ reference = file("${params.reference}", checkIfExists: true)
 
 // STAGE CHANNELS
 
+/*
 // STAGE BAM FILES FROM TEST PROFILE # this establishes the test data to use with -profile test
 if ( workflow.profile.tokenize(",").contains("test") ){
 
@@ -21,9 +25,12 @@ if ( workflow.profile.tokenize(",").contains("test") ){
 } else {
 
     // STAGE INPUT CHANNELS # this defines the normal input when test profile is not in use
-    fastq_files_ch = Channel.fromPath(params.input)
+    INPUT = Channel.fromPath(params.input)
 
 }
+*/
+
+fastq_files_ch = Channel.fromPath(params.input)
 
 ////////////////////
 // BEGIN PIPELINE //
@@ -37,16 +44,17 @@ if ( workflow.profile.tokenize(",").contains("test") ){
  */
 
 // INCLUDES # here you must give the relevant process files from the lib directory 
-include {Hello_world_1;process_2;process_3;process_4;process_5} from './lib/process.nf' params(params)
+include {HELLO_WORLD} from '../processes/Hello_World.nf'
+
 
 // SUB-WORKFLOWS
-workflow 'umi-pipeline' {
+workflow UMI_PIPELINE {
 
     // take the initial Channels and paths
     take:
-        INPUT
-        file1
-        file2
+        fastq_files_ch
+        bed
+        reference
 
     // here we define the structure of our workflow i.e. how the different processes lead into each other
     // eg. process(input1, input2, etc.)
@@ -56,32 +64,7 @@ workflow 'umi-pipeline' {
     // ALWAYS PAY ATTENTION TO CARDINALITY!!
 
     main:
-        // process_1 perhaps begins with the INPUT Channel (defined above)
-        process_1(INPUT)
-        // then process_2 perhaps works on the first output of process_1
-        process_2(process_1.out[0])
-
-        // process_3 perhaps works on the individual files only
-        process_3(file1,file2)
-
-        // perhaps now we need to combine different process outputs with some kind of Channel operator
-        combined_outputs = process_1.out[0].combine(process_3.out)
-
-        // maybe process_4 then uses the combined_channels as well as input files
-        process_4(combined,file1,file2)
-
-        // then finally process_5 works on the output of process_4
-        process_5(process_4.out[0])
-
-}
-
-// MAIN WORKFLOW 
-workflow {
-
-    // call sub-workflows eg. WORKFLOW(Channel1, Channel2, Channel3, etc.)
-    main:
-        DNAseq(INPUT, file1, file2)
-
+        HELLO_WORLD()
 }
 
 
