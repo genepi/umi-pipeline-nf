@@ -8,23 +8,25 @@ if(params.help){
     println """\
 
          ===============================================
-          E C S E Q - t e m p l a t e   P I P E L I N E
+          Nextflow UMI amplicon Pipeline
          ===============================================
          ~ version ${workflow.manifest.version}
 
          Usage: 
-              nextflow run ecseq/dnaseq [OPTIONS]...
+              nextflow run umi-pipeline-nf [OPTIONS]...
 
          Options: GENERAL
-              --input [path/to/input/dir]     [REQUIRED] Provide the directory containing fastq file(s) in "*{1,2}.fastq.gz" format
+              --input [path/to/input/dir]     [REQUIRED] Input directory containing fastq file(s) in "*{1,2}.fastq.gz" format
 
-              --reference [path/to/ref.fa]    [REQUIRED] Provide the path to the reference genome in fasta format
+              --reference [path/to/ref.fa]    [REQUIRED] Path to the reference genome in fasta format
 
-              --output [STR]                  A string that can be given to name the output directory. [default: "."]
+              --bed [path/to/data.bed]        [REQUIRED] Path to the bed file
+
+              --output [STR]                  A string that can be given to name the output directory. [default: "umi-pipeline-nf_results"]
 
 
-         Options: MODIFIERS
-              --SE                            Indicate to the pipeline whether fastq files are SE reads in "*.fastq.gz" format. [default: off]
+         Options: ADDITIONAL
+              --umi_errors                    Indicate to the pipeline whether fastq files are SE reads in "*.fastq.gz" format. [default: off]
 
               --FastQC                        Generate FastQC report of trimmed reads. [default: off]
 
