@@ -57,6 +57,10 @@ if(params.help){
               --input /path/to/input/dir --reference /path/to/genome.fa \
               --bed [path/to/data.bed] --output [STR]
 
+              nextflow run umi-pipeline-nf \
+              --project test --input data/example_egfr_single_cluster.fastq \
+              --reference data/example_egfr_reference.fasta --bed data/example_egfr_amplicon.bed
+
     """
     ["bash", "${baseDir}/bin/clean.sh", "${workflow.sessionId}"].execute()
     exit 0

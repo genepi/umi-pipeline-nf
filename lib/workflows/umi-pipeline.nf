@@ -1,17 +1,19 @@
 nextflow.enable.dsl = 2
 
-// adapt input parameters
-params.input = "$baseDir${params.input}"
-params.bed = "$baseDir${params.bed}"
-params.reference = "$baseDir${params.reference}"
+requiredParams = [
+    'input', 'reference', 'bed'
+]
 
-println "${projectDir}"
-println "${launchDir}"
-println "${baseDir}"
+for (param in requiredParams) {
+    if (params[param] == null) {
+      exit 1, "Parameter ${param} is required."
+    }
+}
 
 // DEFINE PATHS
-bed = file("${params.bed}", checkIfExists: true)
-reference = file("${params.reference}", checkIfExists: true)
+bed = file("${baseDir}/${params.bed}", checkIfExists: true)
+reference = file("${baseDir}/${params.reference}", checkIfExists: true)
+test = file("${baseDir}/data/test.txt", checkIfExists : true)
 
 // STAGE CHANNELS
 
@@ -50,12 +52,6 @@ include {HELLO_WORLD} from '../processes/Hello_World.nf'
 // SUB-WORKFLOWS
 workflow UMI_PIPELINE {
 
-    // take the initial Channels and paths
-    take:
-        fastq_files_ch
-        bed
-        reference
-
     // here we define the structure of our workflow i.e. how the different processes lead into each other
     // eg. process(input1, input2, etc.)
     // eg. process.out[0], process.out[1], etc.
@@ -64,7 +60,8 @@ workflow UMI_PIPELINE {
     // ALWAYS PAY ATTENTION TO CARDINALITY!!
 
     main:
-        HELLO_WORLD()
+        HELLO_WORLD( test )
+        print "${HELLO_WORLD.out.test.text}"
 }
 
 
