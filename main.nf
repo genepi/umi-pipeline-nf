@@ -16,7 +16,7 @@ if(params.help){
               nextflow run umi-pipeline-nf [OPTIONS]...
 
          Options: GENERAL
-              --input [path/to/input/dir]     [REQUIRED] Input FASTQ files. Can be a (zipped) FASTQ file or a folder containing (zipped) FASTQ files
+              --input [path/to/input/dir]     [REQUIRED] Input directory containing (zipped) FASTQ files
 
               --reference [path/to/ref.fa]    [REQUIRED] Path to the reference genome in fasta format
 
