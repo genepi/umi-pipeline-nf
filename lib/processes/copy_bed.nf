@@ -2,12 +2,11 @@ process COPY_BED {
     publishDir "${params.output}", mode: 'copy'
     
     input:
-        file bed
+        path bed
 
     output:
-        file bed
+        path bed
 
-    shell:
     """
         mkdir -p ${params.output}
         cp ${bed} ${params.output}

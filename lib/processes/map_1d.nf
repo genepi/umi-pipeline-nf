@@ -1,18 +1,17 @@
 process MAP_1D {
-    publishDir "${params.output}", mode: 'copy'
+    publishDir "${params.output}/align", mode: 'copy'
 
     input:
         path fastq
         path reference 
     output:
-        path "align/1d.bam", emit: bam_1d
-        path "align/1d.bam.bai", emit: bai_1d
+        path "1d.bam", emit: bam_1d
+        path "1d.bam.bai", emit: bai_1d
 
     """
-        mkdir -p align
         catfishq --max_n 0 ${fastq} | \\
         minimap2 ${params.minimap2_param} -t ${params.threads} ${reference} - | \\
-        samtools sort -@ 5 -o align/1d.bam - && samtools index -@ ${params.threads} align/1d.bam
+        samtools sort -@ 5 -o 1d.bam - && samtools index -@ ${params.threads} 1d.bam
     """
 }
 
