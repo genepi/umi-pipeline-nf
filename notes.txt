@@ -1,0 +1,10 @@
+Snakefile:
+
+1-13: function read_bed_names:
+see if the function should be included into the pipeline and if so see if there is an easier workflow to extract the values from the bed file. 
+Also outsource the function into a own file. 
+
+55-57: --balance_strands flag
+doesn't need to be checked here, but can be a conditional in the process
+
+59: minimap2_param could also be included as a flag with a set default value or just set in in the process

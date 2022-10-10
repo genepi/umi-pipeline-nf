@@ -47,6 +47,8 @@ if(params.help){
 
               --max_length                    Maximum combined UMI length [default: 60]
 
+              --minimap_param                 Set the parameters for minimap2 [default: "-ax map-ont -k 13"]
+
          Options: ADDITIONAL
               --help                          Display this help information and exit
               --version                       Display the current pipeline version and exit
