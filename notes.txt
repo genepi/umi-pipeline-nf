@@ -8,3 +8,8 @@ Also outsource the function into a own file.
 doesn't need to be checked here, but can be a conditional in the process
 
 59: minimap2_param could also be included as a flag with a set default value or just set in in the process
+
+catfishq:
+https://github.com/philres/catfishq
+
+used to cat fastq reads and for subsampling of the reads 
