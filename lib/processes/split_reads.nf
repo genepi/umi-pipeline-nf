@@ -1,10 +1,10 @@
 process SPLIT_READS {
     input:
-        path 1d_bam
+        path bam_1d
         path bed
     output:
 
     """
-        python umi_amplicon_tools/filter_reads_py ${params.min_overlap} -o . ${bed} ${1d_bam} 2>&1 | tee 
+        python ${projectDir}/bin/filter_reads.py --min_overlap ${params.min_overlap} -o . ${bed} ${bam_1d} 2>&1 | tee 
     """
 }
