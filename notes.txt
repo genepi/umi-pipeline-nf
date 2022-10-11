@@ -19,3 +19,10 @@ potentially used to subsample reads, but only by stopping after a certain number
 
 --max_n was a config paramter in the snakemakepipeline which was not used in the end. default was 0, which is used now 
 Step could be used for subsample but make extra process for that
+
+rule SPLIT_READS:
+fastq file as output which is in the fasta_filtered foulder (rename folder later?)
+
+
+TODOS:
+Split process pipes into smaller bits?
