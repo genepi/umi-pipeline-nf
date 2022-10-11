@@ -11,8 +11,8 @@ for (param in requiredParams) {
 }
 
 // DEFINE PATHS
-bed = file("${baseDir}/${params.bed}", checkIfExists: true)
-reference = file("${baseDir}/${params.reference}", checkIfExists: true)
+bed = file("${params.bed}", checkIfExists: true)
+reference = file("${params.reference}", checkIfExists: true)
 test = file("${baseDir}/data/test.txt", checkIfExists : true)
 
 // STAGE CHANNELS
@@ -32,7 +32,7 @@ if ( workflow.profile.tokenize(",").contains("test") ){
 }
 */
 
-fastq_files_ch = Channel.fromPath(params.input)
+fastq_files_ch = Channel.fromPath("${params.input}")
 
 ////////////////////
 // BEGIN PIPELINE //
@@ -47,7 +47,8 @@ fastq_files_ch = Channel.fromPath(params.input)
 
 // INCLUDES # here you must give the relevant process files from the lib directory 
 include {HELLO_WORLD} from '../processes/Hello_World.nf'
-
+include {COPY_BED} from '../processes/copy_bed.nf'
+include {MAP_1D} from '../processes/map_1d.nf'
 
 // SUB-WORKFLOWS
 workflow UMI_PIPELINE {
@@ -60,8 +61,10 @@ workflow UMI_PIPELINE {
     // ALWAYS PAY ATTENTION TO CARDINALITY!!
 
     main:
-        HELLO_WORLD( test )
-        print "${HELLO_WORLD.out.test.text}"
+        //HELLO_WORLD( test )
+        COPY_BED( bed )
+        MAP_1D( fastq_files_ch, reference)
+        
 }
 
 
