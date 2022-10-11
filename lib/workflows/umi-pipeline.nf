@@ -15,6 +15,9 @@ bed = file("${params.bed}", checkIfExists: true)
 reference = file("${params.reference}", checkIfExists: true)
 test = file("${baseDir}/data/test.txt", checkIfExists : true)
 
+// python scripts
+umi_filter_reads = file( "${projectDir}/bin/filter_reads.py", checkIfExists: true)
+
 // STAGE CHANNELS
 
 /*
@@ -66,7 +69,7 @@ workflow UMI_PIPELINE {
         println "${PATH}"
         COPY_BED( bed )
         MAP_1D( fastq_files_ch, reference )
-        SPLIT_READS( MAP_1D.out.bam_1d, COPY_BED.out.bed )
+        SPLIT_READS( MAP_1D.out.bam_1d, MAP_1D.out.bai_1d, COPY_BED.out.bed, umi_filter_reads )
 
 }
 
