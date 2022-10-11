@@ -1,10 +1,11 @@
-FROM nfcore/base
-LABEL authors="Adam Nunn" \
-      email="adam.nunn@ecseq.com" \
-      description="Docker image containing all requirements for the ecSeq/DNAseq pipeline"
+FROM continuumio/miniconda
+LABEL authors="Amstler Stephan" \
+      email="amstler.stephan@i-med.ac.at" 
 
-COPY environment.yml /
-RUN conda env create -f /environment.yml && conda clean -a
+COPY environment.yml .
+RUN \
+   conda env update -n root -f environment.yml \
+&& conda clean -a
 
 # you only need to change <template> in this line:
-ENV PATH /opt/conda/envs/<template>/bin:$PATH:
+ENV PATH /opt/conda/envs/nf_umi_pipeline/bin:$PATH:

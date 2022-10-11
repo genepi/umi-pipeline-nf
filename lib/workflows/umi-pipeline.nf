@@ -32,7 +32,7 @@ if ( workflow.profile.tokenize(",").contains("test") ){
 }
 */
 
-fastq_files_ch = Channel.fromPath(params.input)
+fastq_files_ch = Channel.fromPath("${params.input}")
 
 ////////////////////
 // BEGIN PIPELINE //
@@ -48,6 +48,7 @@ fastq_files_ch = Channel.fromPath(params.input)
 // INCLUDES # here you must give the relevant process files from the lib directory 
 include {HELLO_WORLD} from '../processes/Hello_World.nf'
 include {COPY_BED} from '../processes/copy_bed.nf'
+include {MAP_1D} from '../processes/map_1d.nf'
 
 // SUB-WORKFLOWS
 workflow UMI_PIPELINE {
@@ -62,6 +63,7 @@ workflow UMI_PIPELINE {
     main:
         //HELLO_WORLD( test )
         COPY_BED( bed )
+        MAP_1D( fastq_files_ch, reference)
         
 }
 
