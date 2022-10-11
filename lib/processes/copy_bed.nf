@@ -5,7 +5,7 @@ process COPY_BED {
         path bed
 
     output:
-        path bed
+        path bed, emit: bed
 
     """
         mkdir -p ${params.output}

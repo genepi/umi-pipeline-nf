@@ -49,6 +49,7 @@ fastq_files_ch = Channel.fromPath("${params.input}")
 include {HELLO_WORLD} from '../processes/Hello_World.nf'
 include {COPY_BED} from '../processes/copy_bed.nf'
 include {MAP_1D} from '../processes/map_1d.nf'
+include {SPLIT_READS} from  '../processed/split_reads.nf'
 
 // SUB-WORKFLOWS
 workflow UMI_PIPELINE {
@@ -63,8 +64,9 @@ workflow UMI_PIPELINE {
     main:
         //HELLO_WORLD( test )
         COPY_BED( bed )
-        MAP_1D( fastq_files_ch, reference)
-        
+        MAP_1D( fastq_files_ch, reference )
+        SPLIT_READS( MAP_1D.out.bam_1d, COPY_BED.out.bed )
+
 }
 
 
