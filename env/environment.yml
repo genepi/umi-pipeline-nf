@@ -1,4 +1,4 @@
-name: nf_umi_pipeline
+name: umi-pipeline-nf
 channels:
   - defaults
   - conda-forge

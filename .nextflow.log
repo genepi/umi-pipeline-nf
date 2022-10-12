@@ -1,0 +1,14 @@
+Oct-12 12:52:59.920 [main] DEBUG nextflow.cli.Launcher - $> nextflow run umi-pipeline-nf -profile test,conda
+Oct-12 12:52:59.976 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 22.04.5
+Oct-12 12:53:00.002 [main] DEBUG nextflow.scm.AssetManager - Listing projects in folder: /home/stephanamstler/.nextflow/assets
+Oct-12 12:53:00.024 [main] DEBUG nextflow.cli.Launcher - Operation aborted
+nextflow.exception.AbortOperationException: Can't find git repository config file -- Repository may be corrupted: /home/stephanamstler/.nextflow/assets/AmstlerStephan/umi-pipeline-nf
+	at nextflow.scm.AssetManager.guessHubProviderFromGitConfig(AssetManager.groovy:1097)
+	at nextflow.scm.AssetManager.validateProjectDir(AssetManager.groovy:205)
+	at nextflow.scm.AssetManager.build(AssetManager.groovy:136)
+	at nextflow.scm.AssetManager.<init>(AssetManager.groovy:109)
+	at nextflow.cli.CmdRun.getScriptFile0(CmdRun.groovy:474)
+	at nextflow.cli.CmdRun.getScriptFile(CmdRun.groovy:415)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:287)
+	at nextflow.cli.Launcher.run(Launcher.groovy:480)
+	at nextflow.cli.Launcher.main(Launcher.groovy:639)
