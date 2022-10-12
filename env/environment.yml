@@ -18,4 +18,9 @@ dependencies:
   - pip:
     - catfishq
     - numpy==1.19.5
+    - pysam
+    - tqdm
+    - pandas
+    - seaborn
+    - edlib
 # removed all dependencies from template pipeline

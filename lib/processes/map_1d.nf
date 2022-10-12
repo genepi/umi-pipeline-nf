@@ -9,7 +9,9 @@ process MAP_1D {
         path "1d.bam.bai", emit: bai_1d
 
     """
-        catfishq --max_n 0 ${fastq} | minimap2 ${params.minimap2_param} -t ${params.threads} ${reference} - | samtools sort -@ 5 -o 1d.bam - && samtools index -@ ${params.threads} 1d.bam
+        catfishq --max_n 0 ${fastq} | \
+        minimap2 ${params.minimap2_param} -t ${params.threads} ${reference} - | \
+        samtools sort -@ 5 -o 1d.bam - && samtools index -@ ${params.threads} 1d.bam
     """
 }
 

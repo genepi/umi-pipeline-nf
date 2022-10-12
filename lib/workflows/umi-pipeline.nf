@@ -13,63 +13,33 @@ for (param in requiredParams) {
 // DEFINE PATHS
 bed = file("${params.bed}", checkIfExists: true)
 reference = file("${params.reference}", checkIfExists: true)
-test = file("${baseDir}/data/test.txt", checkIfExists : true)
 
 // python scripts
 umi_filter_reads = file( "${projectDir}/bin/filter_reads.py", checkIfExists: true)
+umi_extract = file( "${projectDir}/bin/extract_umis.py", checkIfExists: true)
 
 // STAGE CHANNELS
-
-/*
-// STAGE BAM FILES FROM TEST PROFILE # this establishes the test data to use with -profile test
-if ( workflow.profile.tokenize(",").contains("test") ){
-
-        include { check_test_data } from './lib/functions.nf' params(readPaths: params.readPaths, singleEnd: params.SE)
-        INPUT = check_test_data(params.readPaths, params.SE)
-
-} else {
-
-    // STAGE INPUT CHANNELS # this defines the normal input when test profile is not in use
-    INPUT = Channel.fromPath(params.input)
-
-}
-*/
-
 fastq_files_ch = Channel.fromPath("${params.input}")
 
 ////////////////////
 // BEGIN PIPELINE //
 ////////////////////
 
-/*
- *   Workflows are where you define how different processes link together. They
- *    may be modularised into "sub-workflows" which must be named eg. 'DNAseq'
- *    and there must always be one MAIN workflow to link them together, which
- *    is always unnamed.
- */
-
 // INCLUDES # here you must give the relevant process files from the lib directory 
-include {HELLO_WORLD} from '../processes/Hello_World.nf'
 include {COPY_BED} from '../processes/copy_bed.nf'
 include {MAP_1D} from '../processes/map_1d.nf'
 include {SPLIT_READS} from  '../processes/split_reads.nf'
+include {DETECT_UMI_FASTA} from '../processes/detect_umi_fasta.nf'
 
 // SUB-WORKFLOWS
 workflow UMI_PIPELINE {
 
-    // here we define the structure of our workflow i.e. how the different processes lead into each other
-    // eg. process(input1, input2, etc.)
-    // eg. process.out[0], process.out[1], etc.
-    // index numbers [0],[1],etc. refer to different outputs defined for processes in process.nf
-    // You can forgo the index number if there is only 1 output.
-    // ALWAYS PAY ATTENTION TO CARDINALITY!!
-
     main:
-        //HELLO_WORLD( test )
-        println "${PATH}"
+
         COPY_BED( bed )
         MAP_1D( fastq_files_ch, reference )
         SPLIT_READS( MAP_1D.out.bam_1d, MAP_1D.out.bai_1d, COPY_BED.out.bed, umi_filter_reads )
+        DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastq, umi_extract )
 
 }
 
