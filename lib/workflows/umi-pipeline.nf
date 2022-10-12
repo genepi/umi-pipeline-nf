@@ -19,22 +19,6 @@ umi_filter_reads = file( "${projectDir}/bin/filter_reads.py", checkIfExists: tru
 umi_extract = file( "${projectDir}/bin/extract_umis.py", checkIfExists: true)
 
 // STAGE CHANNELS
-
-/*
-// STAGE BAM FILES FROM TEST PROFILE # this establishes the test data to use with -profile test
-if ( workflow.profile.tokenize(",").contains("test") ){
-
-        include { check_test_data } from './lib/functions.nf' params(readPaths: params.readPaths, singleEnd: params.SE)
-        INPUT = check_test_data(params.readPaths, params.SE)
-
-} else {
-
-    // STAGE INPUT CHANNELS # this defines the normal input when test profile is not in use
-    INPUT = Channel.fromPath(params.input)
-
-}
-*/
-
 fastq_files_ch = Channel.fromPath("${params.input}")
 
 ////////////////////
