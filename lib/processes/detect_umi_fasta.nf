@@ -1,4 +1,4 @@
-fasta_filename = "_detected_umis.fasta"
+fasta_filename = ".detected_umis.fasta"
 process DETECT_UMI_FASTA {
 
     publishDir "${params.output}/fasta_umi", mode: 'copy'
