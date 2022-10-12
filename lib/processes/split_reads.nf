@@ -14,6 +14,7 @@ process SPLIT_READS {
         path "*.fastq", emit: split_reads_fastq
 
     """
-        python ${python_filter_reads} --min_overlap ${params.min_overlap} -o . ${bed} ${bam_1d} 2>&1 | tee ${stats_filename}
+        python ${python_filter_reads} --min_overlap ${params.min_overlap} -o . ${bed} ${bam_1d} 2>&1 | \
+        tee ${stats_filename}
     """
 }
