@@ -7,6 +7,7 @@ process CLUSTER {
         path detected_umis_fasta
     output:
         path "${detected_umis_fasta.simpleName}/", emit: cluster
+        path "${detected_umis_fasta.simpleName}/${consensus_fasta}", emit:consensus_fasta
 
     """
         outdir_target=${detected_umis_fasta.simpleName}
