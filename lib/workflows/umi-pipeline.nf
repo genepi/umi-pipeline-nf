@@ -13,7 +13,6 @@ for (param in requiredParams) {
 // DEFINE PATHS
 bed = file("${params.bed}", checkIfExists: true)
 reference = file("${params.reference}", checkIfExists: true)
-test = file("${baseDir}/data/test.txt", checkIfExists : true)
 
 // python scripts
 umi_filter_reads = file( "${projectDir}/bin/filter_reads.py", checkIfExists: true)
@@ -43,7 +42,6 @@ fastq_files_ch = Channel.fromPath("${params.input}")
 ////////////////////
 
 // INCLUDES # here you must give the relevant process files from the lib directory 
-include {HELLO_WORLD} from '../processes/Hello_World.nf'
 include {COPY_BED} from '../processes/copy_bed.nf'
 include {MAP_1D} from '../processes/map_1d.nf'
 include {SPLIT_READS} from  '../processes/split_reads.nf'
@@ -53,8 +51,7 @@ include {DETECT_UMI_FASTA} from '../processes/detect_umi_fasta.nf'
 workflow UMI_PIPELINE {
 
     main:
-        //HELLO_WORLD( test )
-        println "${PATH}"
+
         COPY_BED( bed )
         MAP_1D( fastq_files_ch, reference )
         SPLIT_READS( MAP_1D.out.bam_1d, MAP_1D.out.bai_1d, COPY_BED.out.bed, umi_filter_reads )
