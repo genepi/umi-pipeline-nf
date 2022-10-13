@@ -17,6 +17,7 @@ reference = file("${params.reference}", checkIfExists: true)
 // python scripts
 umi_filter_reads = file( "${projectDir}/bin/filter_reads.py", checkIfExists: true)
 umi_extract = file( "${projectDir}/bin/extract_umis.py", checkIfExists: true)
+umi_parse_clusters = file( "${projectDir}/bin/parse_clusters.py", checkIfExists: true)
 
 // STAGE CHANNELS
 fastq_files_ch = Channel.fromPath("${params.input}/*", type: 'dir')
@@ -31,6 +32,7 @@ include {MAP_1D} from '../processes/map_1d.nf'
 include {SPLIT_READS} from  '../processes/split_reads.nf'
 include {DETECT_UMI_FASTA} from '../processes/detect_umi_fasta.nf'
 include {CLUSTER} from '../processes/cluster.nf'
+include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 
 // SUB-WORKFLOWS
 workflow UMI_PIPELINE {
@@ -42,7 +44,7 @@ workflow UMI_PIPELINE {
         SPLIT_READS( MAP_1D.out.bam_1d, COPY_BED.out.bed, umi_filter_reads )
         DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastq, umi_extract )
         CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta )
-
+        REFORMAT_FILTER_CLUSTER( CLUSTER.out.consensus_fasta, CLUSTER.out.vsearch_dir, umi_parse_clusters)
 
 }
 

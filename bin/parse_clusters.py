@@ -48,7 +48,6 @@ def parse_args(argv):
     )
 
     parser.add_argument(
-        "-b",
         "--balance_strands",
         dest="BAL_STRANDS",
         action="store_true",
@@ -90,11 +89,11 @@ def parse_args(argv):
     )
 
     parser.add_argument(
-        "VSEARCH_CONSENSUS", type=str, nargs=1, help="VSearch consensus FASTA"
+        "--vsearch_consensus", dest="VSEARCH_CONSENSUS", type=str, help="VSearch consensus FASTA"
     )
 
     parser.add_argument(
-        "VSEARCH_FOLDER", type=str, nargs=1, help="VSearch cluster folder"
+        "--vsearch_folder", dest="VSEARCH_FOLDER", type=str, help="VSearch cluster folder"
     )
 
     args = parser.parse_args(argv)
@@ -266,7 +265,7 @@ def polish_cluster(
 
 
 def parse_clusters(args):
-    cluster_filename = args.VSEARCH_CONSENSUS[0]
+    cluster_filename = args.VSEARCH_CONSENSUS
     min_read_per_cluster = args.MIN_CLUSTER_READS
     max_read_per_cluster = args.MAX_CLUSTER_READS
     stats_out_filename = args.STATS_OUT
@@ -316,7 +315,7 @@ def parse_clusters(args):
                     a, b, bb, c, d = polish_cluster(
                         id_cluster,
                         n_cluster,
-                        args.VSEARCH_FOLDER[0],
+                        args.VSEARCH_FOLDER,
                         args.OUTPUT,
                         min_read_per_cluster,
                         max_read_per_cluster,

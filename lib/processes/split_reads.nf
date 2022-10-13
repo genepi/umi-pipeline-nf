@@ -2,7 +2,7 @@ stats_filename = "umi_filter_reads_stats.txt"
 process SPLIT_READS {
 
     publishDir "${params.output}/${sample}/stats", mode: 'copy', pattern: "${stats_filename}"
-    publishDir "${params.output}/${sample}/fasta_filtered", mode: 'copy', pattern: '*.fastq'
+    publishDir "${params.output}/${sample}/fasta_filtered", mode: 'copy', pattern: "*.fastq"
 
     input:
         tuple val( sample ), path ( bam_1d ) , path ( bam_bai )
