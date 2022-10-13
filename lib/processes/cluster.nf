@@ -1,6 +1,7 @@
 centroid_fasta="clusters_centroid.fasta"
 consensus_fasta="clusters_consensus.fasta"
 vsearch_dir="vsearch_clusters"
+
 process CLUSTER {
     publishDir "${params.output}/${sample}/cluster", mode: 'copy'
 
