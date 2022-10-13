@@ -12,7 +12,7 @@ process REFORMAT_FILTER_CLUSTER {
     path umi_parse_clusters_python
 
   output:
-    tuple val( "${sample}" ), val( "${target}" ), path( "${smolecule_clusters_fasta}"), 
+    tuple val( "${sample}" ), val( "${target}" ), path( "${smolecule_clusters_fasta}"), emit: smolecule_clusters_fasta
     path( "${vsearch_cluster_stats}" )
 
   script:

@@ -33,6 +33,7 @@ include {SPLIT_READS} from  '../processes/split_reads.nf'
 include {DETECT_UMI_FASTA} from '../processes/detect_umi_fasta.nf'
 include {CLUSTER} from '../processes/cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
+include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
 
 // SUB-WORKFLOWS
 workflow UMI_PIPELINE {
@@ -45,6 +46,7 @@ workflow UMI_PIPELINE {
         DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastq, umi_extract )
         CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta )
         REFORMAT_FILTER_CLUSTER( CLUSTER.out.consensus_fasta, CLUSTER.out.vsearch_dir, umi_parse_clusters)
+        POLISH_CLUSTER( REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fasta )
 
 }
 
