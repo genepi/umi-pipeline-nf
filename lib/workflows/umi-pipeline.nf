@@ -34,6 +34,7 @@ include {DETECT_UMI_FASTA} from '../processes/detect_umi_fasta.nf'
 include {CLUSTER} from '../processes/cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
+include {MAP_CONSENSUS} from '../processes/map_consensus.nf'
 
 // SUB-WORKFLOWS
 workflow UMI_PIPELINE {
@@ -47,6 +48,7 @@ workflow UMI_PIPELINE {
         CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta )
         REFORMAT_FILTER_CLUSTER( CLUSTER.out.consensus_fasta, CLUSTER.out.vsearch_dir, umi_parse_clusters)
         POLISH_CLUSTER( REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fasta )
+        MAP_CONSENSUS( POLISH_CLUSTER.out.consensus_fasta, reference )
 
 }
 

@@ -7,9 +7,9 @@ process POLISH_CLUSTER {
   input:
     tuple val( sample ), val( target ), path( smolecule_clusters_fasta )
   output:
-    tuple val( "${sample}" ), val( "${target}" ), path( "*.bam" ), path( "*bam.bai")
-    path "consensus.fasta"
-    
+    tuple path( "*.bam" ), path( "*bam.bai")
+    tuple val( "${sample}" ), val( "${target}" ), path( "consensus.fasta" ), emit: consensus_fasta
+
   script:
   """
     medaka smolecule --threads ${params.threads} --length 50 --depth 2 --model ${params.medaka_model} --method spoa ${smolecule_clusters_fasta} . 2> ${target}_smolecule.log
