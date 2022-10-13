@@ -39,8 +39,8 @@ workflow UMI_PIPELINE {
 
         COPY_BED( bed )
         MAP_1D( fastq_files_ch, reference )
-        SPLIT_READS( MAP_1D.out.bam_1d, MAP_1D.out.bai_1d, COPY_BED.out.bed, umi_filter_reads )
-        //DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastq, umi_extract )
+        SPLIT_READS( MAP_1D.out.bam_1d, COPY_BED.out.bed, umi_filter_reads )
+        DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastq, umi_extract )
         //CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta )
 
 
