@@ -3,7 +3,7 @@ process MAP_CONSENSUS {
     publishDir "${params.output}/${sample}/align", mode: 'copy'
 
   input:
-    tuple val( sample ), val( target ), path( consensus_fasta )
+    tuple val( sample ), path( consensus_fasta )
     path reference
   output:
     tuple path ( "*.bam" ) , path ( "*.bam.bai" ), emit: bam_consensus

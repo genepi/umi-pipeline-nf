@@ -8,7 +8,7 @@ process POLISH_CLUSTER {
     tuple val( sample ), val( target ), path( smolecule_clusters_fasta )
   output:
     tuple path( "*.bam" ), path( "*bam.bai")
-    tuple val( "${sample}" ), val( "${target}" ), path( "consensus.fasta" ), emit: consensus_fasta
+    tuple val( "${sample}" ), path( "consensus.fasta" ), emit: consensus_fasta
 
   script:
   """
