@@ -1,13 +1,14 @@
-fasta_filename = ".detected_umis.fasta"
+fasta_filename = "_detected_umis.fasta"
+
 process DETECT_UMI_FASTA {
 
-    publishDir "${params.output}/fasta_umi", mode: 'copy'
+    publishDir "${params.output}/${sample}/fasta_umi", mode: 'copy'
 
     input:
-        path split_reads_fastq
+        tuple val( sample ), path ( split_reads_fastq )
         path umi_extract_python
     output:
-        path "*${fasta_filename}", emit: umi_extract_fasta
+        tuple val( "${sample}" ), val( "${split_reads_fastq.baseName}" ), path ( "*${fasta_filename}" ), emit: umi_extract_fasta
         path "*${fasta_filename}.tsv"
     """
         python ${umi_extract_python} --fwd-context ${params.fwd_universal_primer} \
