@@ -19,7 +19,7 @@ umi_filter_reads = file( "${projectDir}/bin/filter_reads.py", checkIfExists: tru
 umi_extract = file( "${projectDir}/bin/extract_umis.py", checkIfExists: true)
 
 // STAGE CHANNELS
-fastq_files_ch = Channel.fromPath("${params.input}")
+fastq_files_ch = Channel.fromPath("${params.input}/**/*.fastq")
 
 ////////////////////
 // BEGIN PIPELINE //
@@ -39,9 +39,9 @@ workflow UMI_PIPELINE {
 
         COPY_BED( bed )
         MAP_1D( fastq_files_ch, reference )
-        SPLIT_READS( MAP_1D.out.bam_1d, MAP_1D.out.bai_1d, COPY_BED.out.bed, umi_filter_reads )
-        DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastq, umi_extract )
-        CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta )
+        //SPLIT_READS( MAP_1D.out.bam_1d, MAP_1D.out.bai_1d, COPY_BED.out.bed, umi_filter_reads )
+        //DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastq, umi_extract )
+        //CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta )
 
 
 }

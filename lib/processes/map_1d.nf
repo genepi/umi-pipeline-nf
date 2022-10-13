@@ -1,11 +1,11 @@
 process MAP_1D {
-    publishDir "${params.output}/align", mode: 'copy'
+    publishDir "${params.output}/${fastq.baseName}/align", mode: 'copy'
 
     input:
         path fastq
         path reference 
     output:
-        path "1d.bam", emit: bam_1d
+        tuple val( "${fastq.baseName}" ), path ( "1d.bam" ) , emit: bam_1d
         path "1d.bam.bai", emit: bai_1d
 
     """
