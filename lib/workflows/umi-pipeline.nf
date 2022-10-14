@@ -22,9 +22,10 @@ umi_parse_clusters = file( "${projectDir}/bin/parse_clusters.py", checkIfExists:
 // STAGE CHANNELS
 fastq_files_ch = Channel.fromPath("${params.input}/*", type: 'dir')
 
-//Helper variables
+// file_prefixes
 consensus = "consensus"
 final_consensus = "final"
+
 
 ////////////////////
 // BEGIN PIPELINE //
