@@ -12,6 +12,6 @@ process POLISH_CLUSTER {
 
   script:
   """
-    medaka smolecule --threads ${params.threads} --length 50 --depth 2 --model ${params.medaka_model} --method spoa ${smolecule_clusters_fasta} . 2> ${target}_smolecule.log
+    medaka smolecule --threads ${params.threads} --length 50 --depth 2 --model ${params.medaka_model} --method spoa . ${smolecule_clusters_fasta} 2> ${target}_smolecule.log
   """
 }
