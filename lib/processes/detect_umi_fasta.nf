@@ -2,7 +2,7 @@ fasta_filename = "detected_umis.fasta"
 
 process DETECT_UMI_FASTA {
 
-    publishDir "${params.output}/${sample}/stats", pattern: "*.tsv", mode: 'copy'
+    publishDir "${params.output}/${sample}/stats/${type}", pattern: "*.tsv", mode: 'copy'
     publishDir "${params.output}/${sample}/fasta_umi/${type}", pattern: "*${fasta_filename}", mode: 'copy'
 
     input:
