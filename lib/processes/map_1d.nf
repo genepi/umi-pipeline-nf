@@ -8,7 +8,9 @@ process MAP_1D {
         tuple val( "${sample.baseName}" ), path ( "1d.bam" ) , path ( "1d.bam.bai" ), emit: bam_1d
 
     """
-        catfishq --max_n 0 ${sample} | minimap2 ${params.minimap2_param} -t ${params.threads} ${reference} - | samtools sort -@ 5 -o 1d.bam - && samtools index -@ ${params.threads} 1d.bam
+        catfishq --max_n 0 ${sample} | \
+        minimap2 ${params.minimap2_param} -t ${params.threads} ${reference} - | \
+        samtools sort -@ 5 -o 1d.bam - && samtools index -@ ${params.threads} 1d.bam
     """
 }
 

@@ -8,4 +8,4 @@ RUN \
 && conda clean -a
 
 # you only need to change <template> in this line:
-ENV PATH /opt/conda/envs/nf_umi_pipeline/bin:$PATH:
+# ENV PATH /opt/conda/envs/nf_umi_pipeline/bin:$PATH:

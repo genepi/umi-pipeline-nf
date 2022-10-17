@@ -10,7 +10,7 @@ process SPLIT_READS {
         path python_filter_reads
     output:
         path "${stats_filename}"
-        tuple val ( "${sample}" ), path ( "*.fastq" ), emit: split_reads_fastq
+        tuple val ( "${sample}" ), val( "target" ), path ( "*.fastq" ), emit: split_reads_fastq
 
     """
         python ${python_filter_reads} --min_overlap ${params.min_overlap} -o . ${bed} ${bam_1d} 2>&1 | \
