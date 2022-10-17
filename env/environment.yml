@@ -1,4 +1,4 @@
-name: umi-pipeline-nf_2
+name: umi-pipeline-nf
 channels:
   - conda-forge
   - bioconda
@@ -10,6 +10,8 @@ dependencies:
   - samtools
   - seqtk
   - lofreq
+  - freebayes
+  - whatshap
   - seqkit
   - pysam
   - bedtools
