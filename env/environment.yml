@@ -8,6 +8,8 @@ dependencies:
   - snakemake-minimal
   - minimap2
   - samtools
+  - seqtk
+  - lofreq
   - seqkit
   - pysam
   - bedtools

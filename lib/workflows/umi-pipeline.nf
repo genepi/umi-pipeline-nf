@@ -73,6 +73,16 @@ workflow UMI_PIPELINE {
         REFORMAT_CONSENSUS_CLUSTER( CLUSTER_CONSENSUS.out.consensus_fasta, final_consensus, umi_reformat_consensus )
         MAP_FINAL_CONSENSUS( REFORMAT_CONSENSUS_CLUSTER.out.consensus_fasta, final_consensus, reference )
         
+        if( params.call_variants ){
+            switch( params.variant_caller ){
+                "lofreq":
+                    LOFREQ( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference )
+                "mutserve":
+                "freebayes":
+                default:
+                    exit 1, "Parameter ${params.variant} is required."
+            }
+        }
 
 }
 
