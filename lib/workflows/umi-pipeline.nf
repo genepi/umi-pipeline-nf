@@ -44,6 +44,7 @@ include {CLUSTER; CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
 include {REFORMAT_CONSENSUS_CLUSTER} from '../processes/reformat_consensus_cluster.nf'
+include {LOFREQ} from '../processes/variant_calling/lofreq.nf'
 
 // SUB-WORKFLOWS
 workflow UMI_PIPELINE {
@@ -80,7 +81,7 @@ workflow UMI_PIPELINE {
                 "mutserve":
                 "freebayes":
                 default:
-                    exit 1, "Parameter ${params.variant} is required."
+                    exit 1, "${params.variant_caller} is not a valid option. \nPossible variant caller are <lofreq/mutserve/freebayes>"
             }
         }
 
