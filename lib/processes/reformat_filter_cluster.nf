@@ -3,11 +3,12 @@ vsearch_cluster_stats="vsearch_cluster_stats.tsv"
 
 process REFORMAT_FILTER_CLUSTER {
 
-    publishDir "${params.output}/${sample}/stats", pattern: "${vsearch_cluster_stats}", mode: 'copy'
-    publishDir "${params.output}/${sample}/clustering", pattern: "${smolecule_clusters_fasta}", mode: 'copy'
+    publishDir "${params.output}/${sample}/stats/${type}", pattern: "${vsearch_cluster_stats}", mode: 'copy'
+    publishDir "${params.output}/${sample}/clustering/${type}", pattern: "${smolecule_clusters_fasta}", mode: 'copy'
   
   input:
     tuple val(sample), val(target), path(consensus_fasta)
+    val( type )
     path vsearch_dir
     path umi_parse_clusters_python
 
