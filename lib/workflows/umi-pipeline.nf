@@ -23,6 +23,7 @@ umi_parse_clusters = file( "${projectDir}/bin/parse_clusters.py", checkIfExists:
 fastq_files_ch = Channel.fromPath("${params.input}/*", type: 'dir')
 
 // file_prefixes
+raw = ""
 consensus = "consensus"
 final_consensus = "final"
 
@@ -36,8 +37,8 @@ include {COPY_BED} from '../processes/copy_bed.nf'
 include {MAP_1D} from '../processes/map_1d.nf'
 include {SPLIT_READS} from  '../processes/split_reads.nf'
 include {DETECT_UMI_FASTA; DETECT_UMI_FASTA as DETECT_UMI_CONSENSUS_FASTA} from '../processes/detect_umi_fasta.nf'
-include {CLUSTER} from '../processes/cluster.nf'
-include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
+include {CLUSTER, CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
+include {REFORMAT_FILTER_CLUSTER, REFORMAT_FILTER_CLUSTER as REFORMAT_FILTER_CLUSTER_CONSENSUS} from '../processes/reformat_filter_cluster.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
 include {MAP_CONSENSUS; MAP_CONSENSUS as MAP_FINAL_CONSENSUS} from '../processes/map_consensus.nf'
 //include {DETECT_UMI_CONSENSUS_FASTA} from '../processes/detect_umi_consensus_fasta.nf'
@@ -50,11 +51,13 @@ workflow UMI_PIPELINE {
         COPY_BED( bed )
         MAP_1D( fastq_files_ch, reference )
         SPLIT_READS( MAP_1D.out.bam_1d, COPY_BED.out.bed, umi_filter_reads )
-        DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastq, consensus, umi_extract )
-        CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta )
+        DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastq, raw, umi_extract )
+        CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta, raw )
         REFORMAT_FILTER_CLUSTER( CLUSTER.out.consensus_fasta, CLUSTER.out.vsearch_dir, umi_parse_clusters)
         POLISH_CLUSTER( REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fasta )
         MAP_CONSENSUS( POLISH_CLUSTER.out.consensus_fasta, reference )
+        CLUSTER_CONSENSUS( DETECT_UMI_CONSENSUS_FASTA.out.umi_extract_fasta )
+
         DETECT_UMI_CONSENSUS_FASTA( POLISH_CLUSTER.out.consensus_fasta, final_consensus, umi_extract )
         MAP_FINAL_CONSENSUS( DETECT_UMI_CONSENSUS_FASTA.out.umi_extract_fasta, reference )
 

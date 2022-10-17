@@ -3,7 +3,7 @@ fasta_filename = "detected_umis.fasta"
 process DETECT_UMI_FASTA {
 
     publishDir "${params.output}/${sample}/stats", pattern: "*.tsv", mode: 'copy'
-    publishDir "${params.output}/${sample}/fasta_umi", pattern: "*${fasta_filename}", mode: 'copy'
+    publishDir "${params.output}/${sample}/fasta_umi/${type}", pattern: "*${fasta_filename}", mode: 'copy'
 
     input:
         tuple val( sample ), val( target ), path ( fasta )
@@ -16,6 +16,6 @@ process DETECT_UMI_FASTA {
         python ${umi_extract_python} --fwd-context ${params.fwd_universal_primer} \
         --rev-context ${params.rev_universal_primer} --fwd-umi ${params.fwd_umi} \
         --rev-umi ${params.rev_umi} --max-error ${params.umi_errors} ${fasta} \
-        -o ${type}_${fasta_filename} --tsv ${type}_${fasta_filename}.tsv
+        -o ${fasta_filename} --tsv ${fasta_filename}.tsv
     """
 }

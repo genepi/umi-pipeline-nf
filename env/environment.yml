@@ -1,8 +1,8 @@
-name: umi-pipeline-nf
+name: umi-pipeline-nf_2
 channels:
-  - defaults
   - conda-forge
   - bioconda
+  - defaults
 dependencies:
   - python>=3.6
   - snakemake-minimal
