@@ -29,6 +29,10 @@ if(params.help){
 
               --subsampling_readnumber        Number of reads after subsampling [default: 100000]
 
+         Options: VARIANT_CALLING
+              --call_variants                 flag to enable variant calling [default: false]
+
+              --variant_caller [STR]          Variant caller [lofreq | mutserve | freebayes ] [default: null]
 
          Options: ADVANCED
               --umi_errors                    Max differences between UMI in read and UMI pattern [default: 3]
