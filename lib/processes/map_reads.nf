@@ -1,4 +1,4 @@
-process MAP_CONSENSUS {
+process MAP_READS {
 
     publishDir "${params.output}/${sample}/align/${type}", mode: 'copy'
 

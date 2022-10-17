@@ -36,8 +36,7 @@ final_consensus = "final"
 // INCLUDES # here you must give the relevant process files from the lib directory 
 include {COPY_BED} from '../processes/copy_bed.nf'
 include {MERGE_FASTQ} from "../processes/merge_input.nf"
-//include {MAP_1D} from '../processes/map_1d.nf'
-include {MAP_CONSENSUS as MAP_1D; MAP_CONSENSUS; MAP_CONSENSUS as MAP_FINAL_CONSENSUS} from '../processes/map_consensus.nf'
+include {MAP_READS; MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS} from '../processes/map_reads.nf'
 include {SPLIT_READS} from  '../processes/split_reads.nf'
 include {DETECT_UMI_FASTA; DETECT_UMI_FASTA as DETECT_UMI_CONSENSUS_FASTA} from '../processes/detect_umi_fasta.nf'
 include {CLUSTER; CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
@@ -52,8 +51,8 @@ workflow UMI_PIPELINE {
 
         COPY_BED( bed )
         MERGE_FASTQ (fastq_files_ch )
-        MAP_1D( MERGE_FASTQ.out.merged_fastq, raw, reference )
-        SPLIT_READS( MAP_1D.out.bam_consensus, COPY_BED.out.bed, raw, umi_filter_reads )
+        MAP_READS( MERGE_FASTQ.out.merged_fastq, raw, reference )
+        SPLIT_READS( MAP_READS.out.bam_consensus, COPY_BED.out.bed, raw, umi_filter_reads )
         DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastq, raw, umi_extract )
         CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta, raw )
         REFORMAT_FILTER_CLUSTER( CLUSTER.out.consensus_fasta, consensus, CLUSTER.out.vsearch_dir, umi_parse_clusters)
