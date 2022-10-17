@@ -22,6 +22,14 @@ if(params.help){
 
               --threads                       Number of maximum threads to use [default: availableProcessors -1]
 
+         Options: SUBSAMPLING
+              --subsampling                   flag to enable subsampling [default: false]
+
+              --subsampling_seed              Seed to produce pseudorandom numbers [default: 11]
+
+              --subsampling_readnumber        Number of reads after subsampling [default: 100000]
+
+
          Options: ADVANCED
               --umi_errors                    Max differences between UMI in read and UMI pattern [default: 3]
 
