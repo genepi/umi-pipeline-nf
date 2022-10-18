@@ -80,7 +80,7 @@ workflow UMI_PIPELINE {
             if( params.variant_caller == "lofreq" ){
                 LOFREQ( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference )
             }else if( params.variant_caller == "mutserve"){
-                MUTSERVE( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference )
+                MUTSERVE( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, COPY_BED.out.bed, reference )
             }else if( params.variant_caller == "freebayes"){
                 FREEBAYES( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference )
             }else{

@@ -3,12 +3,16 @@ process MUTSERVE {
   input:
     tuple val( sample ), val( target ), path( bam ), path( bai )
     val( type )
+    path bed
     path reference
   output:
-        path "${type}.txt", emit: variants
+    path "${type}.txt", emit: variants
     path "${type}_raw.txt", emit: variants_raw
   script:
   """
-    mutserve call --output ${type}.vcf --write-raw --reference ${reference} --deletions --contig-name ${target}
+    mutserve call --output ${type}.vcf --write-raw --reference ${reference} --deletions --contig-name \$(awk '{ print \$1 }' ${bed}) ${bam}
   """
 }
+
+
+
