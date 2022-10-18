@@ -23,7 +23,7 @@ umi_reformat_consensus = file( "${projectDir}/bin/reformat_consensus.py", checkI
 // STAGE CHANNELS
 fastq_files_ch = Channel.fromPath("${params.input}/*", type: 'dir')
 
-// file_prefixes
+// subdirectory_and_file_prefixes
 raw = "raw"
 consensus = "consensus"
 final_consensus = "final"
@@ -44,6 +44,9 @@ include {CLUSTER; CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
 include {REFORMAT_CONSENSUS_CLUSTER} from '../processes/reformat_consensus_cluster.nf'
+include {LOFREQ} from '../processes/variant_calling/lofreq.nf'
+include {MUTSERVE} from '../processes/variant_calling/mutserve.nf'
+include {FREEBAYES} from '../processes/variant_calling/freebayes.nf'
 
 // SUB-WORKFLOWS
 workflow UMI_PIPELINE {
@@ -73,7 +76,18 @@ workflow UMI_PIPELINE {
         REFORMAT_CONSENSUS_CLUSTER( CLUSTER_CONSENSUS.out.consensus_fasta, final_consensus, umi_reformat_consensus )
         MAP_FINAL_CONSENSUS( REFORMAT_CONSENSUS_CLUSTER.out.consensus_fasta, final_consensus, reference )
         
-
+        if( params.call_variants ){
+            if( params.variant_caller == "lofreq" ){
+                LOFREQ( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference )
+            }else if( params.variant_caller == "mutserve"){
+                MUTSERVE( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, COPY_BED.out.bed, reference )
+            }else if( params.variant_caller == "freebayes"){
+                FREEBAYES( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference )
+            }else{
+                exit 1, "${params.variant_caller} is not a valid option. \nPossible variant caller are <lofreq/mutserve/freebayes>"
+            
+            }
+        }
 }
 
 
