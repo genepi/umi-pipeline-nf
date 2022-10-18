@@ -5,7 +5,8 @@ process MUTSERVE {
     val( type )
     path reference
   output:
-    path "${type}.vcf", emit: variants
+        path "${type}.txt", emit: variants
+    path "${type}_raw.txt", emit: variants_raw
   script:
   """
     mutserve call --output ${type}.vcf --write-raw --reference ${reference} --deletions --contig-name ${target}

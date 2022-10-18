@@ -18,6 +18,8 @@ dependencies:
   - vsearch
   - varscan
   - medaka
+  - openjdk=11.0.9
+  - unzip
   - pip
   - pip:
     - catfishq
@@ -27,4 +29,4 @@ dependencies:
     - pandas
     - seaborn
     - edlib
-# removed all dependencies from template pipeline
+
