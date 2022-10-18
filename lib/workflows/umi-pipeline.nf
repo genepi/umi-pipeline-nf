@@ -23,7 +23,7 @@ umi_reformat_consensus = file( "${projectDir}/bin/reformat_consensus.py", checkI
 // STAGE CHANNELS
 fastq_files_ch = Channel.fromPath("${params.input}/*", type: 'dir')
 
-// file_prefixes
+// subdirectory_and_file_prefixes
 raw = "raw"
 consensus = "consensus"
 final_consensus = "final"
@@ -80,9 +80,9 @@ workflow UMI_PIPELINE {
             if( params.variant_caller == "lofreq" ){
                 LOFREQ( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference )
             }else if( params.variant_caller == "mutserve"){
-                MUTSERVE
+                MUTSERVE( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference )
             }else if( params.variant_caller == "freebayes"){
-
+                FREEBAYES( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference )
             }else{
                 exit 1, "${params.variant_caller} is not a valid option. \nPossible variant caller are <lofreq/mutserve/freebayes>"
             

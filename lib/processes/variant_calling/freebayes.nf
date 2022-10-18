@@ -8,6 +8,13 @@ process FREEBAYES {
     path "${type}.vcf", emit: variants
   script:
   """
-      mutserve call --output ${type}.vcf --write-raw --reference ${reference} --deletions --contig-name ${target}
+    freebayes -f ${reference} -p 80 ${bam} | vcfallelicprimitives -kg > ${type}.vcf
+  
   """
 }
+
+//freebayes -f ${reference} ${bam} | vcfallelicprimitives -kg > ${type}.vcf
+
+/*freebayes -f ${reference} --haplotype-length 0 --min-alternate-count 1 \
+      --min-alternate-fraction 0 --pooled-continuous --report-monomorphic ${bam} > ${type}.vcf
+*/    
