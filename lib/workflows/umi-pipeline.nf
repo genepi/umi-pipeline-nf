@@ -45,6 +45,8 @@ include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
 include {REFORMAT_CONSENSUS_CLUSTER} from '../processes/reformat_consensus_cluster.nf'
 include {LOFREQ} from '../processes/variant_calling/lofreq.nf'
+include {MUTSERVE} from '../processes/variant_calling/mutserve.nf'
+include {FREEBAYES} from '../processes/variant_calling/freebayes.nf'
 
 // SUB-WORKFLOWS
 workflow UMI_PIPELINE {
@@ -78,7 +80,7 @@ workflow UMI_PIPELINE {
             if( params.variant_caller == "lofreq" ){
                 LOFREQ( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference )
             }else if( params.variant_caller == "mutserve"){
-
+                MUTSERVE
             }else if( params.variant_caller == "freebayes"){
 
             }else{

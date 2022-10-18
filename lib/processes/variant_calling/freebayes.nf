@@ -1,4 +1,4 @@
-process MUTSERVE {
+process FREEBAYES {
     publishDir "${params.output}/${params.variant_caller}/${sample}/", mode: 'copy'
   input:
     tuple val( sample ), val( target ), path( bam ), path( bai )
@@ -8,6 +8,6 @@ process MUTSERVE {
     path "${type}.vcf", emit: variants
   script:
   """
-    mutserve call --output ${type}.vcf --write-raw --reference ${reference} --deletions --contig-name ${target}
+      mutserve call --output ${type}.vcf --write-raw --reference ${reference} --deletions --contig-name ${target}
   """
 }
