@@ -1,4 +1,4 @@
-# ecSeq-DNAseq Output
+# umi-pipeline-nf Output
 This document describes the output produced by the pipeline.
 
 ## Pipeline overview
