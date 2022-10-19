@@ -36,4 +36,4 @@ nextflow run AmstlerStephan/umi-pipeline-nf -profile custom,docker
 
 ### Credits
 
-These scripts were originally written for use by [GENEPI](https://genepi.i-med.ac.at/), by You ([@StephanAmstler]).
+These scripts were originally written for use by [GENEPI](https://genepi.i-med.ac.at/), by ([@StephanAmstler](https://github.com/AmstlerStephan)).
