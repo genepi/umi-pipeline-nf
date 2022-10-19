@@ -9,7 +9,7 @@ process SUBSAMPLING {
     path( "subsampling_${subsample}.tsv" )
   script:
   """
-    echo -e "seed\tsubsampling_readnumber\n${params.seed}\t${params.subsampling_readnumber}" > subsampling_${subsample}.tsv
+    echo -e "seed\tsubsampling_readnumber\n${params.subsampling_seed}\t${params.subsampling_readnumber}" > subsampling_${subsample}.tsv
     seqtk sample -s ${params.subsampling_seed} ${merged_fastq} ${params.subsampling_readnumber} > ${subsample}.fastq 
   """
 }
