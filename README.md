@@ -25,10 +25,10 @@ nextflow run AmstlerStephan/umi-pipeline-nf -profile test,docker
 ```
 
 3. Start running your own analysis!
-3.1 Adapt the config/custom.config with links to your data (relative and absolute paths possible)
+3.1 Download and adapt the config/custom.config with paths to your data (relative and absolute paths possible)
 
 ```bash
-nextflow run AmstlerStephan/umi-pipeline-nf -profile custom,docker 
+nextflow run AmstlerStephan/umi-pipeline-nf -r dev -c <custom.config> -profile docker 
 ```
 
 > See the [usage documentation](docs/usage.md) for all of the available options when running the pipeline.
