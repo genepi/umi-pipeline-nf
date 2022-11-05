@@ -16,6 +16,8 @@ if(params.help){
 
               --reference [path/to/ref.fa]    [REQUIRED] Path to the reference genome in fasta format
 
+              --reference_fai [path/to/fai] [REQUIRED] Path to the reference index file
+
               --bed [path/to/data.bed]        [REQUIRED] Path to the bed file
 
               --output [STR]                  A string that can be given to name the output directory [default: "umi-pipeline-nf_results"]

@@ -4,6 +4,7 @@ process FREEBAYES {
     tuple val( sample ), val( target ), path( bam ), path( bai )
     val( type )
     path reference
+    path reference_fai
   output:
     path "${type}.vcf", emit: variants
   script:

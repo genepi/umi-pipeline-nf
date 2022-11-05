@@ -1,7 +1,7 @@
 nextflow.enable.dsl = 2
 
 requiredParams = [
-    'input', 'reference', 'bed'
+    'input', 'reference', 'reference_fai', 'bed'
 ]
 
 for (param in requiredParams) {
@@ -13,6 +13,7 @@ for (param in requiredParams) {
 // DEFINE PATHS
 bed = file("${params.bed}", checkIfExists: true)
 reference = file("${params.reference}", checkIfExists: true)
+reference_fai = file( "${params.reference_fai}", checkIfExists: true)
 
 // python scripts
 umi_filter_reads = file( "${projectDir}/bin/filter_reads.py", checkIfExists: true)
@@ -85,11 +86,11 @@ workflow UMI_PIPELINE {
         
         if( params.call_variants ){
             if( params.variant_caller == "lofreq" ){
-                LOFREQ( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference )
+                LOFREQ( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
             }else if( params.variant_caller == "mutserve"){
-                MUTSERVE( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, COPY_BED.out.bed, reference )
+                MUTSERVE( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, COPY_BED.out.bed, reference, reference_fai )
             }else if( params.variant_caller == "freebayes"){
-                FREEBAYES( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference )
+                FREEBAYES( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
             }else{
                 exit 1, "${params.variant_caller} is not a valid option. \nPossible variant caller are <lofreq/mutserve/freebayes>"
             
