@@ -16,7 +16,7 @@ if(params.help){
 
               --reference [path/to/ref.fa]    [REQUIRED] Path to the reference genome in fasta format
 
-              --reference_fai [path/to/fai] [REQUIRED] Path to the reference index file
+              --reference_fai [path/to/fai]   [REQUIRED] Path to the reference index file
 
               --bed [path/to/data.bed]        [REQUIRED] Path to the bed file
 
@@ -71,13 +71,8 @@ if(params.help){
               --debug                         Run the pipeline in debug mode    
 
          Example: 
-              nextflow run umi-pipeline-nf \
-              --input /path/to/input/dir --reference /path/to/genome.fa \
-              --bed [path/to/data.bed] --output [STR]
-
-              nextflow run umi-pipeline-nf \
-              --project test --input data/example_egfr_single_cluster.fastq \
-              --reference data/example_egfr_reference.fasta --bed data/example_egfr_amplicon.bed
+              nextflow run AmstlerStephan/umi-pipeline-nf -profile test,docker
+              nextflow run AmstlerStephan/umi-pipeline-nf -r main -c <custom.config> -profile docker 
 
     """
     ["bash", "${baseDir}/bin/clean.sh", "${workflow.sessionId}"].execute()
