@@ -21,6 +21,7 @@ umi_parse_clusters = file( "${projectDir}/bin/parse_clusters.py", checkIfExists:
 umi_reformat_consensus = file( "${projectDir}/bin/reformat_consensus.py", checkIfExists: true )
 
 // STAGE CHANNELS
+// Remove barcode01 and uncalssified from the input fastq folder
 fastq_files_ch = Channel.fromPath("${params.input}/*", type: 'dir')
     .filter( ~/.*barcode.*[^(01)]/ )
 
