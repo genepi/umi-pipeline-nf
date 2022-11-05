@@ -69,7 +69,7 @@ workflow UMI_PIPELINE {
             .map { sample, target, fastq_file -> [ sample, target, fastq_file ] }
             .filter{ sample, target, fastq_file -> fastq_file.countFastq() > params.min_reads_per_barcode }
 
-        MAP_READS( merged_fastq, raw, reference )
+        MAP_READS( merged_filtered_fastq, raw, reference )
         SPLIT_READS( MAP_READS.out.bam_consensus, COPY_BED.out.bed, raw, umi_filter_reads )
         DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastq, raw, umi_extract )
         CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta, raw )
