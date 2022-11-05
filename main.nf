@@ -20,10 +20,15 @@ if(params.help){
 
               --bed [path/to/data.bed]        [REQUIRED] Path to the bed file
 
-              --output [STR]                  A string that can be given to name the output directory [default: "umi-pipeline-nf_results"]
+              --output [STR]                  [REQUIRED] A string that can be given to name the output directory
 
               --threads                       Number of maximum threads to use [default: availableProcessors -1]
+          
+          Options: READ FILTERING
+              --min_read_length               flag to enable subsampling [default: 0]
 
+              --min_qscore                    Seed to produce pseudorandom numbers [default: 0]
+         
          Options: SUBSAMPLING
               --subsampling                   flag to enable subsampling [default: false]
 
@@ -34,7 +39,7 @@ if(params.help){
          Options: VARIANT_CALLING
               --call_variants                 flag to enable variant calling [default: false]
 
-              --variant_caller [STR]          Variant caller [lofreq | mutserve | freebayes ] [default: null]
+              --variant_caller [STR]          [REQUIRED if call_variants is set] Variant caller [lofreq | mutserve | freebayes ]
 
          Options: ADVANCED
               --min_reads_per_barcode         Minimal number of fastq reads for each barcode [default: 100]
