@@ -4,7 +4,7 @@ This document describes the output produced by the pipeline.
 ## Pipeline overview
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-[<img width="400" align="centered" src="docs/images/Umi_pipeline_without_output_Flowchart.jpg">](https://www.ecseq.com)
+[<img width="400" align="centered" src="docs/images/Umi_pipeline_without_output_Flowchart.png">](https://www.ecseq.com)
 
 * [Read Trimming](#read-trimming) - read trimming with cutadapt
 * [Read Alignment](#read-alignment) - mapping trimmed reads with bowtie2
