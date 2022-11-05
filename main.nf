@@ -71,7 +71,7 @@ if(params.help){
               --debug                         Run the pipeline in debug mode    
 
          Example: 
-              nextflow run AmstlerStephan/umi-pipeline-nf -profile test,docker
+              nextflow run AmstlerStephan/umi-pipeline-nf -r main -profile test,docker
               nextflow run AmstlerStephan/umi-pipeline-nf -r main -c <custom.config> -profile docker 
 
     """
