@@ -122,7 +122,9 @@ workflow.onComplete {
     log.info "         Error report : ${workflow.errorReport ?: "-"}"
     log.info ""
 
+    
     // run a small clean-up script to remove "work" directory after successful completion 
     if (!params.debug && workflow.success) {
         ["bash", "${baseDir}/bin/clean.sh", "${workflow.sessionId}"].execute() }
+    
 }

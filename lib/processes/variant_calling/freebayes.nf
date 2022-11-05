@@ -8,7 +8,7 @@ process FREEBAYES {
     path "${type}.vcf", emit: variants
   script:
   """
-    freebayes -f ${reference} -p 80 ${bam} | vcfallelicprimitives -kg > ${type}.vcf
+    freebayes -f ${reference} ${bam} | vcfallelicprimitives -kg > ${type}.vcf
   
   """
 }
