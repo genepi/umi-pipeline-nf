@@ -5,6 +5,7 @@ process MUTSERVE {
     val( type )
     path bed
     path reference
+    path reference_fai
   output:
     path "${type}.txt", emit: variants
     path "${type}_raw.txt", emit: variants_raw
