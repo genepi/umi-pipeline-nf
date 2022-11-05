@@ -22,6 +22,7 @@ umi_reformat_consensus = file( "${projectDir}/bin/reformat_consensus.py", checkI
 
 // STAGE CHANNELS
 fastq_files_ch = Channel.fromPath("${params.input}/*", type: 'dir')
+    .filter( ~/.*barcode.*[^(01)]/ )
 
 // subdirectory_and_file_prefixes
 raw = "raw"
