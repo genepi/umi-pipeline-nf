@@ -35,6 +35,8 @@ if(params.help){
               --variant_caller [STR]          Variant caller [lofreq | mutserve | freebayes ] [default: null]
 
          Options: ADVANCED
+              --min_reads_per_barcode         Minimal number of fastq reads for each barcode [default: 100]
+
               --umi_errors                    Max differences between UMI in read and UMI pattern [default: 3]
 
               --min_reads_per_cluster         Min number of reads required for a consensus read [default: 20]
