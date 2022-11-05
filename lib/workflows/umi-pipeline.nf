@@ -1,7 +1,7 @@
 nextflow.enable.dsl = 2
 
 requiredParams = [
-    'input', 'reference', 'reference_fai', 'bed'
+    'input', 'reference', 'reference_fai', 'bed', 'output'
 ]
 
 for (param in requiredParams) {
