@@ -9,7 +9,7 @@ if(params.help){
 
 
          Usage: 
-              nextflow run umi-pipeline-nf [OPTIONS]...
+              nextflow run AmstlerStephan/umi-pipeline-nf [OPTIONS]...
 
          Options: GENERAL
               --input [path/to/input/dir]     [REQUIRED] Input directory containing (zipped) FASTQ files
