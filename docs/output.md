@@ -4,40 +4,56 @@ This document describes the output produced by the pipeline.
 ## Pipeline overview
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-[![Workflow Flow Chart](https://mermaid.ink/img/pako:eNqFVl2PmkAU_SuGJzfZNjIzIvrQhFXcmvhBBR-2tZlMYVxNBSxg283u_veOChfuuJvyxJx75tx75g43PBthGkljYGz26Z9wK7KiFYzWSUs9h067PdyKJJH7j5ssjT1RbG9uypjZbrdgQb6tZhPuTTx3Opm7g-HCe-B37uh7GaY4PHOX9y4fO37wpWIwzPBXd74z89T7fcXoNvNZzUWvubC1VI7Hl64z8iuZfpNsdtDK1IpQ-QO82yRoA0UrhlZdLDZyA3cY8BN2Mu6AIrJiIi-mZmY4XfmBu4StyAtBXghuj9afpTteLGdOwMeTqRLkmjBBvgjyRTRf3mI68T9fKSBXBLkiNlr1rxs2XMx9d-6v4Ngp8kaRN4paQum7xw6quAEU2aPomlHrzQa8USBySJFDitrEkBVmvtOYuljtZBmyy1CnGLs-y_Fk7kyvC2bIJ0PtYj0sM1667p3z4Nabkb9O68OHTy8bkRe_-Ga3lzkPty_KdnVLz-EfMlIYqZrewEyzOqcTqMSrJGdOLLNHGfGzuiLbzaCaCdU4OHOLp4NscHpnMJMbmckkbEbsy27I3G9uB9S8GDs8Fds0OTkrZMYzKaIcscxSjOhAF6YEkgf4YvAY77j8W2QiLPglFSJ1SzFbByyYGEgdeKVHQv4HmH0YIE0l4BET6jyILJc83B9zdRR5XW7NJWWSrg5QGCYoCfBKW8TSAagO-axh-6rLdax_0aAdTZRSmCRN0Rom77emJpX3lVo6wGCWIHXgWeVFNzWA2jrQgxHSVIKNrAN1qgNIs1gUPEyTXCb5MUfE8k4y-LgIEgSYXp1mHSu_OdaDEYI0ALauNSB2aeLvcHOeFKeQbdwa6iOPxS5S_yDPJ-LaKLYylmtjoF4jkf1cG-vkVfHEsUj9pyQ0Bhuxz-WtcTxEopCjnXjMRAyojHZFms0ufzXnn5tb4yCSr2mqOEV2lK__AMtMa8c?type=png)](https://mermaid-js.github.io/mermaid-live-editor/edit#pako:eNqFVl2PmkAU_SuGJzfZNjIzIvrQhFXcmvhBBR-2tZlMYVxNBSxg283u_veOChfuuJvyxJx75tx75g43PBthGkljYGz26Z9wK7KiFYzWSUs9h067PdyKJJH7j5ssjT1RbG9uypjZbrdgQb6tZhPuTTx3Opm7g-HCe-B37uh7GaY4PHOX9y4fO37wpWIwzPBXd74z89T7fcXoNvNZzUWvubC1VI7Hl64z8iuZfpNsdtDK1IpQ-QO82yRoA0UrhlZdLDZyA3cY8BN2Mu6AIrJiIi-mZmY4XfmBu4StyAtBXghuj9afpTteLGdOwMeTqRLkmjBBvgjyRTRf3mI68T9fKSBXBLkiNlr1rxs2XMx9d-6v4Ngp8kaRN4paQum7xw6quAEU2aPomlHrzQa8USBySJFDitrEkBVmvtOYuljtZBmyy1CnGLs-y_Fk7kyvC2bIJ0PtYj0sM1667p3z4Nabkb9O68OHTy8bkRe_-Ga3lzkPty_KdnVLz-EfMlIYqZrewEyzOqcTqMSrJGdOLLNHGfGzuiLbzaCaCdU4OHOLp4NscHpnMJMbmckkbEbsy27I3G9uB9S8GDs8Fds0OTkrZMYzKaIcscxSjOhAF6YEkgf4YvAY77j8W2QiLPglFSJ1SzFbByyYGEgdeKVHQv4HmH0YIE0l4BET6jyILJc83B9zdRR5XW7NJWWSrg5QGCYoCfBKW8TSAagO-axh-6rLdax_0aAdTZRSmCRN0Rom77emJpX3lVo6wGCWIHXgWeVFNzWA2jrQgxHSVIKNrAN1qgNIs1gUPEyTXCb5MUfE8k4y-LgIEgSYXp1mHSu_OdaDEYI0ALauNSB2aeLvcHOeFKeQbdwa6iOPxS5S_yDPJ-LaKLYylmtjoF4jkf1cG-vkVfHEsUj9pyQ0Bhuxz-WtcTxEopCjnXjMRAyojHZFms0ufzXnn5tb4yCSr2mqOEV2lK__AMtMa8c)
+[![Workflow](https://mermaid.ink/img/pako:eNqlWPFv2jgU_lci3y-txFWBwcbQtVLahh0SlB6BSdtyitzEKdGFJBcn21jT_u334qyE2A6GW_ghxvb3vef37M88npAbewSNkB_G39w1TjNteW1HdqTBQ_OHxxQnay2nJHWCKMkz7YuNNBv9XU0on3rMyc5s9IcfR5lGgx_ksqdfaSsY1SblqI3OaxDNtiFpQDU_CMMRzdL4HzL6Tdf1TtX-_VvgZeuRnnyXm6x7qw4f0-xfJ8GUnp013Xl7pdWDjheksJLz83Oe4IF4EiT0tkNS4pOURC6RAHdjPJxEnla1uGDjCIdbShyKNwkEqRFw4CBuFsQRy9KrF00En4YupMGoZmgWmyFJBU9xSjp47MvLy14u9tfIpak1QynBHuVjXbeSNHYJ5NCNk22Zry88S_Pbzfz-k3Nt3ja27SvHhqSPpHJHoJmZiw-mMzas5V9SLKSMrTmIHgWstbq2jNn9dHL3QW4XJ9UyRavGvbMwjVtLbhPMZS1IC8wtD2A9ksHucfJNwBaMBYJbc2neLJ3VbMJWbUhZ3DCnGUkF8M10ZS3NhRQDpyBONxjyHoSAbeVYmOP5YmYsnfFkClzOIc4kDgO6bqW6n08n1p8HGcocuHFESURzeR5u5neWeWetlPHc0agju-NUx_iAdz_XpfBwF_faP2Xoa_9UsfMDOPmKCI4nd8ZU4eVXnAY4AidxWJ4lZ5NnoPBfiUi4Wlrm4qN5FIufEvKAt0T0a7wwzWvjk3mcN2EMTKI4TOdA09SFugUx8YJSp_c14omn2Buz0bMMzfkiMHDjDRbJxaZdXl4V8C4ECW0XVxGzJ0Ht1piiMmwl6XDwCS1ksntQk0sGeTQVwWZAiVAfVHHmL7PuVeYLUa9V7v4_itehptuyQEsGGyBe5NXXQAP-Ux5aJakxuUXWj9b_BllTz1V634A2hPwkZLuEnyL3sggeckiYIo-qINqnCLwQIE6tj5J07vjxcqNWLEZQvAp6oVL8oxl34l4o5f9ozkroi8P3QLvi7X7pMxWpf_ezHVKo9urJHK3pPIlJnYhfopMk4Zf4-BycHLU9MYUCrGrsl5NQu_DlDD9JmFJN4MtPtqeEOoi7HDWeqfygDoILZIMDD-rypxJno2xNNlC3jaDpER_nIdTTdvQMU3GexdY2ctHIxyElHZQnHs7IbYChnNzsehMcodET-o5G3W7vYqDrg8Gw977_Bl7dDtpC98VwMNT7erfffzd4M-wOnjvoRxwDg37xvq_3u-8GPejt9d8Ohh1E4CDF6az674D9hcBMfGaALM3J839DY5zs?type=png)](https://mermaid-js.github.io/mermaid-live-editor/edit#pako:eNqlWPFv2jgU_lci3y-txFWBwcbQtVLahh0SlB6BSdtyitzEKdGFJBcn21jT_u334qyE2A6GW_ghxvb3vef37M88npAbewSNkB_G39w1TjNteW1HdqTBQ_OHxxQnay2nJHWCKMkz7YuNNBv9XU0on3rMyc5s9IcfR5lGgx_ksqdfaSsY1SblqI3OaxDNtiFpQDU_CMMRzdL4HzL6Tdf1TtX-_VvgZeuRnnyXm6x7qw4f0-xfJ8GUnp013Xl7pdWDjheksJLz83Oe4IF4EiT0tkNS4pOURC6RAHdjPJxEnla1uGDjCIdbShyKNwkEqRFw4CBuFsQRy9KrF00En4YupMGoZmgWmyFJBU9xSjp47MvLy14u9tfIpak1QynBHuVjXbeSNHYJ5NCNk22Zry88S_Pbzfz-k3Nt3ja27SvHhqSPpHJHoJmZiw-mMzas5V9SLKSMrTmIHgWstbq2jNn9dHL3QW4XJ9UyRavGvbMwjVtLbhPMZS1IC8wtD2A9ksHucfJNwBaMBYJbc2neLJ3VbMJWbUhZ3DCnGUkF8M10ZS3NhRQDpyBONxjyHoSAbeVYmOP5YmYsnfFkClzOIc4kDgO6bqW6n08n1p8HGcocuHFESURzeR5u5neWeWetlPHc0agju-NUx_iAdz_XpfBwF_faP2Xoa_9UsfMDOPmKCI4nd8ZU4eVXnAY4AidxWJ4lZ5NnoPBfiUi4Wlrm4qN5FIufEvKAt0T0a7wwzWvjk3mcN2EMTKI4TOdA09SFugUx8YJSp_c14omn2Buz0bMMzfkiMHDjDRbJxaZdXl4V8C4ECW0XVxGzJ0Ht1piiMmwl6XDwCS1ksntQk0sGeTQVwWZAiVAfVHHmL7PuVeYLUa9V7v4_itehptuyQEsGGyBe5NXXQAP-Ux5aJakxuUXWj9b_BllTz1V634A2hPwkZLuEnyL3sggeckiYIo-qINqnCLwQIE6tj5J07vjxcqNWLEZQvAp6oVL8oxl34l4o5f9ozkroi8P3QLvi7X7pMxWpf_ezHVKo9urJHK3pPIlJnYhfopMk4Zf4-BycHLU9MYUCrGrsl5NQu_DlDD9JmFJN4MtPtqeEOoi7HDWeqfygDoILZIMDD-rypxJno2xNNlC3jaDpER_nIdTTdvQMU3GexdY2ctHIxyElHZQnHs7IbYChnNzsehMcodET-o5G3W7vYqDrg8Gw977_Bl7dDtpC98VwMNT7erfffzd4M-wOnjvoRxwDg37xvq_3u-8GPejt9d8Ohh1E4CDF6az674D9hcBMfGaALM3J839DY5zs)
 
-* [Read Trimming](#read-trimming) - read trimming with cutadapt
-* [Read Alignment](#read-alignment) - mapping trimmed reads with bowtie2
-* [Quality Control](#quality-control) - generating FastQC and bamQC reports
+
+* [Merge and Filter Reads](#merge-and-filter-reads) - Merge and filter input fastq files
+* [Subsample Reads](#subsampling) - Subsample merged and filtered reads
+* [Align Reads](#align-reads) - Align all reads to the reference genome
+* [Separate Amplicons](#separate-amplicons) - Separate all reads into amplicons
+* [Extract UMI](#extract-umi-sequences) - Extract UMI sequences of all reads
+* [Cluster UMI](#cluster-umi-sequences) - Cluster UMI sequences per amplicon  
+* [Extract Consensus Reads](#extract-conensus-sequences) - Extract consensus reads of UMI clusters  
+* [Align Consensus Reads](#align-consensus-reads) - Align all consensus reads to the reference genome 
+* [Call Variants](#call-variants) - Perform a variant calling of consensus reads (optional)
+* [Haplotyping](#haplotyping) - Perform haplotyping of consensus reads (optional)
 * [Pipeline Info](#pipeline-info) - reports from nextflow about the pipeline run
 
-## Read Trimming
-Input reads will be trimmed with cutadapt, and output to a new directory if specified by the user.
+## Merge and Filter Reads
+Input fastq files will be merged and filtered - if specified by user - using catfishq.
 
-**Output directory: `./trimming`**
+## Subsampling
+If specified by user the merged and filtered reads will be subsampled using seqtk sample.
+**Output directory: `<output>/<barcodeXX>/subsampling/`**
 
+Information regarding subsampling will be saved in a tsv file 
+**Output directory: `<output>/<barcodeXX>/stats/`**
 
-## Read Alignment
-Depending on which options are specified to the pipeline, trimmed reads will be aligned with bowtie2.
+## Align Reads
+Merged - filtered and subsampled - reads will be aligned to the provided reference genome using minimap2.
+**Output directory: `<output>/<barcodeXX>/align/raw/`**
 
-**Output directory: `./mapping`**
+## Separate Amplicons
 
+## Extract UMI Sequences
 
-## Quality Control
-Following trimming, the pipeline will generate FastQC reports for each new set of reads. Following alignment, the pipeline will generate bamQC reports for each BAM file.
+## Cluster UMI Sequences
 
-**Output directory: `./trimming`**
-**Output directory: `./mapping/<sample>`**
+## Extract Consensus Sequences
 
+## Align Consensus Reads
+
+## Call Variants
+
+## Haplotyping
 
 ## Pipeline Info
 Nextflow has several built-in reporting tools that give information about the pipeline run.
 
-**Output directory: `./`**
+**Output directory: `<output>/nextflow_stats/`**
 
 * `dag.svg`
-  * DAG graph giving a diagrammatic view of the pipeline run.
-  * NB: If [Graphviz](http://www.graphviz.org/) was not installed when running the pipeline, this file will be in [DOT format](http://www.graphviz.org/content/dot-language) instead of SVG.
+  * MMD file, which can be visualized using [Mermaid](https://mermaid-js.github.io/mermaid/#/)
 * `report.html`
   * Nextflow report describing parameters, computational resource usage and task bash commands used.
 * `timeline.html`

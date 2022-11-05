@@ -1,7 +1,7 @@
 nextflow.enable.dsl = 2
 
 requiredParams = [
-    'input', 'reference', 'bed'
+    'input', 'reference', 'reference_fai', 'bed', 'output'
 ]
 
 for (param in requiredParams) {
@@ -13,6 +13,7 @@ for (param in requiredParams) {
 // DEFINE PATHS
 bed = file("${params.bed}", checkIfExists: true)
 reference = file("${params.reference}", checkIfExists: true)
+reference_fai = file( "${params.reference_fai}", checkIfExists: true)
 
 // python scripts
 umi_filter_reads = file( "${projectDir}/bin/filter_reads.py", checkIfExists: true)
@@ -21,8 +22,9 @@ umi_parse_clusters = file( "${projectDir}/bin/parse_clusters.py", checkIfExists:
 umi_reformat_consensus = file( "${projectDir}/bin/reformat_consensus.py", checkIfExists: true )
 
 // STAGE CHANNELS
+// Remove barcode01 and uncalssified from the input fastq folder
 fastq_files_ch = Channel.fromPath("${params.input}/*", type: 'dir')
-    .filter( ~/.*barcode.*[^(01)]/ )
+    .filter( ~/.*barcode.*[^(01)\D]/ )
 
 // subdirectory_and_file_prefixes
 raw = "raw"
@@ -84,11 +86,11 @@ workflow UMI_PIPELINE {
         
         if( params.call_variants ){
             if( params.variant_caller == "lofreq" ){
-                LOFREQ( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference )
+                LOFREQ( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
             }else if( params.variant_caller == "mutserve"){
-                MUTSERVE( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, COPY_BED.out.bed, reference )
+                MUTSERVE( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, COPY_BED.out.bed, reference, reference_fai )
             }else if( params.variant_caller == "freebayes"){
-                FREEBAYES( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference )
+                FREEBAYES( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
             }else{
                 exit 1, "${params.variant_caller} is not a valid option. \nPossible variant caller are <lofreq/mutserve/freebayes>"
             
@@ -121,7 +123,9 @@ workflow.onComplete {
     log.info "         Error report : ${workflow.errorReport ?: "-"}"
     log.info ""
 
+    
     // run a small clean-up script to remove "work" directory after successful completion 
     if (!params.debug && workflow.success) {
         ["bash", "${baseDir}/bin/clean.sh", "${workflow.sessionId}"].execute() }
+    
 }

@@ -9,19 +9,26 @@ if(params.help){
 
 
          Usage: 
-              nextflow run umi-pipeline-nf [OPTIONS]...
+              nextflow run AmstlerStephan/umi-pipeline-nf [OPTIONS]...
 
          Options: GENERAL
               --input [path/to/input/dir]     [REQUIRED] Input directory containing (zipped) FASTQ files
 
               --reference [path/to/ref.fa]    [REQUIRED] Path to the reference genome in fasta format
 
+              --reference_fai [path/to/fai]   [REQUIRED] Path to the reference index file
+
               --bed [path/to/data.bed]        [REQUIRED] Path to the bed file
 
-              --output [STR]                  A string that can be given to name the output directory [default: "umi-pipeline-nf_results"]
+              --output [STR]                  [REQUIRED] A string that can be given to name the output directory
 
               --threads                       Number of maximum threads to use [default: availableProcessors -1]
+          
+          Options: READ FILTERING
+              --min_read_length               flag to enable subsampling [default: 0]
 
+              --min_qscore                    Seed to produce pseudorandom numbers [default: 0]
+         
          Options: SUBSAMPLING
               --subsampling                   flag to enable subsampling [default: false]
 
@@ -32,7 +39,7 @@ if(params.help){
          Options: VARIANT_CALLING
               --call_variants                 flag to enable variant calling [default: false]
 
-              --variant_caller [STR]          Variant caller [lofreq | mutserve | freebayes ] [default: null]
+              --variant_caller [STR]          [REQUIRED if call_variants is set] Variant caller [lofreq | mutserve | freebayes ]
 
          Options: ADVANCED
               --min_reads_per_barcode         Minimal number of fastq reads for each barcode [default: 100]
@@ -69,13 +76,8 @@ if(params.help){
               --debug                         Run the pipeline in debug mode    
 
          Example: 
-              nextflow run umi-pipeline-nf \
-              --input /path/to/input/dir --reference /path/to/genome.fa \
-              --bed [path/to/data.bed] --output [STR]
-
-              nextflow run umi-pipeline-nf \
-              --project test --input data/example_egfr_single_cluster.fastq \
-              --reference data/example_egfr_reference.fasta --bed data/example_egfr_amplicon.bed
+              nextflow run AmstlerStephan/umi-pipeline-nf -r main -profile test,docker
+              nextflow run AmstlerStephan/umi-pipeline-nf -r main -c <custom.config> -profile docker 
 
     """
     ["bash", "${baseDir}/bin/clean.sh", "${workflow.sessionId}"].execute()
