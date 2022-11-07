@@ -69,7 +69,6 @@ workflow UMI_PIPELINE {
 
 
         merged_filtered_fastq = merged_fastq
-            .map { sample, target, fastq_file -> [ sample, target, fastq_file ] }
             .filter{ sample, target, fastq_file -> fastq_file.countFastq() > params.min_reads_per_barcode }
 
         MAP_READS( merged_filtered_fastq, raw, reference )
