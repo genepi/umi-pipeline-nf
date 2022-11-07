@@ -24,8 +24,7 @@ umi_reformat_consensus = file( "${projectDir}/bin/reformat_consensus.py", checkI
 // STAGE CHANNELS
 // Remove barcode01 and uncalssified from the input fastq folder
 fastq_files_ch = Channel.fromPath("${params.input}/*", type: 'dir')
-    .filter( ~/.*barcode\d{2}/ )
-    .view()
+    .filter( ~/.*((0[2-9])|([1-9][0-9]))/ )
 
 // subdirectory_and_file_prefixes
 raw = "raw"
