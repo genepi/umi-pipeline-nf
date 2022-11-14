@@ -137,7 +137,7 @@ def polish_cluster(
     required_rev = max_reads
 
     with pysam.FastxFile(
-        os.path.join(cluster_folder, "test{}".format(id_cluster))
+        os.path.join(cluster_folder, "cluster{}".format(id_cluster))
     ) as fh:
         for entry in fh:
             cols = entry.name.split(";")
