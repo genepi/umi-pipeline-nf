@@ -1,8 +1,7 @@
-stats_filename = "umi_filter_reads_stats.txt"
 process SPLIT_READS {
 
-    publishDir "${params.output}/${sample}/stats/${type}", mode: 'copy', pattern: "${stats_filename}"
-    publishDir "${params.output}/${sample}/fasta_filtered/${type}", mode: 'copy', pattern: "*.fastq"
+    publishDir "${params.output}/${sample}/stats/${type}", mode: 'copy', pattern: "*.tsv"
+    publishDir "${params.output}/${sample}/${params.output_format}_filtered/${type}", mode: 'copy'
 
     input:
         tuple val( sample ), val( target ), path ( bam ) , path ( bam_bai )
@@ -10,11 +9,13 @@ process SPLIT_READS {
         val( type )
         path python_filter_reads
     output:
-        path "${stats_filename}"
-        tuple val ( "${sample}" ), val( "target" ), path ( "*.fastq" ), emit: split_reads_fastq
-
+        path "*.tsv"
+        tuple val ( "${sample}" ), val( "target" ), path ( "filtered.fast*" ), emit: split_reads_fastx
+        path "*.fast*"
+    script:
+        def include_secondary_reads = "${params.include_secondary_reads}" ? "--include_secondary_reads" : ""
+        def write_report = "${params.write_reports}" ? "--tsv" : ""
     """
-        python ${python_filter_reads} --min_overlap ${params.min_overlap} -o . ${bed} ${bam} 2>&1 | \
-        tee ${stats_filename}
+        python ${python_filter_reads} --min_overlap ${params.min_overlap} $include_secondary_reads $write_report -o . ${bed} ${bam}
     """
 }
