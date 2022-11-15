@@ -12,6 +12,7 @@ process DETECT_UMI_FASTA {
     output:
         tuple val( "${sample}" ), val( "${fasta.baseName}" ), path ( "*${fasta_filename}" ), emit: umi_extract_fasta
         path "*${fasta_filename}.tsv"
+        
     """
         python ${umi_extract_python} --fwd-context ${params.fwd_universal_primer} \
         --rev-context ${params.rev_universal_primer} --fwd-umi ${params.fwd_umi} \

@@ -72,7 +72,8 @@ workflow UMI_PIPELINE {
 
         MAP_READS( merged_filtered_fastq, raw, reference )
         SPLIT_READS( MAP_READS.out.bam_consensus, COPY_BED.out.bed, raw, umi_filter_reads )
-        /*DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastx, raw, umi_extract )
+        DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastx, raw, umi_extract )
+        /*
         CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta, raw )
         REFORMAT_FILTER_CLUSTER( CLUSTER.out.consensus_fasta, consensus, CLUSTER.out.vsearch_dir, umi_parse_clusters)
         POLISH_CLUSTER( REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fasta, consensus )
