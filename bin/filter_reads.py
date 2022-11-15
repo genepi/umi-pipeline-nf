@@ -270,7 +270,7 @@ def write_tsv(n_total, n_unmapped, n_secondary, n_supplementary, n_ontarget, n_c
         )
         print(
             "count",
-            region,
+            region["name"],
             n_total,
             n_unmapped,
             n_secondary,
@@ -285,8 +285,8 @@ def write_tsv(n_total, n_unmapped, n_secondary, n_supplementary, n_ontarget, n_c
         )
         print(
             "%",
-            region,
-            "100%",
+            region["name"],
+            "100",
             unmapped_perc,
             secondary_perc,
             supplementary_perc,
