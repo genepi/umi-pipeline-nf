@@ -79,13 +79,6 @@ def parse_args(argv):
     )
 
     parser.add_argument(
-        "--smolecule_out",
-        dest="SMOLECULE_OUT",
-        default="smolecule_clusters",
-        help="Name of summary file containing all reads for medaka smolecule"
-    )
-
-    parser.add_argument(
         "--vsearch_consensus", dest="VSEARCH_CONSENSUS", required=True, type=str, help="VSearch consensus FASTX"
     )
 
@@ -113,7 +106,7 @@ def get_cluster_seq_n(cluster):
     return int(cluster.name.split(";")[-2].split("=")[1])
 
 def get_read_seq(entry):
-    return entry.name.split(";seq=")[1].split(";=qual")[0]
+    return entry.name.split(";seq=")[1].split(";")[0]
 
 def get_read_qual(entry):
     return entry.name.split(";qual=")[1]
@@ -135,21 +128,20 @@ def get_mean_qual(qual):
     return sum(map(lambda char: ord(char), qual)) / len(qual)
 
 def get_split_reads(cluster_fasta_umi):
-    reads_fwd = {}
-    reads_rev = {}
+    reads_fwd = []
+    reads_rev = []
     with pysam.FastxFile(cluster_fasta_umi) as fh:
         for entry in fh:
             strand = get_read_strand(entry)
-            read_name = get_read_name(entry)
-
+            
             if strand == "+":
-                reads_fwd[read_name] = entry
+                reads_fwd.append(entry)
             else:
-                reads_rev[read_name] = entry
+                reads_rev.append(entry)
     return reads_fwd, reads_rev
 
 def get_sorted_reads(reads):
-    return sorted(reads.items(), key=lambda pair: get_read_mean_qual(pair[1]), reverse=True)
+    return sorted(reads, key=get_read_mean_qual, reverse=True)
 
 def get_filter_parameters(n_fwd, n_rev, min_reads, max_reads, balance_strands):
     if balance_strands:
@@ -183,7 +175,6 @@ def get_filtered_reads(reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_read
         skipped_fwd = n_fwd
         skipped_rev = n_rev
         return reads_fwd, reads_rev, write_cluster, skipped_fwd, skipped_rev
-
     if n_fwd > max_fwd:
         reads_fwd = reads_fwd[:max_fwd]
         skipped_fwd = n_fwd - max_fwd
@@ -214,8 +205,8 @@ def polish_cluster(
     reads_skipped = 0
     cluster_written = 0
 
-    reads_fwd = {}
-    reads_rev = {}
+    reads_fwd = []
+    reads_rev = []
 
     cluster_fasta_umi = os.path.join(
         vsearch_folder, "cluster{}".format(cluster_id))
@@ -234,18 +225,16 @@ def polish_cluster(
     # Fail fast if no stat file must be written
     if not tsv:
         if reads_found < min_reads:
-            write_cluster = False
+            cluster_written = 0
             reads_written = 0
             reads_skipped = reads_found
-            return write_cluster, reads_found, reads_skipped, reads_written
+            return cluster_written, reads_found, reads_skipped, reads_written
     else:
         if filter == "quality":
             reads_fwd = get_sorted_reads(reads_fwd)
             reads_rev = get_sorted_reads(reads_rev)
-        else:
-            reads_fwd = list(zip(reads_fwd.keys(), reads_fwd.values()))
-            reads_rev = list(zip(reads_rev.keys(), reads_rev.values()))
 
+    #logging.info( isinstance(reads_fwd, list), isinstance(reads_rev, list), cluster_id)
     reads_fwd, reads_rev, write_cluster, reads_skipped_fwd, reads_skipped_rev = get_filtered_reads(
         reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_reads, max_reads, balance_strands)
 
@@ -286,8 +275,7 @@ def parse_cluster(cluster_fasta_umi, parsed_cluster, format):
 
 def write_smolecule(cluster_id, reads, smolecule_file, format):
     with open(smolecule_file, "a") as out_f:
-        for n, read in enumerate(reads):
-            entry = read[1]
+        for n, entry in enumerate(reads):
             seq = get_read_seq(entry)
             read_name = "{}_{}".format(cluster_id, n)
             if format == "fastq":
@@ -329,13 +317,13 @@ def parse_clusters(args):
     min_read_per_cluster = args.MIN_CLUSTER_READS
     max_read_per_cluster = args.MAX_CLUSTER_READS
     filter = args.FILTER
-    smolecule_filename = args.SMOLECULE_OUT
     format = args.OUT_FORMAT
     vsearch_folder = args.VSEARCH_FOLDER
     output = args.OUTPUT
     balance_strands = args.BAL_STRANDS
     tsv = args.TSV
 
+    smolecule_filename = "smolecule_clusters"
     stats_out_filename = "vsearch_cluster_stats"
     n_clusters = 0
     n_written = 0

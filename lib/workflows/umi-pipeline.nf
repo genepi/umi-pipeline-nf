@@ -41,10 +41,11 @@ include {MERGE_FASTQ} from '../processes/merge_input.nf'
 include {SUBSAMPLING} from '../processes/subsampling.nf'
 include {MAP_READS; MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS} from '../processes/map_reads.nf'
 include {SPLIT_READS} from  '../processes/split_reads.nf'
-include {DETECT_UMI_FASTA; DETECT_UMI_FASTA as DETECT_UMI_CONSENSUS_FASTA} from '../processes/detect_umi_fasta.nf'
+include {DETECT_UMI_FASTA} from '../processes/detect_umi_fasta.nf'
 include {CLUSTER; CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
+include {DETECT_UMI_CONSENSUS_FASTA} from '../processes/detect_umi_consensus_fasta.nf'
 include {REFORMAT_CONSENSUS_CLUSTER} from '../processes/reformat_consensus_cluster.nf'
 include {LOFREQ} from '../processes/variant_calling/lofreq.nf'
 include {MUTSERVE} from '../processes/variant_calling/mutserve.nf'
@@ -73,12 +74,11 @@ workflow UMI_PIPELINE {
         MAP_READS( merged_filtered_fastq, raw, reference )
         SPLIT_READS( MAP_READS.out.bam_consensus, COPY_BED.out.bed, raw, umi_filter_reads )
         DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastx, raw, umi_extract )
-        /*
         CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta, raw )
-        REFORMAT_FILTER_CLUSTER( CLUSTER.out.consensus_fasta, consensus, CLUSTER.out.vsearch_dir, umi_parse_clusters)
+        REFORMAT_FILTER_CLUSTER( CLUSTER.out.consensus_fasta, raw, CLUSTER.out.vsearch_dir, umi_parse_clusters)
         POLISH_CLUSTER( REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fasta, consensus )
         MAP_CONSENSUS( POLISH_CLUSTER.out.consensus_fasta, consensus, reference )
-        DETECT_UMI_CONSENSUS_FASTA( POLISH_CLUSTER.out.consensus_fasta, final_consensus, umi_extract )
+        DETECT_UMI_CONSENSUS_FASTA( POLISH_CLUSTER.out.consensus_fasta, consensus, umi_extract )
         CLUSTER_CONSENSUS( DETECT_UMI_CONSENSUS_FASTA.out.umi_extract_fasta , consensus )
         REFORMAT_CONSENSUS_CLUSTER( CLUSTER_CONSENSUS.out.consensus_fasta, final_consensus, umi_reformat_consensus )
         MAP_FINAL_CONSENSUS( REFORMAT_CONSENSUS_CLUSTER.out.consensus_fasta, final_consensus, reference )
@@ -95,7 +95,6 @@ workflow UMI_PIPELINE {
             
             }
         }
-        */
 }
 
 

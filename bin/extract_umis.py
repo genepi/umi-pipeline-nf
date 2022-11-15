@@ -133,7 +133,12 @@ def get_read_name(entry):
     return entry.name.split(";")[0]
 
 def get_read_strand(entry):
-    return entry.name.split("strand=")[1]
+    strand = entry.name.split("strand=")
+    if len(strand) > 1:
+        return strand[1]
+    # second extraction only includes positive strand!
+    else:
+        return "+"
 
 def combine_umis_fasta(seq_5p, seq_3p, strand):
     if strand == "+":
@@ -233,14 +238,14 @@ def write_tsv(
     tsv_file = os.path.join(output_folder, "{}.tsv".format(output_file_name))
     with open(tsv_file, "w") as tsv_f:
         print(
-            "output file",
-            "max pattern distance",
-            "detected forward strands",
-            "detected reverse strands",
-            "ration fwd rvs",
-            "total reads",
-            "included reads",
-            "percent of included reads",
+            "output_file",
+            "max_pattern_distance",
+            "detected_forward_strands",
+            "detected_reverse_strands",
+            "ratio_fwd_rvs",
+            "total_reads",
+            "included_reads",
+            "percent_of_total_reads",
             sep="\t",
             file=tsv_f
         )
