@@ -1,4 +1,6 @@
 process POLISH_CLUSTER {
+  tag "${sample}"
+  label 'MemoryDemandingTaks'
 
     publishDir "${params.output}/${sample}/fasta/${type}", pattern: "*.bam.bai", saveAs: { "${target}_consensus.bam.bai" }, mode: 'copy'
     publishDir "${params.output}/${sample}/fasta/${type}", pattern: "*.bam", saveAs: {"${target}_consensus.bam"}, mode: 'copy'
