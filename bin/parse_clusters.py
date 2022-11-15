@@ -106,7 +106,7 @@ def get_cluster_seq_n(cluster):
     return int(cluster.name.split(";")[-2].split("=")[1])
 
 def get_read_seq(entry):
-    return entry.name.split(";seq=")[1].split(";=qual")[0]
+    return entry.name.split(";seq=")[1].split(";")[0]
 
 def get_read_qual(entry):
     return entry.name.split(";qual=")[1]

@@ -1,5 +1,3 @@
-fasta_filename = "detected_umis.fasta"
-
 process DETECT_UMI_FASTA {
 
     publishDir "${params.output}/${sample}/stats/${type}", pattern: "*.tsv", mode: 'copy'
