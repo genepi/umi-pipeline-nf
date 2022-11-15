@@ -140,8 +140,6 @@ def get_read_strand(entry):
     else:
         return "+"
 
-
-
 def combine_umis_fasta(seq_5p, seq_3p, strand):
     if strand == "+":
         return seq_5p + seq_3p
