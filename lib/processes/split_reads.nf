@@ -1,7 +1,7 @@
 process SPLIT_READS {
 
     publishDir "${params.output}/${sample}/stats/${type}", mode: 'copy', pattern: "*.tsv"
-    publishDir "${params.output}/${sample}/${params.output_format}_filtered/${type}", mode: 'copy'
+    publishDir "${params.output}/${sample}/${params.output_format}_filtered/${type}", mode: 'copy', pattern: "*${params.output_format}"
 
     input:
         tuple val( sample ), val( target ), path ( bam ) , path ( bam_bai )
