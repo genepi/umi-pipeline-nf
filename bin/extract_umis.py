@@ -132,8 +132,21 @@ def extract_adapters(entry, max_adapter_length, format):
 def get_read_name(entry):
     return entry.name.split(";")[0]
 
-def get_read_strand(entry):
-    return entry.name.split("strand=")[1]
+def get_read_strand(entry, read_5p_seq, upstream_context_fwd, upstream_context_rev):
+    strand = entry.name.split("strand=")
+    if len(strand) > 1:
+        return strand[1]
+    else:
+        detect_read_strand(read_5p_seq, upstream_context_fwd, upstream_context_rev)
+
+def detect_read_strand(read_5p_seq, upstream_context_fwd, upstream_context_rev):
+    result_fwd = edlib.align(upstream_context_fwd, read_5p_seq, mode="HW", k=5)
+    result_rev = edlib.align(upstream_context_rev, read_5p_seq, mode="HW", k=5)
+    strand = "-"
+    if result_fwd["editDistance"] < result_rev["editDistance"]:
+        strand = "+"
+    return strand
+
 
 def combine_umis_fasta(seq_5p, seq_3p, strand):
     if strand == "+":
