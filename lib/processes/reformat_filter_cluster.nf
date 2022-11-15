@@ -1,6 +1,3 @@
-smolecule_clusters_fasta="smolecule_clusters.fasta"
-vsearch_cluster_stats="vsearch_cluster_stats.tsv"
-
 process REFORMAT_FILTER_CLUSTER {
 
     publishDir "${params.output}/${sample}/stats/${type}", pattern: "${vsearch_cluster_stats}", mode: 'copy'
@@ -17,17 +14,13 @@ process REFORMAT_FILTER_CLUSTER {
     path( "${vsearch_cluster_stats}" )
 
   script:
-  if( params.balance_strands )
+    def balance_strands = params.balance_strands ? "--balance_strands" : ""
+    def write_report = params.write_reports ? "--tsv" : ""
+
     """
-        python ${umi_parse_clusters_python} --smolecule_out ${smolecule_clusters_fasta} --balance_strands \
-        --min_reads_per_clusters ${params.min_reads_per_cluster} --max_reads_per_clusters ${params.max_reads_per_cluster} \
-        --stats_out ${vsearch_cluster_stats} -o . --vsearch_consensus ${consensus_fasta} --vsearch_folder ${vsearch_dir}
-    """
-  else
-    """
-        python ${umi_parse_clusters_python} --smolecule_out ${smolecule_clusters_fasta} \
-        --min_reads_per_clusters ${params.min_reads_per_cluster} --max_reads_per_clusters ${params.max_reads_per_cluster} \
-        --stats_out ${vsearch_cluster_stats} -o . --vsearch_consensus ${consensus_fasta} --vsearch_folder ${vsearch_dir}
+        python ${umi_parse_clusters_python} $balance_strands \
+        --filter_strategy ${params.filter_strategy_clusters} --min_reads_per_clusters ${params.min_reads_per_cluster} --max_reads_per_clusters ${params.max_reads_per_cluster} \
+        $write_report -o . --vsearch_consensus ${consensus_fasta} --vsearch_folder ${vsearch_dir}
     """
 }
 

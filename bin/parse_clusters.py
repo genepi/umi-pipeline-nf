@@ -79,13 +79,6 @@ def parse_args(argv):
     )
 
     parser.add_argument(
-        "--smolecule_out",
-        dest="SMOLECULE_OUT",
-        default="smolecule_clusters",
-        help="Name of summary file containing all reads for medaka smolecule"
-    )
-
-    parser.add_argument(
         "--vsearch_consensus", dest="VSEARCH_CONSENSUS", required=True, type=str, help="VSearch consensus FASTX"
     )
 
@@ -329,13 +322,13 @@ def parse_clusters(args):
     min_read_per_cluster = args.MIN_CLUSTER_READS
     max_read_per_cluster = args.MAX_CLUSTER_READS
     filter = args.FILTER
-    smolecule_filename = args.SMOLECULE_OUT
     format = args.OUT_FORMAT
     vsearch_folder = args.VSEARCH_FOLDER
     output = args.OUTPUT
     balance_strands = args.BAL_STRANDS
     tsv = args.TSV
 
+    smolecule_filename = "smolecule_clusters"
     stats_out_filename = "vsearch_cluster_stats"
     n_clusters = 0
     n_written = 0
