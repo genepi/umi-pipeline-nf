@@ -63,7 +63,7 @@ def parse_args(argv):
     parser.add_argument(
         "--tsv",
         dest="TSV",
-        action="store true",
+        action="store_true",
         help="Write tsv file containing filtering stats"
     )
 
