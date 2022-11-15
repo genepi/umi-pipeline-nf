@@ -79,7 +79,6 @@ workflow UMI_PIPELINE {
         POLISH_CLUSTER( REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fasta, consensus )
         MAP_CONSENSUS( POLISH_CLUSTER.out.consensus_fasta, consensus, reference )
         DETECT_UMI_CONSENSUS_FASTA( POLISH_CLUSTER.out.consensus_fasta, consensus, umi_extract )
-        /*
         CLUSTER_CONSENSUS( DETECT_UMI_CONSENSUS_FASTA.out.umi_extract_fasta , consensus )
         REFORMAT_CONSENSUS_CLUSTER( CLUSTER_CONSENSUS.out.consensus_fasta, final_consensus, umi_reformat_consensus )
         MAP_FINAL_CONSENSUS( REFORMAT_CONSENSUS_CLUSTER.out.consensus_fasta, final_consensus, reference )
@@ -96,7 +95,6 @@ workflow UMI_PIPELINE {
             
             }
         }
-        */
 }
 
 
