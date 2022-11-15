@@ -233,14 +233,14 @@ def write_tsv(
     tsv_file = os.path.join(output_folder, "{}.tsv".format(output_file_name))
     with open(tsv_file, "w") as tsv_f:
         print(
-            "output file",
-            "max pattern distance",
-            "detected forward strands",
-            "detected reverse strands",
-            "ration fwd rvs",
-            "total reads",
-            "included reads",
-            "percent of included reads",
+            "output_file",
+            "max_pattern_distance",
+            "detected_forward_strands",
+            "detected_reverse_strands",
+            "ratio_fwd_rvs",
+            "total_reads",
+            "included_reads",
+            "percent_of_total_reads",
             sep="\t",
             file=tsv_f
         )
