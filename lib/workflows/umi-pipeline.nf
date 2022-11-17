@@ -38,6 +38,7 @@ final_consensus = "final"
 // INCLUDES # here you must give the relevant process files from the lib directory 
 include {COPY_BED} from '../processes/copy_bed.nf'
 include {MERGE_FASTQ} from '../processes/merge_input.nf'
+include {MERGE_CONSENSUS_FASTA} from '../processes/merge_consensus_fasta.nf'
 include {SUBSAMPLING} from '../processes/subsampling.nf'
 include {MAP_READS; MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS} from '../processes/map_reads.nf'
 include {SPLIT_READS} from  '../processes/split_reads.nf'
@@ -76,8 +77,18 @@ workflow UMI_PIPELINE {
         DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastx, raw, umi_extract )
         CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta, raw )
         REFORMAT_FILTER_CLUSTER( CLUSTER.out.consensus_fasta, raw, CLUSTER.out.vsearch_dir, umi_parse_clusters)
-        POLISH_CLUSTER( REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fasta, consensus )
-        MAP_CONSENSUS( POLISH_CLUSTER.out.consensus_fasta, consensus, reference )
+        
+        flatten_smolecule_fastas = REFORMAT_FILTER_CLUSTER.out.sample_details
+        .combine(REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas.flatten()) 
+        
+        POLISH_CLUSTER( flatten_smolecule_fastas, consensus )
+
+        merge_consensus = POLISH_CLUSTER.out.consensus_fasta
+        .groupTuple(by: [0, 1])
+        
+        MERGE_CONSENSUS_FASTA(merge_consensus)
+
+        MAP_CONSENSUS( MERGE_CONSENSUS_FASTA.out.merged_consensus_fasta, consensus, reference )
         DETECT_UMI_CONSENSUS_FASTA( POLISH_CLUSTER.out.consensus_fasta, consensus, umi_extract )
         CLUSTER_CONSENSUS( DETECT_UMI_CONSENSUS_FASTA.out.umi_extract_fasta , consensus )
         REFORMAT_CONSENSUS_CLUSTER( CLUSTER_CONSENSUS.out.consensus_fasta, final_consensus, umi_reformat_consensus )
@@ -95,6 +106,7 @@ workflow UMI_PIPELINE {
             
             }
         }
+        
 }
 
 

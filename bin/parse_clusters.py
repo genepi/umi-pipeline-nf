@@ -213,7 +213,7 @@ def polish_cluster(
     parsed_cluster = os.path.join(
         output_folder, "cluster{}.{}".format(cluster_id, format))
     smolecule_file = os.path.join(
-        output_folder, "{}.{}".format(smolecule_out, format))
+        output_folder, "smolecule{}.{}".format(cluster_id, format))
 
     parse_cluster(cluster_fasta_umi, parsed_cluster, format)
 
@@ -261,7 +261,7 @@ def polish_cluster(
 
 
 def parse_cluster(cluster_fasta_umi, parsed_cluster, format):
-    with open(parsed_cluster, "a") as out_f:
+    with open(parsed_cluster, "w") as out_f:
         with pysam.FastxFile(cluster_fasta_umi) as fh:
             for entry in fh:
                 read_name = get_read_name(entry)
@@ -274,7 +274,7 @@ def parse_cluster(cluster_fasta_umi, parsed_cluster, format):
 
 
 def write_smolecule(cluster_id, reads, smolecule_file, format):
-    with open(smolecule_file, "a") as out_f:
+    with open(smolecule_file, "w") as out_f:
         for n, entry in enumerate(reads):
             seq = get_read_seq(entry)
             read_name = "{}_{}".format(cluster_id, n)
