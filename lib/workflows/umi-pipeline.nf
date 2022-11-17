@@ -79,7 +79,7 @@ workflow UMI_PIPELINE {
         REFORMAT_FILTER_CLUSTER( CLUSTER.out.consensus_fasta, raw, CLUSTER.out.vsearch_dir, umi_parse_clusters)
         
         flatten_smolecule_fastas = REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
-        .map { sample, type, fastas -> sample, type, fastas.flatten() }
+        .transpose(by: 2)
         .view()
         
         POLISH_CLUSTER( flatten_smolecule_fastas, consensus )
