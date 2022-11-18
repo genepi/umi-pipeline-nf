@@ -57,6 +57,26 @@ workflow UMI_PIPELINE {
 
     main:
 
+        /*
+        helper = Channel.of(['a', 'b', ['c', 'd', 'e']])
+        helper
+        .map { sample, target, fastas -> fastas }
+        .flatten()
+        .count()
+        .view()
+        */
+
+        /*
+        helper
+        .map { sample, target, fastas -> sample }
+        .view()
+        
+        helper
+        .transpose()
+        .count()
+        .view()
+        */
+
         COPY_BED( bed )
 
         if( params.subsampling ){
@@ -77,23 +97,30 @@ workflow UMI_PIPELINE {
         DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastx, raw, umi_extract )
         CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta, raw )
         REFORMAT_FILTER_CLUSTER( CLUSTER.out.consensus_fasta, raw, CLUSTER.out.vsearch_dir, umi_parse_clusters)
-        
-        helper = REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
-        map { sample, target, fastas -> fastas.count() }
-        helper.view()
+
+        sizes = REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
+        .map{ sample, type, fastas -> tuple( sample, fastas.size) }
+        .view()
+
 
         flatten_smolecule_fastas = REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
         .transpose(by: 2)
+        /*
+        flatten_smolecule_fastas = REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
+        .map{ sample, type, fastas -> tuple( groupKey(sample, fastas.size), type, fastas) }
         .view()
-        
-        /*POLISH_CLUSTER( flatten_smolecule_fastas, consensus )
+        */
+
+        POLISH_CLUSTER( flatten_smolecule_fastas, consensus )
 
         merge_consensus = POLISH_CLUSTER.out.consensus_fasta
+        .join(sizes)
+        .map{ sample, type, fasta, size -> tuple( groupKey(sample, size), type, fasta) }
         .groupTuple(by: [0, 1])
+        .view()
         
         MERGE_CONSENSUS_FASTA(merge_consensus)
-        MERGE_CONSENSUS_FASTA.out.merged_consensus_fasta
-
+        
         MAP_CONSENSUS( MERGE_CONSENSUS_FASTA.out.merged_consensus_fasta, consensus, reference )
         DETECT_UMI_CONSENSUS_FASTA( MERGE_CONSENSUS_FASTA.out.merged_consensus_fasta, consensus, umi_extract )
         CLUSTER_CONSENSUS( DETECT_UMI_CONSENSUS_FASTA.out.umi_extract_fasta , consensus )
@@ -112,7 +139,7 @@ workflow UMI_PIPELINE {
             
             }
         }
-        */
+        
         
 }
 
