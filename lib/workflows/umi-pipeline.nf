@@ -30,6 +30,8 @@ fastq_files_ch = Channel.fromPath("${params.input}/*", type: 'dir')
 raw = "raw"
 consensus = "consensus"
 final_consensus = "final"
+barcode_sizes = [:]
+
 
 ////////////////////
 // BEGIN PIPELINE //
@@ -56,27 +58,6 @@ include {FREEBAYES} from '../processes/variant_calling/freebayes.nf'
 workflow UMI_PIPELINE {
 
     main:
-
-        /*
-        helper = Channel.of(['a', 'b', ['c', 'd', 'e']])
-        helper
-        .map { sample, target, fastas -> fastas }
-        .flatten()
-        .count()
-        .view()
-        */
-
-        /*
-        helper
-        .map { sample, target, fastas -> sample }
-        .view()
-        
-        helper
-        .transpose()
-        .count()
-        .view()
-        */
-
         COPY_BED( bed )
 
         if( params.subsampling ){
@@ -88,9 +69,8 @@ workflow UMI_PIPELINE {
             merged_fastq = MERGE_FASTQ.out.merged_fastq
         }
 
-        
         merged_filtered_fastq = merged_fastq
-            .filter{ sample, target, fastq_file -> fastq_file.countFastq() > params.min_reads_per_barcode }
+        .filter{ sample, target, fastq_file -> fastq_file.countFastq() > params.min_reads_per_barcode }
 
         MAP_READS( merged_filtered_fastq, raw, reference )
         SPLIT_READS( MAP_READS.out.bam_consensus, COPY_BED.out.bed, raw, umi_filter_reads )
@@ -98,27 +78,18 @@ workflow UMI_PIPELINE {
         CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta, raw )
         REFORMAT_FILTER_CLUSTER( CLUSTER.out.consensus_fasta, raw, CLUSTER.out.vsearch_dir, umi_parse_clusters)
 
-        sizes = REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
-        .map{ sample, type, fastas -> tuple( sample, fastas.size) }
-        .view()
-
+        REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
+        .map{ sample, type, fastas -> barcode_sizes.put("$sample", fastas.size)}
 
         flatten_smolecule_fastas = REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
         .transpose(by: 2)
-        /*
-        flatten_smolecule_fastas = REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
-        .map{ sample, type, fastas -> tuple( groupKey(sample, fastas.size), type, fastas) }
-        .view()
-        */
 
         POLISH_CLUSTER( flatten_smolecule_fastas, consensus )
 
         merge_consensus = POLISH_CLUSTER.out.consensus_fasta
-        .join(sizes)
-        .map{ sample, type, fasta, size -> tuple( groupKey(sample, size), type, fasta) }
-        .groupTuple(by: [0, 1])
-        .view()
-        
+        .map{ sample, type, fasta -> tuple( groupKey(sample, barcode_sizes.get("$sample")), type, fasta) }
+        .groupTuple()
+
         MERGE_CONSENSUS_FASTA(merge_consensus)
         
         MAP_CONSENSUS( MERGE_CONSENSUS_FASTA.out.merged_consensus_fasta, consensus, reference )
@@ -139,6 +110,7 @@ workflow UMI_PIPELINE {
             
             }
         }
+        
         
         
 }
