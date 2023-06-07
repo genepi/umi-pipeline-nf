@@ -6,20 +6,6 @@ import sys
 import pysam
 
 
-def rev_comp(seq):
-    complement = {"A": "T", "C": "G", "G": "C", "T": "A"}
-    return "".join(complement.get(base, base) for base in reversed(seq))
-
-
-def str2bool(v):
-    if v.lower() in ("yes", "true", "t", "y", "1"):
-        return True
-    elif v.lower() in ("no", "false", "f", "n", "0"):
-        return False
-    else:
-        raise argparse.ArgumentTypeError("Boolean value expected.")
-
-
 def parse_args(argv):
     """
     Commandline parser
@@ -64,7 +50,7 @@ def parse_args(argv):
     )
 
     parser.add_argument(
-        "--include_sec",
+        "--include_secondary_reads",
         dest="INCL_SEC",
         action="store_true",
         help="Include secondary alignments",
@@ -74,10 +60,25 @@ def parse_args(argv):
         "-o", "--output", dest="OUT", type=str, required=False, help="Output folder"
     )
 
+    parser.add_argument(
+        "--tsv",
+        dest="TSV",
+        action="store_true",
+        help="Write tsv file containing filtering stats"
+    )
+
     parser.add_argument("BED", type=str, nargs=1, help="BED file")
 
     parser.add_argument(
         "BAM", type=str, nargs="?", default="/dev/stdin", help="BAM file"
+    )
+
+    parser.add_argument(
+        "--output_format",
+        dest="OUT_FORMAT",
+        type=str,
+        help="Choose fastq or fasta",
+        default="fasta"
     )
 
     args = parser.parse_args(argv)
@@ -102,18 +103,58 @@ def parse_bed(bed_regions):
                 "end": int(cols[2]),
                 "name": cols[3],
             }
-            yield region
+            return region
 
 
-def count_reads(bam_file):
-    n_total = 0
-    n_unmapped = 0
-    with pysam.AlignmentFile(bam_file, "rb") as bam:
-        for read in bam:
-            n_total += 1
-            if read.is_unmapped:
-                n_unmapped += 1
-    return n_total, n_unmapped
+def write_read(read, output, region, type, format):
+    output_fastx = os.path.join(
+        output, "{}_{}.{}".format(region["name"], type, format)
+    )
+
+    # see if appending line is no problem by running it with nextflow (Otherwise delete files before appending for the first time)
+    with open(output_fastx, "a") as out_f:
+        if format == "fasta":
+            write_fasta(read, out_f)
+        elif format == "fastq":
+            write_fastq(read, out_f)
+        else:
+            raise RuntimeError("specified format incorrect: {}".format(format))
+
+
+def write_fasta(read, out_f):
+    read_strand = "-"
+    if read.is_reverse:
+        print(
+            ">{};strand={}".format(read.query_name, read_strand), file=out_f
+        )
+        print(read.get_forward_sequence(), file=out_f)
+    else:
+        read_strand = "+"
+        print(
+            ">{};strand={}".format(read.query_name, read_strand), file=out_f
+        )
+        print(read.query_sequence, file=out_f)
+
+
+def write_fastq(read, out_f):
+    read_strand = "-"
+    if read.is_reverse:
+        print(
+            "@{};strand={}".format(read.query_name, read_strand), file=out_f
+        )
+        print(read.get_forward_sequence(), file=out_f)
+        print("+", file=out_f)
+        print(pysam.qualities_to_qualitystring(
+            read.get_forward_qualities()), file=out_f)
+    else:
+        read_strand = "+"
+        print(
+            "@{};strand={}".format(read.query_name, read_strand), file=out_f
+        )
+        print(read.query_sequence, file=out_f)
+        print("+", file=out_f)
+        print(pysam.qualities_to_qualitystring(
+            read.query_qualities), file=out_f)
 
 
 def filter_reads(args):
@@ -122,74 +163,141 @@ def filter_reads(args):
     max_clipping = 250
     min_overlap = args.MIN_OVERLAP
     incl_sec = args.INCL_SEC
-    output_folder = args.OUT
+    output = args.OUT
+    out_format = args.OUT_FORMAT
+    tsv = args.TSV
+    stats_out_filename = "umi_filter_reads_stats"
 
+    n_non_reads = 0
+    n_unmapped = 0
     n_concatamer = 0
     n_short = 0
     n_ontarget = 0
-    n_total, n_unmapped = count_reads(bam_file)
+    n_reads_region = 0
+    n_supplementary = 0
+    n_secondary = 0
+    n_total = 0
 
-    logging.info("Reads found: {}".format(n_total))
+    filtered_perc = 0
     unmapped_perc = 0
-    if n_total:
-        unmapped_perc = int(100.0 * unmapped_perc / n_total)
-
-    logging.info("Reads unmapped: {} ({}%)".format(n_unmapped, unmapped_perc))
+    ontarget_perc = 0
+    concatermer_perc = 0
+    short_perc = 0
 
     with pysam.AlignmentFile(bam_file, "rb") as bam:
-        for region in parse_bed(bed_regions):
-            logging.info(region["name"])
-            n_reads_region = 0
-            output_fastq = os.path.join(
-                output_folder, "{}.fastq".format(region["name"])
-            )
-            with open(output_fastq, "w") as out:
-                region_length = region["end"] - region["start"]
-                for read in bam.fetch(
-                    contig=region["chr"], start=region["start"], stop=region["end"]
-                ):
-                    if read.is_secondary and not incl_sec:
-                        continue
-                    if read.is_supplementary:
-                        continue
+        region = parse_bed(bed_regions)
+        region_length = region["end"] - region["start"]
+        logging.info("Region: {}".format(region["name"]))
 
-                    n_ontarget += 1
-                    if read.query_alignment_length < (
-                        read.query_length - 2 * max_clipping
-                    ):
-                        n_concatamer += 1
-                        continue
+        for read in bam.fetch(
+            until_eof=True
+        ):
 
-                    if read.reference_length < (region_length * min_overlap):
-                        n_short += 1
-                        continue
-                    n_reads_region += 1
+            if (read.query_sequence is None):
+                n_non_reads += 1
+                continue
 
-                    read_strand = "+"
-                    if read.is_reverse:
-                        read_strand = "-"
-                    print(
-                        ">{} strand={}".format(read.query_name, read_strand), file=out
-                    )
-                    if read.is_reverse:
-                        print(rev_comp(read.query_sequence), file=out)
-                    else:
-                        print(read.query_sequence, file=out)
+            n_total += 1
+            if read.is_unmapped:
+                n_unmapped += 1
+                write_read(read, output, region, "unmapped", out_format)
+                continue
 
-            logging.info("Reads found: {}".format(n_reads_region))
+            if read.is_secondary:
+                if not incl_sec:
+                    n_secondary += 1
+                    write_read(read, output, region, "secondary", out_format)
+                    continue
 
-    ontarget_perc = 0
-    if n_total:
-        ontarget_perc = int(100.0 * n_ontarget / n_total)
+            if read.is_supplementary:
+                n_supplementary += 1
+                write_read(read, output, region, "supplementary", out_format)
+                continue
 
-    concatermer_perc = 0
-    if n_ontarget:
-        concatermer_perc = int(100.0 * n_concatamer / n_ontarget)
-    if n_ontarget:
-        short_perc = int(100.0 * n_short / n_ontarget)
-    logging.info("On target: {} ({}%)".format(n_ontarget, ontarget_perc))
-    logging.info("{} concatamers - {}%".format(n_concatamer, concatermer_perc))
-    logging.info("{} short - {}%".format(n_short, short_perc))
+            n_ontarget += 1
+            if read.query_alignment_length < (
+                read.query_length - 2 * max_clipping
+            ):
+                n_concatamer += 1
+                write_read(read, output, region, "concatamer", out_format)
+                continue
+
+            if read.reference_length < (region_length * min_overlap):
+                n_short += 1
+                write_read(read, output, region, "short", out_format)
+                continue
+            n_reads_region += 1
+            write_read(read, output, region, "filtered", out_format)
+
+    if tsv:
+        stats_out_filename = os.path.join(
+            output, "{}.tsv".format(stats_out_filename))
+        write_tsv(n_total, n_unmapped, n_secondary, n_supplementary, n_ontarget,
+                  n_concatamer, n_short, n_reads_region, incl_sec, stats_out_filename, region)
+
+
+def write_tsv(n_total, n_unmapped, n_secondary, n_supplementary, n_ontarget, n_concatamer, n_short, n_reads_region, incl_sec, stats_out_filename, region):
+    if n_total > 0:
+        if incl_sec:
+            filtered_perc = 100 * n_supplementary // n_total
+        else:
+            filtered_perc = 100 * (n_secondary + n_supplementary) // n_total
+
+        unmapped_perc = 100 * n_unmapped // n_total
+        secondary_perc = 100 * n_secondary // n_total
+        supplementary_perc = 100 * n_supplementary // n_total
+        ontarget_perc = 100 * n_ontarget // n_total
+
+        if ontarget_perc > 0:
+            concatermer_perc = 100 * n_concatamer // n_ontarget
+            short_perc = 100 * n_short // n_ontarget
+
+    with open(stats_out_filename, "a") as out_f:
+        print(
+            "format",
+            "region",
+            "reads_found",
+            "reads_unmapped",
+            "reads_secondary",
+            "reads_supplementary",
+            "reads_on_target",
+            "reads_concatamer",
+            "reads_short",
+            "reads_filtered",
+            "include_secondary",
+            sep="\t",
+            file=out_f
+        )
+        print(
+            "count",
+            region["name"],
+            n_total,
+            n_unmapped,
+            n_secondary,
+            n_supplementary,
+            n_ontarget,
+            n_concatamer,
+            n_short,
+            n_reads_region,
+            incl_sec,
+            sep="\t",
+            file=out_f
+        )
+        print(
+            "%",
+            region["name"],
+            "100",
+            unmapped_perc,
+            secondary_perc,
+            supplementary_perc,
+            ontarget_perc,
+            concatermer_perc,
+            short_perc,
+            filtered_perc,
+            incl_sec,
+            sep="\t",
+            file=out_f
+        )
 
 
 def main(argv=sys.argv[1:]):
