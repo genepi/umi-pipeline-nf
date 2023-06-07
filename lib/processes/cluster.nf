@@ -15,7 +15,7 @@ process CLUSTER {
         
     """
         mkdir -p ${vsearch_dir} && \
-        vsearch --clusterout_id --clusters ${vsearch_dir}/test \
+        vsearch --clusterout_id --clusters ${vsearch_dir}/cluster \
         --centroids ${centroid_fasta} --consout ${consensus_fasta} --minseqlength ${params.min_length} \
         --maxseqlength ${params.max_length} --threads ${params.threads} --cluster_fast ${detected_umis_fasta} \
         --clusterout_sort --gapopen 0E/5I --gapext 0E/2I --mismatch -8 --match 6 \
