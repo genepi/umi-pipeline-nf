@@ -29,13 +29,15 @@ If specified by user the merged and filtered reads will be subsampled using seqt
 Information regarding subsampling will be saved in a tsv file 
 **Output directory: `<output>/<barcodeXX>/stats/`**
 
-## Align Reads
+## Align and Filter Reads
 Merged - filtered and subsampled - reads will be aligned to the provided reference genome using minimap2.
+The aligned reads are filtered for primary alignment and to have more than 90 % overlap with the reference sequence using the python script (https://github.com/AmstlerStephan/umi-pipeline-nf/blob/update-Readme/bin/filter_reads.py) and split by filter reason.
 **Output directory: `<output>/<barcodeXX>/align/raw/`**
 
-## Separate Amplicons
-
 ## Extract UMI Sequences
+The UMI sequences are extracted from the filtered and aligned reads and written into the header of the FASTQ/A file with a python script (https://github.com/AmstlerStephan/umi-pipeline-nf/blob/update-Readme/bin/extract_umis.py).
+**Output directory: `<output>/<barcodeXX>/align/raw/`**
+
 
 ## Cluster UMI Sequences
 
