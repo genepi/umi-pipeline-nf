@@ -79,40 +79,6 @@ Specify the path to the reference genome in fasta format. NB: there must also be
 ### `--output <ARG>`
 Name the output directory where containing final results. [default: "./"]
 
-
-## Modifying Parameters
-
-### `--SE`
-Indicate to the pipeline whether input reads should be expected in single-end format (i.e. "\*.fastq.gz"). [default: off]
-
-### `--FastQC`
-Specify in order to generate QC reports of trimmed reads with FastQC. [default: off]
-
-### `--bamQC`
-Specify in order to produce QC reports of alignments using Qualimap bamQC. [default: off]
-
-### `--keepReads`
-Specify in order to keep trimmed fastq reads as well as alignments. [default: off]
-
-
-## Trimming Parameters
-
-### `--forward <ARG>`
-Forward adapter sequence. [default: "GATCGGAAGAGCTCGTATGCCGTCTTCTGCTTG"]
-
-### `--reverse <ARG>`
-Reverse adapter sequence. [default: "ACACTCTTTCCCTACACGACGCTCTTCCGATCT"]
-
-### `--minQual <ARG>`
-Minimum base quality threshold. [default: 20]
-
-### `--minLeng <ARG>`
-Minimum read length threshold. [default: 25]
-
-### `--minOver <ARG>`
-Minimum adapter overlap threshold. [default: 3]
-
-
 ## Additional Parameters
 
 ### `--debug`
