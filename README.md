@@ -10,7 +10,7 @@ umi-pipeline-nf Pipeline
 
 ## Overview
 `umi-pipeline-nf` creates highly accurate single-molecule consensus sequences based on amplicon data tagged by unique molecular identifiers (UMIs). The pipeline can be run for the whole fastq_pass folder of your nanopore run and per default the output are the aligned consensus sequences in bam file format. 
-Additional flags can be set to perform a variant calling ( [freebayes](https://github.com/freebayes/freebayes), [lofreq](http://csb5.github.io/lofreq/) or [mutserve](https://mitoverse.readthedocs.io/mutserve/mutserve/) ) and haplotyping ( [whatshap](https://whatshap.readthedocs.io/en/latest/index.html)).
+Additional flags can be set to perform a variant calling ( [freebayes](https://github.com/freebayes/freebayes), [lofreq](http://csb5.github.io/lofreq/) or [mutserve](https://mitoverse.readthedocs.io/mutserve/mutserve/) )
 
 > See the [output documentation](docs/output.md) for more details of the results.
 
