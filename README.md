@@ -6,10 +6,10 @@
 umi-pipeline-nf Pipeline
 ======================
 
-**umi-pipeline-nf** is based on a [snakemake pipeline](https://github.com/nanoporetech/pipeline-umi-amplicon) provided by [Oxford Nanopore Technologies (ONT)](https://nanoporetech.com/). To increase efficieny and usabilty the pipeline was transfered to [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
+**umi-pipeline-nf** is based on a [snakemake pipeline](https://github.com/nanoporetech/pipeline-umi-amplicon) provided by [Oxford Nanopore Technologies (ONT)](https://nanoporetech.com/). To increase efficiency and usability the pipeline was transferred to [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
 
 ## Overview
-`umi-pipeline-nf` creates highly accurate single-molecule consensus sequences based on amplicon data tagged by unique molecular identifiers (UMIs). The pipeline can be run for the whole fastq_pass folder of your nanopore run and per default the output are the aligned consensus sequences in bam file format. 
+`umi-pipeline-nf` creates highly accurate single-molecule consensus sequences based on amplicon data tagged by unique molecular identifiers (UMIs). The pipeline can be run for the whole fastq_pass folder of your nanopore run and per default, the output are the aligned consensus sequences in bam file format. 
 Additional flags can be set to perform a variant calling ( [freebayes](https://github.com/freebayes/freebayes), [lofreq](http://csb5.github.io/lofreq/) or [mutserve](https://mitoverse.readthedocs.io/mutserve/mutserve/) )
 
 > See the [output documentation](docs/output.md) for more details of the results.
