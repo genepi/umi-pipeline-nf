@@ -6,7 +6,7 @@
 umi-pipeline-nf Pipeline
 ======================
 
-**umi-pipeline-nf** is based on a [snakemake pipeline](https://github.com/nanoporetech/pipeline-umi-amplicon) provided by [Oxford Nanopore Technologies (ONT)](https://nanoporetech.com/). To increase efficiency and usability the pipeline was transferred to [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
+**umi-pipeline-nf** is based on a [snakemake pipeline](https://github.com/nanoporetech/pipeline-umi-amplicon) provided by [Oxford Nanopore Technologies (ONT)](https://nanoporetech.com/). To increase efficiency and usability the pipeline was transferred to [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation simple and results highly reproducible.
 
 ## Overview
 `umi-pipeline-nf` creates highly accurate single-molecule consensus sequences based on amplicon data tagged by unique molecular identifiers (UMIs). The pipeline can be run for the whole fastq_pass folder of your nanopore run and per default, the output are the aligned consensus sequences in bam file format. 
