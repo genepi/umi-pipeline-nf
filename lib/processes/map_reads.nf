@@ -11,7 +11,16 @@ process MAP_READS {
 
   script:
   """
-    minimap2 ${params.minimap2_param} -t ${params.threads} ${reference} ${consensus_fasta} | 
-    samtools sort -@ 5 -o ${consensus_fasta.baseName}.bam - && samtools index -@ ${params.threads} ${consensus_fasta.baseName}.bam
+    minimap2 \
+      ${params.minimap2_param} \
+      -t ${params.threads} \
+      ${reference} \
+      ${consensus_fasta} | 
+    samtools sort \
+      -@ ${params.threads} \
+      -o ${consensus_fasta.baseName}.bam - && \
+    samtools index \
+      -@ ${params.threads} \
+      ${consensus_fasta.baseName}.bam
   """
 }

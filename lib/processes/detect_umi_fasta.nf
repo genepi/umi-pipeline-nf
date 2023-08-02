@@ -1,5 +1,4 @@
 process DETECT_UMI_FASTA {
-
     publishDir "${params.output}/${sample}/stats/${type}", pattern: "*.tsv", mode: 'copy'
     publishDir "${params.output}/${sample}/${params.output_format}_umi/${type}", pattern: "*${params.output_format}", mode: 'copy'
 
@@ -14,8 +13,13 @@ process DETECT_UMI_FASTA {
     script:
         def write_report = "${params.write_reports}" ? "--tsv" : ""
     """
-        python ${umi_extract_python} --fwd-umi ${params.fwd_umi} \
-        --rev-umi ${params.rev_umi} --max-error ${params.umi_errors} ${fasta} \
-        -o . $write_report --output_format ${params.output_format}
+        python ${umi_extract_python} \
+        --fwd-umi ${params.fwd_umi} \
+        --rev-umi ${params.rev_umi} \
+        --max-error ${params.umi_errors} \
+        --output_format ${params.output_format}
+        $write_report \
+        -o . \
+        ${fasta} \
     """
 }
