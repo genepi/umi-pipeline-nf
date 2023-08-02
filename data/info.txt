@@ -1,0 +1,7 @@
+This folder contains testdata to run the pipeline from a proof-of-principle run 
+(run9, barcode04 [=barcode01] and barcode07 [=barcode02])
+
+The test data originated from mixtures of two plasmids containing different sequences.
+Barcode01 has a mixture level of:
+Barcode02 has a mixture level of: 
+

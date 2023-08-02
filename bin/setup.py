@@ -31,7 +31,6 @@ setup(
             'umi_extract = umi_amplicon_tools.extract_umis:main',
             'umi_reformat_consensus = umi_amplicon_tools.reformat_consensus:main',
             'umi_parse_clusters = umi_amplicon_tools.parse_clusters:main',
-            'umi_bam_to_phred = umi_amplicon_tools.bam_to_phred:main',
             'umi_stats = umi_amplicon_tools.umi_stats:main'
         ]
     },
