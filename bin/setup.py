@@ -15,7 +15,6 @@ setup(
     description='Toolset to work with ONT amplicon sequencing using UMIs',
     zip_safe=False,
     install_requires=[
-        'tqdm',
         'pysam',
         'numpy',
         'pandas',

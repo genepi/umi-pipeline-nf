@@ -7,9 +7,6 @@ import os
 import sys
 import argparse
 
-from tqdm import tqdm
-
-
 
 def parse_args(argv):
     usage = "Annotate homopolymers in FASTA file"
