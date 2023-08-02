@@ -52,13 +52,26 @@ def parse_args(argv):
         help="Length of adapter",
     )
     parser.add_argument(
-        "-t", "--threads", dest="THREADS", type=int, default=1, help="Number of threads."
+        "-t",
+        "--threads",
+        dest="THREADS",
+        type=int,
+        default=1,
+        help="Number of threads."
     )
     parser.add_argument(
-        "--tsv", dest="TSV", action="store_true", help="write TSV output file"
+        "--tsv",
+        dest="TSV",
+        action="store_true",
+        help="write TSV output file"
     )
     parser.add_argument(
-        "-o", "--output", dest="OUT", type=str, required=False, help="Output directory"
+        "-o",
+        "--output",
+        dest="OUT",
+        type=str,
+        required=False,
+        help="Output directory"
     )
     parser.add_argument(
         "--output_format",
@@ -82,7 +95,10 @@ def parse_args(argv):
         help="Reverse UMI sequence",
     )
     parser.add_argument(
-        "INPUT_FA", type=str, default="/dev/stdin", help="Filtered Reads"
+        "INPUT_FA",
+        type=str,
+        default="/dev/stdin",
+        help="Filtered Reads"
     )
 
     args = parser.parse_args(argv)
@@ -109,8 +125,10 @@ def extract_umi(query_seq, query_qual, pattern, max_edit_dist, format):
     edit_dist = result["editDistance"]
     locs = result["locations"][0]
     umi = query_seq[locs[0]:locs[1]+1]
+
     if format == "fastq":
         umi_qual = query_qual[locs[0]:locs[1]+1]
+
     return edit_dist, umi, umi_qual
 
 
@@ -123,14 +141,17 @@ def extract_adapters(entry, max_adapter_length, format):
     if len(entry.sequence) > max_adapter_length:
         read_5p_seq = entry.sequence[:max_adapter_length]
         read_3p_seq = entry.sequence[-max_adapter_length:]
+        
         if format == "fastq":
             read_5p_qual = entry.quality[:max_adapter_length]
             read_3p_qual = entry.quality[-max_adapter_length:]
 
     return read_5p_seq, read_3p_seq, read_5p_qual, read_3p_qual
 
+
 def get_read_name(entry):
     return entry.name.split(";")[0]
+
 
 def get_read_strand(entry):
     strand = entry.name.split("strand=")
@@ -139,6 +160,7 @@ def get_read_strand(entry):
     # second extraction only includes positive strand!
     else:
         return "+"
+
 
 def combine_umis_fasta(seq_5p, seq_3p, strand):
     if strand == "+":

@@ -6,6 +6,7 @@ process DETECT_UMI_FASTA {
         tuple val( sample ), val( target ), path ( fasta )
         val ( type )
         path umi_extract_python
+    
     output:
         tuple val( "${sample}" ), val( "${fasta.baseName}" ), path ( "*${params.output_format}" ), emit: umi_extract_fasta
         path "*.tsv"
