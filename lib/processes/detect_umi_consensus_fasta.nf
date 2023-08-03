@@ -20,6 +20,6 @@ process DETECT_UMI_CONSENSUS_FASTA {
         --max-error ${params.umi_errors} \
         $write_report
         -o . \
-        ${fasta} \
+        ${fasta}
     """
 }

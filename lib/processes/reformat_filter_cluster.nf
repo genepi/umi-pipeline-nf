@@ -27,6 +27,6 @@ process REFORMAT_FILTER_CLUSTER {
           --output_format ${params.output_format}
           $balance_strands \
           $write_report \
-          -o . \
+          -o .
     """
 }

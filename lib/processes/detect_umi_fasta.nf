@@ -21,6 +21,6 @@ process DETECT_UMI_FASTA {
         --output_format ${params.output_format}
         $write_report \
         -o . \
-        ${fasta} \
+        ${fasta}
     """
 }
