@@ -18,6 +18,6 @@ process POLISH_CLUSTER {
           --method spoa . \
           ${smolecule_clusters_fasta} 2> smolecule.log
         
-        mv consensus.fasta ${smolecule_clusters_fasta.baseName}consensus.fasta
+        mv consensus.fasta ${smolecule_clusters_fasta.baseName}_consensus.fasta
     """
 }
