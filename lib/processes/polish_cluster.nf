@@ -6,7 +6,7 @@ process POLISH_CLUSTER {
         val ( type )
 
     output:
-        tuple val( "${sample}" ), val( "${target}" ), path( "${smolecule_clusters_fasta.baseName}consensus.fasta" ), emit: consensus_fasta
+        tuple val( "${sample}" ), val( "${target}" ), path( "${smolecule_clusters_fasta.baseName}_consensus.fasta" ), emit: consensus_fasta
 
     script:
     """
