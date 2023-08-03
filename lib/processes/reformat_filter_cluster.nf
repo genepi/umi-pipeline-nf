@@ -24,7 +24,7 @@ process REFORMAT_FILTER_CLUSTER {
           --max_reads_per_clusters ${params.max_reads_per_cluster} \
           --vsearch_consensus ${consensus_fasta} \
           --vsearch_folder ${vsearch_dir} \
-          --output_format ${params.output_format}
+          --output_format ${params.output_format} \
           $balance_strands \
           $write_report \
           -o .

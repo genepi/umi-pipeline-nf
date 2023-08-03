@@ -18,7 +18,7 @@ process DETECT_UMI_FASTA {
         --fwd-umi ${params.fwd_umi} \
         --rev-umi ${params.rev_umi} \
         --max-error ${params.umi_errors} \
-        --output_format ${params.output_format}
+        --output_format ${params.output_format} \
         $write_report \
         -o . ${fasta}
     """
