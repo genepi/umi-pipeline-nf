@@ -19,7 +19,6 @@ process DETECT_UMI_CONSENSUS_FASTA {
         --rev-umi ${params.rev_umi} \
         --max-error ${params.umi_errors} \
         $write_report
-        -o . \
-        ${fasta}
+        -o . ${fasta}
     """
 }

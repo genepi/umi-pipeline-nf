@@ -20,7 +20,6 @@ process DETECT_UMI_FASTA {
         --max-error ${params.umi_errors} \
         --output_format ${params.output_format}
         $write_report \
-        -o . \
-        ${fasta}
+        -o . ${fasta}
     """
 }
