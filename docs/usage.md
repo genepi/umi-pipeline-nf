@@ -57,7 +57,7 @@ This document describes the parameter options used by the pipeline.
 The main command for running the pipeline is as follows:
 
 ```bash
-nextflow run Genepi/umi-pipeline-nf [OPTIONS]
+nextflow run genepi/umi-pipeline-nf [OPTIONS]
 ```
 
 Note that the pipeline will create files in your working directory:
@@ -181,10 +181,10 @@ Specify the minimap2 parameters. [default: "-ax map-ont -k 13]
 Specify in order to prevent Nextflow from clearing the work dir cache following a successful pipeline completion. [default: off]
 
 ### `--version`
-When called with `nextflow run Genepi/umi-pipeline-nf --version` this will display the pipeline version and quit.
+When called with `nextflow run genepi/umi-pipeline-nf --version` this will display the pipeline version and quit.
 
 ### `--help`
-When called with `nextflow run Genepi/umi-pipeline-nf --help` this will display the parameter options and quit.
+When called with `nextflow run genepi/umi-pipeline-nf --help` this will display the parameter options and quit.
 
 ## Software Dependencies
 
@@ -199,10 +199,10 @@ Use this parameter to choose a preset configuration profile. Profiles available 
     * Builds a conda environment from the environment.yml file provided by the pipeline
     * Requires conda to be installed on your system.
 * `docker`
-    * Launches a docker image pulled from Genepi/umi-pipeline-nf (ADAPT)
+    * Launches a docker image pulled from genepi/umi-pipeline-nf (ADAPT)
     * Requires docker to be installed on your system. 
 * `singularity`
-    * Launches a singularity image pulled from Genepi/umi-pipeline-nf (ADAPT)
+    * Launches a singularity image pulled from genepi/umi-pipeline-nf (ADAPT)
     * Requires singularity to be installed on your system.
 * `custom`
     * No configuration at all. Useful if you want to build your own config from scratch and want to avoid loading in the default `base` config for process resource allocation.
