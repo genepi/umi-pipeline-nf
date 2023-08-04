@@ -107,7 +107,7 @@ if(params.version){
 // PRINT STANDARD LOGGING INFO
 log.info ""
 log.info "         ==============================================="
-log.info "          E C S E Q - t e m p l a t e   P I P E L I N E"
+log.info "          U M I - P I P E L I N E - N F"
 if(params.debug){
 log.info "         (debug mode enabled)"
 log.info "         ===============================================" }
