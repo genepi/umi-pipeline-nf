@@ -87,10 +87,10 @@ Specify the path to the bed file containing the target name, start and end posit
 
 ## Workflow Modifying Parameters 
 
-### `--subsampling <ARG>`
+### `--subsampling`
 Specify if the raw reads per barcode should be subsampled. [default: false]
 
-### `--call_variants <ARG>`
+### `--call_variants`
 Specify if the variants in the final consensus sequences should be called. [default: false]
 Note: If set to true, the (`variant caller`)[ must be specified
 
