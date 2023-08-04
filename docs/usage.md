@@ -130,7 +130,8 @@ Note: Clusters with fewer reads will be excluded from the analysis.
 
 ### `--max_reads_per_cluster <ARG>`
 Specify the maximal number of reads per cluster. [default: 60]
-Note: Clusters with more reads will be downsampled according to the [`cluster filtering strategy`](#--filter_strategy_clusters-arg-random-quality).
+Note: Clusters with more reads will be downsampled  
+according to the [`cluster filtering strategy`](#--filter_strategy_clusters-arg-random-quality).
 
 ### `--output_format <ARG>` [fasta |fastq]
 Specify the output format until the cluster filtering step. [default: "fasta"]  
@@ -156,7 +157,7 @@ Specify if secondary mappings should be included in the analysis. [default: fals
 Specify if the number of forward and reverse reads per cluster should be equalized. [default: true]
 
 ### `--medaka_model <ARG>`
-Specify the medaka model that is used for cluster polishing. [default: "r1041_e82_400bps_hac_g615"]
+Specify the medaka model that is used for cluster polishing. [default: "r1041_e82_400bps_hac_g615"]  
 Note: The models are specific for Chemistry, basecalling algorithm and sequencing speed. 
 
 ### `--fwd_umi <ARG>`
@@ -186,8 +187,6 @@ When called with `nextflow run Genepi/umi-pipeline-nf --version` this will displ
 When called with `nextflow run Genepi/umi-pipeline-nf --help` this will display the parameter options and quit.
 
 ## Software Dependencies
-
-There are different ways to provide the required software dependencies for the pipeline. The recommended method is to use the Conda, Docker or Singularity profiles as provided by the pipeline. 
 
 ### `-profile <ARG>`
 Use this parameter to choose a preset configuration profile. Profiles available with the pipeline are:
