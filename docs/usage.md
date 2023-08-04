@@ -134,11 +134,11 @@ Note: Clusters with more reads will be downsampled
 according to the [`cluster filtering strategy`](#--filter_strategy_clusters-arg-random-quality).
 
 ### `--output_format <ARG>` [fasta | fastq]
-Specify the output format until the cluster filtering step. [default: "fasta"]  
+Specify the output format until the cluster filtering step. [default: "fastq"]  
 Note: Only the "fastq" option can be used to filter reads by the quality and requires FASTQ input reads.  
 
 ### `--filter_strategy_clusters <ARG>` [random | quality]
-Specify filter strategy to downsample cluster above the maximal reads per cluster parameter. [default: "random"]  
+Specify filter strategy to downsample cluster above the maximal reads per cluster parameter. [default: "quality"]  
 Note: "quality" filter strategy only goes in hand with "fastq" output format. 
 
 ### `--write-reports <ARG>`
