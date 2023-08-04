@@ -8,7 +8,6 @@ This document describes the parameter options used by the pipeline.
     * [`--reference_fai`](#--reference_fai-arg-required)
     * [`--bed`](#--bed-arg-required)
     * [`--output`](#--output-arg-required)
-    * [`--output_format`](#--output_format-arg)
 * [Workflow modifying parameters](#workflow-modifying-parameters)
     * [`--subsampling`](#--subsampling)
     * [`--call_variants`](#--call_variants)
@@ -25,6 +24,8 @@ This document describes the parameter options used by the pipeline.
     * [`--umi_errors`](#--umi_errors-arg)
     * [`--min_reads_per_cluster`](#--min_reads_per_cluster-arg)
     * [`--max_reads_per_cluster`](#--max_reads_per_cluster-arg)
+    * [`--filter_strategy_clusters`](#--filter_strategy_clusters-arg)
+    * [`--output_format`](#--output_format-arg)
     * [`--min_overlap`](#--min_overlap-arg)
     * [`--include_secondary_reads`](#--include_secdondary_reads-arg)
     * [`--balance_strands`](#--balance_strands-arg)
@@ -36,7 +37,7 @@ This document describes the parameter options used by the pipeline.
     * [`--minimap_param`](#--minimap_param-arg)
     * [`--write_reports`](#--write_reports-arg)
     * [`--threads`](#--threads-arg)
-* [Additional Parameters](#additional-parameters)
+* [Additional parameters](#additional-parameters)
     * [`--debug`](#--debug)
     * [`--version`](#--version)
     * [`--help`](#--help)
@@ -72,13 +73,30 @@ work/           # Directory containing the nextflow working files
 ## Inputs and Outputs
 
 ### `--input <ARG>` [REQUIRED]
-Specify the path to the directory containing input reads in either "\*_{1,2}.fastq.gz" format (paired-end) or "\*.fastq.gz" format (single-end).
+Specify the path to the directory containing the demultiplexed reads. [default: "null"]
+
+### `--output <ARG>` [REQUIRED]
+Name the output directory to save the results. [default: "null"]
 
 ### `--reference <ARG>` [REQUIRED]
-Specify the path to the reference genome in fasta format. NB: there must also be a corresponding fasta index file "*.fai".
+Specify the path to the reference genome in fasta format. [default: "null"]
 
-### `--output <ARG>`
-Name the output directory where containing final results. [default: "./"]
+### `--reference_fai <ARG>` [REQUIRED]
+Specify the path to the reference index file. [default: "null"]
+
+### `--bed <ARG>` [REQUIRED]
+Specify the path to the bed file containing the target name, start and end position. [default: "null"]
+
+## Advanced Parameters
+
+### `--output_format <ARG>` [fasta | fastq]
+Specify the output format until the cluster filtering step.  
+Note: Only the "fastq" option can be used to filter reads by quality and requires FASTQ input reads. [default: "fasta"]  
+
+### `--filter_strategy_clusters <ARG>` [random | quality]
+Specify filter strategy to downsample cluster above the maximal reads per cluster parameter.  
+Note: "quality" filter strategy only goes in hand with "fastq" output format. 
+
 
 ## Additional Parameters
 
