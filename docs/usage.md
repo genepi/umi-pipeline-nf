@@ -24,8 +24,8 @@ This document describes the parameter options used by the pipeline.
     * [`--umi_errors`](#--umi_errors-arg)
     * [`--min_reads_per_cluster`](#--min_reads_per_cluster-arg)
     * [`--max_reads_per_cluster`](#--max_reads_per_cluster-arg)
-    * [`--filter_strategy_clusters`](#--filter_strategy_clusters-arg-random-quality)
-    * [`--output_format`](#--output_format-arg-fasta-fastq)
+    * [`--filter_strategy_clusters`](#--filter_strategy_clusters-arg-random--quality)
+    * [`--output_format`](#--output_format-arg-fasta--fastq)
     * [`--min_overlap`](#--min_overlap-arg)
     * [`--include_secondary_reads`](#--include_secdondary_reads-arg)
     * [`--balance_strands`](#--balance_strands-arg)
@@ -133,11 +133,11 @@ Specify the maximal number of reads per cluster. [default: 60]
 Note: Clusters with more reads will be downsampled  
 according to the [`cluster filtering strategy`](#--filter_strategy_clusters-arg-random-quality).
 
-### `--output_format <ARG>` [fasta |fastq]
+### `--output_format <ARG>` [fasta | fastq]
 Specify the output format until the cluster filtering step. [default: "fasta"]  
 Note: Only the "fastq" option can be used to filter reads by the quality and requires FASTQ input reads.  
 
-### `--filter_strategy_clusters <ARG>` [random |quality]
+### `--filter_strategy_clusters <ARG>` [random | quality]
 Specify filter strategy to downsample cluster above the maximal reads per cluster parameter. [default: "random"]  
 Note: "quality" filter strategy only goes in hand with "fastq" output format. 
 
