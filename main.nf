@@ -44,17 +44,23 @@ if(params.help){
          Options: ADVANCED
               --min_reads_per_barcode         Minimal number of fastq reads for each barcode [default: 100]
 
-              --umi_errors                    Max differences between UMI in read and UMI pattern [default: 3]
+              --umi_errors                    Max differences between extracted UMIs of the read and UMI pattern [default: 3]
 
-              --min_reads_per_cluster         Min number of reads required for a consensus read [default: 20]
+              --min_reads_per_cluster         Min number of raw reads required for a consensus read [default: 20]
 
-              --max_reads_per_cluster         Max number of 1D used for a consensus read [default: 60]
+              --max_reads_per_cluster         Max number of raw reads used for a consensus read [default: 60]
+
+              --filter_strategy_clusters      Filtering strategy for clusters with more than max_reads_per_cluster reads [random | quality] [default: random]
+
+              --output_format                 Output format until the cluster filtering step [fasta | fastq] [default: fastq]
+
+              --write_reports                 Write stats of cluster and cluster filtering [default: true]
 
               --min_overlap                   Min overlap with target region [default: 0.90]
 
-              --balance_strands               Balance forward and reverse 1D reads in clusters [default: true]
+              --balance_strands               Balance forward and reverse raw reads in clusters [default: true]
 
-              --medaka_model                  Medaka model used to compute consensus reads [default: "r941_min_high_g360"]
+              --medaka_model                  Medaka model used to compute consensus reads [default: "r1041_e82_400bps_hac_g615"]
 
               --fwd_universal_primer          Forward tail of primer (Ftail...UMI...primer) [default: "GTATCGTGTAGAGACTGCGTAGG"]
 
