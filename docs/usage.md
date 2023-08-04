@@ -112,7 +112,7 @@ Specify the number of reads that should be preserved after subsampling. [default
 
 ## Variant Calling Parameters
 
-### `--variant_caller <ARG>` [REQUIRED] [lofreq |freebayes |mutserve]
+### `--variant_caller <ARG>` [REQUIRED] [lofreq | freebayes | mutserve]
 Specify the variant caller that should be used for variant calling.  [default: null]
 
 ## Advanced Parameters
