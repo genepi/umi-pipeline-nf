@@ -6,7 +6,7 @@ Umi-pipeline-nf
 
 **Umi-pipeline-nf** creates highly accurate single-molecule consensus sequences for unique molecular identifier (UMI)-tagged amplicon data.  
 The pipeline can be run for the whole fastq_pass folder of your nanopore run and, per default, outputs the aligned consensus sequences of each UMI cluster in bam file. The optional variant calling creates a vcf file for all variants that are found in the consensus sequences.
-umi-pipeline-nf is based on the [snakemake ONT UMI analysis pipeline](https://github.com/nanoporetech/pipeline-umi-amplicon). We transferred the pipeline to [Nextflow](https://www.nextflow.io).  
+umi-pipeline-nf is based on the [snakemake ONT UMI analysis pipeline](https://github.com/nanoporetech/pipeline-umi-amplicon). We transferred the pipeline to [Nextflow](https://www.nextflow.io) and included [additional functionalities](#main-adaptations).  
 
 ## Workflow
 
