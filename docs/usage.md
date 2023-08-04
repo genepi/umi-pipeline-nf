@@ -24,7 +24,7 @@ This document describes the parameter options used by the pipeline.
     * [`--umi_errors`](#--umi_errors-arg)
     * [`--min_reads_per_cluster`](#--min_reads_per_cluster-arg)
     * [`--max_reads_per_cluster`](#--max_reads_per_cluster-arg)
-    * [`--filter_strategy_clusters`](#--filter_strategy_clusters-arg)
+    * [`--filter_strategy_clusters`](#--filter_strategy_clusters-arg-random-quality)
     * [`--output_format`](#--output_format-arg-fasta-fastq)
     * [`--min_overlap`](#--min_overlap-arg)
     * [`--include_secondary_reads`](#--include_secdondary_reads-arg)
@@ -89,14 +89,6 @@ Specify the path to the bed file containing the target name, start and end posit
 
 ## Advanced Parameters
 
-### `--output_format <ARG>` [fasta |fastq]
-Specify the output format until the cluster filtering step. [default: "fasta"]  
-Note: Only the "fastq" option can be used to filter reads by the quality and requires FASTQ input reads.  
-
-### `--filter_strategy_clusters <ARG>` [random |quality]
-Specify filter strategy to downsample cluster above the maximal reads per cluster parameter. [default: "random"]  
-Note: "quality" filter strategy only goes in hand with "fastq" output format. 
-
 ### `--min_reads_per_barcode <ARG>`
 Specify the minimal number of raw reads per barcode. [default: 1000]  
 Note: Barcodes with fewer reads will be filtered before the analysis.
@@ -110,7 +102,49 @@ Note: Clusters with fewer reads will be excluded from the analysis.
 
 ### `--max_reads_per_cluster <ARG>`
 Specify the maximal number of reads per cluster. [default: 60]
-Note: Clusters with more reads will be downsampled according to the [`cluster filtering strategy`](#--filter_strategy_clusters-arg).
+Note: Clusters with more reads will be downsampled according to the [`cluster filtering strategy`](#--filter_strategy_clusters-arg-random-quality).
+
+### `--output_format <ARG>` [fasta |fastq]
+Specify the output format until the cluster filtering step. [default: "fasta"]  
+Note: Only the "fastq" option can be used to filter reads by the quality and requires FASTQ input reads.  
+
+### `--filter_strategy_clusters <ARG>` [random |quality]
+Specify filter strategy to downsample cluster above the maximal reads per cluster parameter. [default: "random"]  
+Note: "quality" filter strategy only goes in hand with "fastq" output format. 
+
+### `--write-reports <ARG>`
+Specify if reports of the pipeline should be saved. [default: true]
+
+### `--threads <ARG>`
+Specify the number of threads that are allocated for the pipeline. [default: all available processors - 1]
+
+### `--min_overlap <ARG>` [0-1]
+Specify the minimal overlap of the mapped raw reads to the reference sequence. [default: 0.90]
+
+### `--include_secondary_reads <ARG>`
+Specify if secondary mappings should be included in the analysis. [default: false]
+
+### `--balance_strands <ARG>`
+Specify if the number of forward and reverse reads per cluster should be equalized. [default: true]
+
+### `--medaka_model <ARG>`
+Specify the medaka model that is used for cluster polishing. [default: "r1041_e82_400bps_hac_g615"]
+Note: The models are specific for Chemistry, basecalling algorithm and sequencing speed. 
+
+### `--fwd_umi <ARG>`
+Specify the pattern of the forward UMI primer. [default: "TTTVVVVTTVVVVTTVVVVTTVVVVTTT"]
+
+### `--rev_umi <ARG>`
+Specify the pattern of the reverse UMI primer. [default: "AAABBBBAABBBBAABBBBAABBBBAAA"]
+
+### `--min_length <ARG>`
+Specify the minimal length of the extracted UMI sequences. [default: 40]
+
+### `--min_length <ARG>`
+Specify the maximal length of the extracted UMI sequences. [default: 60]
+
+### `--minimap2_param <ARG>`
+Specify the minimap2 parameters. [default: "-ax map-ont -k 13]
 
 ## Additional Parameters
 
