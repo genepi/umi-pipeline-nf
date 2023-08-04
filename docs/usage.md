@@ -25,7 +25,7 @@ This document describes the parameter options used by the pipeline.
     * [`--min_reads_per_cluster`](#--min_reads_per_cluster-arg)
     * [`--max_reads_per_cluster`](#--max_reads_per_cluster-arg)
     * [`--filter_strategy_clusters`](#--filter_strategy_clusters-arg)
-    * [`--output_format`](#--output_format-arg)
+    * [`--output_format`](#--output_format-arg-fasta-fastq)
     * [`--min_overlap`](#--min_overlap-arg)
     * [`--include_secondary_reads`](#--include_secdondary_reads-arg)
     * [`--balance_strands`](#--balance_strands-arg)
@@ -76,7 +76,7 @@ work/           # Directory containing the nextflow working files
 Specify the path to the directory containing the demultiplexed reads. [default: "null"]
 
 ### `--output <ARG>` [REQUIRED]
-Name the output directory to save the results. [default: "null"]
+Specify the name of the output directory to save the results. [default: "null"]
 
 ### `--reference <ARG>` [REQUIRED]
 Specify the path to the reference genome in fasta format. [default: "null"]
@@ -89,14 +89,28 @@ Specify the path to the bed file containing the target name, start and end posit
 
 ## Advanced Parameters
 
-### `--output_format <ARG>` [fasta | fastq]
-Specify the output format until the cluster filtering step.  
-Note: Only the "fastq" option can be used to filter reads by quality and requires FASTQ input reads. [default: "fasta"]  
+### `--output_format <ARG>` [fasta |fastq]
+Specify the output format until the cluster filtering step. [default: "fasta"]  
+Note: Only the "fastq" option can be used to filter reads by the quality and requires FASTQ input reads.  
 
-### `--filter_strategy_clusters <ARG>` [random | quality]
-Specify filter strategy to downsample cluster above the maximal reads per cluster parameter.  
+### `--filter_strategy_clusters <ARG>` [random |quality]
+Specify filter strategy to downsample cluster above the maximal reads per cluster parameter. [default: "random"]  
 Note: "quality" filter strategy only goes in hand with "fastq" output format. 
 
+### `--min_reads_per_barcode <ARG>`
+Specify the minimal number of raw reads per barcode. [default: 1000]  
+Note: Barcodes with fewer reads will be filtered before the analysis.
+
+### `--umi_errors <ARG>`
+Specify the number of deviating positions per read of each UMI cluster. [default: 3]
+
+### `--min_reads_per_cluster <ARG>`
+Specify the minimal number of reads per cluster. [default: 20]
+Note: Clusters with fewer reads will be excluded from the analysis. 
+
+### `--max_reads_per_cluster <ARG>`
+Specify the maximal number of reads per cluster. [default: 60]
+Note: Clusters with more reads will be downsampled according to the [`cluster filtering strategy`](#--filter_strategy_clusters-arg).
 
 ## Additional Parameters
 
