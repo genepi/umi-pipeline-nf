@@ -18,7 +18,7 @@ This document describes the parameter options used by the pipeline.
     * [`--subsampling_seed`](#--subsampling_seed-arg)
     * [`--subsampling_readnumber`](#--subsampling_readnumber-arg)
 * [Variant calling parameters](#variant-calling-parameters)
-    * [`--variant_caller`](#--variant_caller-arg-required-lofreq--frebayes--mutserve)
+    * [`--variant_caller`](#--variant_caller-arg-required-lofreq-frebayes-mutserve)
 * [Advanced parameters](#advanced-parameters)
     * [`--min_reads_per_barcode`](#--min_reads_per_barcode-arg)
     * [`--umi_errors`](#--umi_errors-arg)
@@ -112,7 +112,7 @@ Specify the number of reads that should be preserved after subsampling. [default
 
 ## Variant Calling Parameters
 
-### `--variant_caller <ARG>` [REQUIRED] [lofreq | freebayes | mutserve]
+### `--variant_caller <ARG>` [REQUIRED] [lofreq |freebayes |mutserve]
 Specify the variant caller that should be used for variant calling.  [default: null]
 
 ## Advanced Parameters
