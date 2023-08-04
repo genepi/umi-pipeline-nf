@@ -52,5 +52,5 @@ nextflow run genepi/umi-pipeline-nf -r main -c <custom.config> -profile docker
 
 The pipeline was written by ([@StephanAmstler](https://github.com/AmstlerStephan)).  
 Nextflow template pipeline: [EcSeq](https://github.com/ecSeq).  
-Original Snakemake-based pipeline: [nanoporetech/pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon).  
-Original Workflow: [SorenKarst/longread_umi](https://github.com/SorenKarst/longread_umi).
+Original snakemake-based pipeline: [nanoporetech/pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon).  
+Original workflow: [SorenKarst/longread_umi](https://github.com/SorenKarst/longread_umi).
