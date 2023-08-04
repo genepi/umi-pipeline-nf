@@ -17,8 +17,8 @@ umi-pipeline-nf
 The pipeline can be run for the whole fastq_pass folder of your nanopore run and, per default, outputs the aligned consensus sequences of each UMI cluster in bam file. The optional variant calling creates a vcf file for all variants that are found in the consensus sequences.
 
 
-> See the [output documentation](docs/output.md) for more details of the results.  
-> See the [usage documentation](docs/usage.md) for all of the available options when running the pipeline.
+> See the [output documentation](docs/output.md) for a detailed overview of the pipeline and its output files.  
+> See the [usage documentation](docs/usage.md) for all of the available parameters of the pipeline.
 
 ## Quick Start
 
@@ -27,19 +27,19 @@ The pipeline can be run for the whole fastq_pass folder of your nanopore run and
 2. Download the pipeline and test it on a minimal dataset with a single command
 
 ```bash
-nextflow run AmstlerStephan/umi-pipeline-nf -profile test,docker
+nextflow run genepi/umi-pipeline-nf -profile test,docker
 ```
 
 3. Start running your own analysis!
 3.1 Download and adapt the config/custom.config with paths to your data (relative and absolute paths possible)
 
 ```bash
-nextflow run AmstlerStephan/umi-pipeline-nf -r main -c <custom.config> -profile docker 
+nextflow run genepi/umi-pipeline-nf -r main -c <custom.config> -profile docker 
 ```
 
 
 ### Credits
 
-These scripts were originally written for use by [GENEPI](https://genepi.i-med.ac.at/), by ([@StephanAmstler](https://github.com/AmstlerStephan)).  
+The pipeline was written by ([@StephanAmstler](https://github.com/AmstlerStephan)).  
 Nextflow template pipeline: [EcSeq](https://github.com/ecSeq).  
 Original Snakemake-based pipeline: [nanoporetech](https://github.com/nanoporetech/pipeline-umi-amplicon).
