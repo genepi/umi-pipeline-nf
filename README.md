@@ -1,23 +1,33 @@
 [![Nextflow](https://img.shields.io/badge/nextflow-20.07.1-brightgreen.svg)](https://www.nextflow.io/)
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
 
-umi-pipeline-nf
+Umi-pipeline-nf
 ======================
 
-**umi-pipeline-nf** is based on the [snakemake ONT UMI analysis pipeline](https://github.com/nanoporetech/pipeline-umi-amplicon). We transferred the pipeline to [Nextflow](https://www.nextflow.io).  
+**Umi-pipeline-nf** creates highly accurate single-molecule consensus sequences for unique molecular identifier (UMI)-tagged amplicon data.  
+The pipeline can be run for the whole fastq_pass folder of your nanopore run and, per default, outputs the aligned consensus sequences of each UMI cluster in bam file. The optional variant calling creates a vcf file for all variants that are found in the consensus sequences.
+umi-pipeline-nf is based on the [snakemake ONT UMI analysis pipeline](https://github.com/nanoporetech/pipeline-umi-amplicon). We transferred the pipeline to [Nextflow](https://www.nextflow.io).  
+
+## Workflow
+
+1. Input reads are aligned against a reference genome.
+2. The flanking UMI sequences of all reads are extracted.
+3. The extracted UMIs are used to cluster the reads.
+4. Per cluster, highly accurate consensus sequences are created.
+5. The consensus sequences are aligned against the reference sequenced.
+6. An optional variant calling step can be performed.
+
+> See the [output documentation](docs/output.md) for a detailed overview of the pipeline and its output files.
+
+## Main Adaptations
+
 * It comes with docker containers making **installation simple, portable** and **results highly reproducible**.
 * The pipeline is **optimized for parallelization**.
 * Read filtering strategy per UMI cluster was adapted to **preserve the highest quality reads**.
 * **Three commonly used variant callers** ([freebayes](https://github.com/freebayes/freebayes), [lofreq](http://csb5.github.io/lofreq/) or [mutserve](https://mitoverse.readthedocs.io/mutserve/mutserve/)) are supported by the pipeline.
 * The raw reads can be optionally **subsampled**.
 * The raw reads can be **filtered by read length and quality**.
-
-## Overview
-`umi-pipeline-nf` creates highly accurate single-molecule consensus sequences for unique molecular identifier (UMI)-tagged amplicon data.  
-The pipeline can be run for the whole fastq_pass folder of your nanopore run and, per default, outputs the aligned consensus sequences of each UMI cluster in bam file. The optional variant calling creates a vcf file for all variants that are found in the consensus sequences.
-
-
-> See the [output documentation](docs/output.md) for a detailed overview of the pipeline and its output files.  
+ 
 > See the [usage documentation](docs/usage.md) for all of the available parameters of the pipeline.
 
 ## Quick Start
