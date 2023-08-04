@@ -18,7 +18,7 @@ This document describes the parameter options used by the pipeline.
     * [`--subsampling_seed`](#--subsampling_seed-arg)
     * [`--subsampling_readnumber`](#--subsampling_readnumber-arg)
 * [Variant calling parameters](#variant-calling-parameters)
-    * [`--variant_caller`](#--variant_caller-arg-required)
+    * [`--variant_caller`](#--variant_caller-arg-required-lofreq--frebayes--mutserve)
 * [Advanced parameters](#advanced-parameters)
     * [`--min_reads_per_barcode`](#--min_reads_per_barcode-arg)
     * [`--umi_errors`](#--umi_errors-arg)
@@ -44,8 +44,6 @@ This document describes the parameter options used by the pipeline.
 * [Software dependencies](#software-dependencies)
     * [`-profile`](#-profile-arg)
     * [`-with-conda`](#-with-conda-arg)
-    * [`-with-docker`](#-with-docker-arg)
-    * [`-with-singularity`](#-with-singularity-arg)
 * [Other command line parameters](#other-command-line-parameters)
     * [`-work-dir`](#-work-dir-arg)
     * [`-params-file`](#-params-file-arg)
@@ -59,7 +57,7 @@ This document describes the parameter options used by the pipeline.
 The main command for running the pipeline is as follows:
 
 ```bash
-nextflow run ecSeq/DNAseq [OPTIONS]
+nextflow run Genepi/umi-pipeline-nf [OPTIONS]
 ```
 
 Note that the pipeline will create files in your working directory:
@@ -86,6 +84,36 @@ Specify the path to the reference index file. [default: "null"]
 
 ### `--bed <ARG>` [REQUIRED]
 Specify the path to the bed file containing the target name, start and end position. [default: "null"]
+
+## Workflow Modifying Parameters 
+
+### `--subsampling <ARG>`
+Specify if the raw reads per barcode should be subsampled. [default: false]
+
+### `--call_variants <ARG>`
+Specify if the variants in the final consensus sequences should be called. [default: false]
+Note: If set to true, the (`variant caller`)[ must be specified
+
+## Read Filtering Parameters
+
+### `--min_read_length <ARG>`
+Specify the minimal read length of the raw reads. [default: 0]
+
+### `--min_qcore <ARG>`
+Specify the minimal Q-score of the raw reads. [default: 0]
+
+## Subsampling Parameters
+
+### `--subsampling_seed <ARG>`
+Specify the seed for pseudo-random subsampling. [default: 11]
+
+### `--subsampling_readnumber <ARG>`
+Specify the number of reads that should be preserved after subsampling. [default: 100,000]
+
+## Variant Calling Parameters
+
+### `--variant_caller <ARG>` [REQUIRED] [lofreq | freebayes | mutserve]
+Specify the variant caller that should be used for variant calling.  [default: null]
 
 ## Advanced Parameters
 
@@ -152,10 +180,10 @@ Specify the minimap2 parameters. [default: "-ax map-ont -k 13]
 Specify in order to prevent Nextflow from clearing the work dir cache following a successful pipeline completion. [default: off]
 
 ### `--version`
-When called with `nextflow run ecseq/dnaseq --version` this will display the pipeline version and quit.
+When called with `nextflow run Genepi/umi-pipeline-nf --version` this will display the pipeline version and quit.
 
 ### `--help`
-When called with `nextflow run ecseq/dnaseq --help` this will display the parameter options and quit.
+When called with `nextflow run Genepi/umi-pipeline-nf --help` this will display the parameter options and quit.
 
 ## Software Dependencies
 
@@ -165,31 +193,25 @@ There are different ways to provide the required software dependencies for the p
 Use this parameter to choose a preset configuration profile. Profiles available with the pipeline are:
 
 * `standard`
-    * The default profile, used if `-profile` is not specified.
-    * Uses sensible resource allocation for , runs using the `local` executor (native system calls) and expects all software to be installed and available on the `$PATH`.
+    * The default profile, is used if `-profile` is not specified.
+    * Uses sensible resource allocation for, runs using the `local` executor (native system calls) and expects all software to be installed and available on the `$PATH`.
     * This profile is mainly designed to be used as a starting point for other configurations and is inherited by most of the other profiles below.
 * `conda`
     * Builds a conda environment from the environment.yml file provided by the pipeline
     * Requires conda to be installed on your system.
 * `docker`
-    * Launches a docker image pulled from ecseq/dnaseq
+    * Launches a docker image pulled from Genepi/umi-pipeline-nf (ADAPT)
     * Requires docker to be installed on your system. 
 * `singularity`
-    * Launches a singularity image pulled from ecseq/dnaseq
+    * Launches a singularity image pulled from Genepi/umi-pipeline-nf (ADAPT)
     * Requires singularity to be installed on your system.
 * `custom`
     * No configuration at all. Useful if you want to build your own config from scratch and want to avoid loading in the default `base` config for process resource allocation.
 
-If you wish to provide your own package containers it is possible to do so by setting the `standard` or `custom` profile, and then providing your custom package with the command line flags below. These are not required with the the other profiles.
+If you wish to provide your own package containers it is possible to do so by setting the `standard` or `custom` profile and then providing your custom package with the command line flags below. These are not required with the other profiles.
 
 ### `-with-conda <ARG>`
-Flag to enable conda. You can provide either a pre-built environment or a *.yaml file.
-
-### `-with-docker <ARG>`
-Flag to enable docker. The image will automatically be pulled from Dockerhub.
-
-### `-with-singularity <ARG>`
-Flag to enable use of singularity. The image will automatically be pulled from the internet. If running offline, follow the option with the full path to the image file.
+Flag to enable conda. You can provide either a pre-built environment or a *.yml file.
 
 ## Other command line parameters
 
@@ -203,7 +225,7 @@ Provide a file with specified parameters to avoid typing them out on the command
 Provide a custom config file for adapting the pipeline to run on your own computing infrastructure. A template config file [`assets/custom.config`](../assets/custom.config) has been made available in the pipeline repository. This file can be used as a boilerplate for building your own custom config.
 
 ### `-resume [<ARG>]`
-Specify this when restarting a pipeline. Nextflow will used cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously. Give a specific pipeline name as an argument to resume it, otherwise Nextflow will resume the most recent. NOTE: This will not work if the specified run finished successfully and the cache was automatically cleared. (see: [`--debug`](#--debug))
+Specify this when restarting a pipeline. Nextflow will use cached results from any pipeline steps where the inputs are the same, continuing from where they got previously. Give a specific pipeline name as an argument to resume it, otherwise, Nextflow will resume the most recent. NOTE: This will not work if the specified run finished successfully and the cache was automatically cleared. (see: [`--debug`](#--debug))
 
 ### `-name <ARG>`
 Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
