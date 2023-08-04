@@ -1,4 +1,4 @@
-# ecSeq-DNAseq Usage
+# Umi-pipeline-nf Usage
 This document describes the parameter options used by the pipeline.
 
 * [Running the pipeline](#running-the-pipeline)
