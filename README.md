@@ -34,4 +34,6 @@ nextflow run AmstlerStephan/umi-pipeline-nf -r main -c <custom.config> -profile 
 
 ### Credits
 
-These scripts were originally written for use by [GENEPI](https://genepi.i-med.ac.at/), by ([@StephanAmstler](https://github.com/AmstlerStephan)).
+These scripts were originally written for use by [GENEPI](https://genepi.i-med.ac.at/), by ([@StephanAmstler](https://github.com/AmstlerStephan)).  
+Nextflow template pipeline: [EcSeq](https://github.com/ecSeq).  
+Original Snakemake-based pipeline: [nanoporetech](https://github.com/nanoporetech/pipeline-umi-amplicon).
