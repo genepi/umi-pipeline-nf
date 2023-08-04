@@ -6,7 +6,7 @@ Umi-pipeline-nf
 
 **Umi-pipeline-nf** creates highly accurate single-molecule consensus sequences for unique molecular identifier (UMI)-tagged amplicon data.  
 The pipeline can be run for the whole fastq_pass folder of your nanopore run and, per default, outputs the aligned consensus sequences of each UMI cluster in bam file. The optional variant calling creates a vcf file for all variants that are found in the consensus sequences.
-umi-pipeline-nf is based on the [snakemake ONT UMI analysis pipeline](https://github.com/nanoporetech/pipeline-umi-amplicon). We transferred the pipeline to [Nextflow](https://www.nextflow.io) and included [additional functionalities](#main-adaptations).  
+umi-pipeline-nf is based on the [snakemake ONT UMI analysis pipeline](https://github.com/nanoporetech/pipeline-umi-amplicon) (workflow originally developed by [Karst et al, Nat Biotechnol 18:165–169, 2021](https://www.nature.com/articles/s41592-020-01041-y)). We transferred the pipeline to [Nextflow](https://www.nextflow.io) and included [additional functionalities](#main-adaptations).  
 
 ## Workflow
 
@@ -52,4 +52,5 @@ nextflow run genepi/umi-pipeline-nf -r main -c <custom.config> -profile docker
 
 The pipeline was written by ([@StephanAmstler](https://github.com/AmstlerStephan)).  
 Nextflow template pipeline: [EcSeq](https://github.com/ecSeq).  
-Original Snakemake-based pipeline: [nanoporetech](https://github.com/nanoporetech/pipeline-umi-amplicon).
+Original Snakemake-based pipeline: [nanoporetech/pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon).
+Original Workflow: [SorenKarst/longread_umi](https://github.com/SorenKarst/longread_umi)
