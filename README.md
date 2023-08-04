@@ -13,9 +13,11 @@ umi-pipeline-nf
 * The raw reads can be **filtered by read length and quality**.
 
 ## Overview
-`umi-pipeline-nf` creates highly accurate single-molecule consensus sequences based on amplicon data tagged by unique molecular identifiers (UMIs). The pipeline can be run for the whole fastq_pass folder of your nanopore run and, per default, outputs the aligned consensus sequences of each UMI cluster in bam file. 
+`umi-pipeline-nf` creates highly accurate single-molecule consensus sequences for unique molecular identifiers (UMIs) tagged amplicon data.  
+The pipeline can be run for the whole fastq_pass folder of your nanopore run and, per default, outputs the aligned consensus sequences of each UMI cluster in bam file. The optional variant calling creates a vcf file for all variants that are found in the consensus sequences.
 
-> See the [output documentation](docs/output.md) for more details of the results.
+
+> See the [output documentation](docs/output.md) for more details of the results.  
 > See the [usage documentation](docs/usage.md) for all of the available options when running the pipeline.
 
 ## Quick Start
