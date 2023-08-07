@@ -1,6 +1,6 @@
 process POLISH_CLUSTER {
     tag "${sample}"
-    conda 'miniconda3/envs/medaka'
+    conda '/home/qf0297/anaconda3/envs/npumi/envs/umi_test0'
 
     input:
         tuple val( sample ), val( target ), path( smolecule_clusters_fasta )
