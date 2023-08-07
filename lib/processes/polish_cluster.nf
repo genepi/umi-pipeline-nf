@@ -1,5 +1,6 @@
 process POLISH_CLUSTER {
     tag "${sample}"
+    conda "/root/miniconda3/envs/medaka"
 
     input:
         tuple val( sample ), val( target ), path( smolecule_clusters_fasta )
