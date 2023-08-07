@@ -12,6 +12,8 @@ process FREEBAYES {
 
     script:
     """
-      freebayes -f ${reference} ${bam} | vcfallelicprimitives -kg > ${type}.vcf
+      freebayes --version
+      freebayes -f ${reference} ${bam} | vcfallelicprimitives -kg >${type}.vcf
+
     """
 }

@@ -13,6 +13,7 @@ RUN wget \
     && bash Miniconda3-latest-Linux-x86_64.sh -b \
     && rm -f Miniconda3-latest-Linux-x86_64.sh
 RUN conda --version
+RUN conda update -y conda
 
 COPY environment.yml .
 RUN \
