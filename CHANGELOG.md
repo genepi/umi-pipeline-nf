@@ -1,4 +1,4 @@
-# ecSeq/DNAseq
+# genepi/umi-pipeline-nf
 ---
 # Releases
 

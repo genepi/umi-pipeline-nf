@@ -10,34 +10,35 @@ for (param in requiredParams) {
     }
 }
 
-// DEFINE PATHS
-bed = file("${params.bed}", checkIfExists: true)
-reference = file("${params.reference}", checkIfExists: true)
-reference_fai = file( "${params.reference_fai}", checkIfExists: true)
+// file paths
+bed                         = file("${params.bed}", checkIfExists: true)
+reference                   = file("${params.reference}", checkIfExists: true)
+reference_fai               = file( "${params.reference_fai}", checkIfExists: true)
 
 // python scripts
-umi_filter_reads = file( "${projectDir}/bin/filter_reads.py", checkIfExists: true)
-umi_extract = file( "${projectDir}/bin/extract_umis.py", checkIfExists: true)
-umi_parse_clusters = file( "${projectDir}/bin/parse_clusters.py", checkIfExists: true)
-umi_reformat_consensus = file( "${projectDir}/bin/reformat_consensus.py", checkIfExists: true )
+umi_filter_reads            = file( "${projectDir}/bin/filter_reads.py", checkIfExists: true)
+umi_extract                 = file( "${projectDir}/bin/extract_umis.py", checkIfExists: true)
+umi_parse_clusters          = file( "${projectDir}/bin/parse_clusters.py", checkIfExists: true)
+umi_reformat_consensus      = file( "${projectDir}/bin/reformat_consensus.py", checkIfExists: true )
+
+// subdirectory and file prefixes
+raw                         = "raw"
+consensus                   = "consensus"
+final_consensus             = "final"
+barcode_sizes               = [:]
+
 
 // STAGE CHANNELS
+// to remove also barcode01 use :~/.*barcode((0[2-9])|([1-9][0-9]))/ 
 // Remove barcode01 and uncalssified from the input fastq folder
-fastq_files_ch = Channel.fromPath("${params.input}/*", type: 'dir')
-    .filter( ~/.*barcode((0[2-9])|([1-9][0-9]))/ )
-
-// subdirectory_and_file_prefixes
-raw = "raw"
-consensus = "consensus"
-final_consensus = "final"
-barcode_sizes = [:]
-
+Channel.fromPath("${params.input}/*", type: 'dir')
+    .filter( ~/.*barcode(([0-9][0-9]))/ )
+    .set { fastq_files_ch }
 
 ////////////////////
 // BEGIN PIPELINE //
 ////////////////////
 
-// INCLUDES # here you must give the relevant process files from the lib directory 
 include {COPY_BED} from '../processes/copy_bed.nf'
 include {MERGE_FASTQ} from '../processes/merge_input.nf'
 include {MERGE_CONSENSUS_FASTA} from '../processes/merge_consensus_fasta.nf'
@@ -63,14 +64,17 @@ workflow UMI_PIPELINE {
         if( params.subsampling ){
             MERGE_FASTQ( fastq_files_ch )
             SUBSAMPLING( MERGE_FASTQ.out.merged_fastq )
-            merged_fastq = SUBSAMPLING.out.subsampled_fastq
+            SUBSAMPLING.out.subsampled_fastq
+            .set { merged_fastq }
         } else {
             MERGE_FASTQ( fastq_files_ch )
-            merged_fastq = MERGE_FASTQ.out.merged_fastq
+            MERGE_FASTQ.out.merged_fastq
+            .set { merged_fastq }
         }
 
-        merged_filtered_fastq = merged_fastq
-        .filter{ sample, target, fastq_file -> fastq_file.countFastq() > params.min_reads_per_barcode }
+        merged_fastq
+        .filter { sample, target, fastq_file -> fastq_file.countFastq() > params.min_reads_per_barcode }
+        .set { merged_filtered_fastq }
 
         MAP_READS( merged_filtered_fastq, raw, reference )
         SPLIT_READS( MAP_READS.out.bam_consensus, COPY_BED.out.bed, raw, umi_filter_reads )
@@ -81,14 +85,16 @@ workflow UMI_PIPELINE {
         REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
         .map{ sample, type, fastas -> barcode_sizes.put("$sample", fastas.size)}
 
-        flatten_smolecule_fastas = REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
+        REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
         .transpose(by: 2)
+        .set { flatten_smolecule_fastas }
 
         POLISH_CLUSTER( flatten_smolecule_fastas, consensus )
 
-        merge_consensus = POLISH_CLUSTER.out.consensus_fasta
+        POLISH_CLUSTER.out.consensus_fasta
         .map{ sample, type, fasta -> tuple( groupKey(sample, barcode_sizes.get("$sample")), type, fasta) }
         .groupTuple()
+        .set { merge_consensus }
 
         MERGE_CONSENSUS_FASTA(merge_consensus)
         
