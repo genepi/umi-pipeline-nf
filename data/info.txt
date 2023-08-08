@@ -10,7 +10,7 @@ Consensus sequences before polishing: 14
 Final consensus sequences after polishing: 13
 1 Sequence KIV-2B can be found in both (consensus and final) bam files.
 
-Barocde03:
+Barcode03:
 Barcode03 has a mixture level of 33% KIV-2A and 67% KIV-2B.
 Raw reads: 6,509
 Found clusters: 240
