@@ -42,16 +42,16 @@ Channel.fromPath("${params.input}/*", type: 'dir')
 
 include {COPY_BED} from '../processes/copy_bed.nf'
 include {MERGE_FASTQ} from '../processes/merge_input.nf'
-include {MERGE_CONSENSUS_FASTA} from '../processes/merge_consensus_fasta.nf'
+include {MERGE_CONSENSUS_FASTQ} from '../processes/merge_consensus_fastq.nf'
 include {SUBSAMPLING} from '../processes/subsampling.nf'
 include {MAP_READS; MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS} from '../processes/map_reads.nf'
 include {SPLIT_READS} from  '../processes/split_reads.nf'
-include {DETECT_UMI_FASTA} from '../processes/detect_umi_fasta.nf'
+include {DETECT_UMI_FASTQ} from '../processes/detect_umi_fastq.nf'
 include {CLUSTER; CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
 include {SPLIT_CLUSTER; SPLIT_CLUSTER as SPLIT_CLUSTER_CONSENSUS} from '../processes/cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
-include {DETECT_UMI_CONSENSUS_FASTA} from '../processes/detect_umi_consensus_fasta.nf'
+include {DETECT_UMI_CONSENSUS_FASTQ} from '../processes/detect_umi_consensus_fastq.nf'
 include {REFORMAT_CONSENSUS_CLUSTER} from '../processes/reformat_consensus_cluster.nf'
 include {LOFREQ} from '../processes/variant_calling/lofreq.nf'
 include {MUTSERVE} from '../processes/variant_calling/mutserve.nf'
@@ -80,47 +80,47 @@ workflow UMI_PIPELINE {
 
         MAP_READS( merged_filtered_fastq, raw, reference )
         SPLIT_READS( MAP_READS.out.bam_consensus, COPY_BED.out.bed, raw, umi_filter_reads )
-        DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastx, raw, umi_extract )
-        CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta, raw )
+        DETECT_UMI_FASTQ( SPLIT_READS.out.split_reads_fastx, raw, umi_extract )
+        CLUSTER( DETECT_UMI_FASTQ.out.umi_extract_fastq, raw )
 
         // filter clusters that are below the minimal reads per cluster threshold
         // usually up to 80% of the clusters are below the threshold
-        CLUSTER.out.cluster_fastas
-        .filter { sample, target, cluster_fasta -> cluster_fasta.countFastq() > params.min_reads_per_cluster}
-        .set { cluster_fastas }
+        CLUSTER.out.cluster_fastqs
+        .filter { sample, target, cluster_fastq -> cluster_fastq.countFastq() > params.min_reads_per_cluster}
+        .set { cluster_fastqs }
 
-        SPLIT_CLUSTER( cluster_fastas, raw, umi_split_cluster_python )
+        SPLIT_CLUSTER( cluster_fastqs, raw, umi_split_cluster_python )
 
-        SPLIT_CLUSTER.out.split_cluster_fastas
-        .filter { sample, target, split_cluster_fasta -> split_cluster_fasta.countFastq() > params.min_reads_per_cluster}
-        .set { split_cluster_fastas }
+        SPLIT_CLUSTER.out.split_cluster_fastqs
+        .filter { sample, target, split_cluster_fastq -> split_cluster_fastq.countFastq() > params.min_reads_per_cluster}
+        .set { split_cluster_fastqs }
 
-        REFORMAT_FILTER_CLUSTER( split_cluster_fastas, raw, umi_parse_clusters)
+        REFORMAT_FILTER_CLUSTER( split_cluster_fastqs, raw, umi_parse_clusters )
 
         // count number of final clusters per sample to end cluster polishing sooner
         // TODO test for small number of clusters if pipeline gets stuck
-        REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fasta
+        REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastq
         .groupTuple(by: 1)
-        .map{ sample, type, fastas -> barcode_sizes.put("$sample", fastas.size)}
+        .map{ sample, type, fastqs -> barcode_sizes.put("$sample", fastqs.size)}
 
-        REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
+        REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastqs
         .transpose(by: 2)
-        .set { flatten_smolecule_fastas }
+        .set { flatten_smolecule_fastqs }
 
-        POLISH_CLUSTER( flatten_smolecule_fastas, consensus )
+        POLISH_CLUSTER( flatten_smolecule_fastqs, consensus )
 
-        POLISH_CLUSTER.out.consensus_fasta
-        .map{ sample, type, fasta -> tuple( groupKey(sample, barcode_sizes.get("$sample")), type, fasta) }
+        POLISH_CLUSTER.out.consensus_fastq
+        .map{ sample, type, fastq -> tuple( groupKey(sample, barcode_sizes.get("$sample")), type, fastq) }
         .groupTuple()
         .set { merge_consensus }
 
-        MERGE_CONSENSUS_FASTA(merge_consensus)
+        MERGE_CONSENSUS_FASTQ(merge_consensus)
         
-        MAP_CONSENSUS( MERGE_CONSENSUS_FASTA.out.merged_consensus_fasta, consensus, reference )
-        DETECT_UMI_CONSENSUS_FASTA( MERGE_CONSENSUS_FASTA.out.merged_consensus_fasta, consensus, umi_extract )
-        CLUSTER_CONSENSUS( DETECT_UMI_CONSENSUS_FASTA.out.umi_extract_fasta , consensus )
-        REFORMAT_CONSENSUS_CLUSTER( CLUSTER_CONSENSUS.out.consensus_fasta, final_consensus, umi_reformat_consensus )
-        MAP_FINAL_CONSENSUS( REFORMAT_CONSENSUS_CLUSTER.out.consensus_fasta, final_consensus, reference )
+        MAP_CONSENSUS( MERGE_CONSENSUS_FASTQ.out.merged_consensus_fastq, consensus, reference )
+        DETECT_UMI_CONSENSUS_FASTQ( MERGE_CONSENSUS_FASTQ.out.merged_consensus_fastq, consensus, umi_extract )
+        CLUSTER_CONSENSUS( DETECT_UMI_CONSENSUS_FASTQ.out.umi_extract_fastq , consensus )
+        REFORMAT_CONSENSUS_CLUSTER( CLUSTER_CONSENSUS.out.consensus_fastq, final_consensus, umi_reformat_consensus )
+        MAP_FINAL_CONSENSUS( REFORMAT_CONSENSUS_CLUSTER.out.consensus_fastq, final_consensus, reference )
         
         if( params.call_variants ){
             if( params.variant_caller == "lofreq" ){
