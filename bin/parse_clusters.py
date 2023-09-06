@@ -96,7 +96,7 @@ def parse_args(argv):
 
 
 def get_cluster_id(cluster):
-    return re.findall(r'[\d.]+', cluster)
+    return re.findall(r'[\d.]+', cluster)[0]
 
 def get_read_seq(entry):
     return entry.name.split(";seq=")[1].split(";")[0]

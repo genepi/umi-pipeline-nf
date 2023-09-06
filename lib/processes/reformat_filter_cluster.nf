@@ -8,7 +8,7 @@ process REFORMAT_FILTER_CLUSTER {
         path umi_parse_clusters_python
 
     output:
-        tuple val( "${sample}" ), val( "${target}" ), path( "smolecule*"), emit: smolecule_cluster_fastq
+        tuple val( "${sample}" ), val( "${target}" ), path( "smolecule*"), optional: true, emit: smolecule_cluster_fastq
         path( "*.tsv" )
 
     script:

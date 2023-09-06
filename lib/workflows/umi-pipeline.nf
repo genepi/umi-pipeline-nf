@@ -94,7 +94,6 @@ workflow UMI_PIPELINE {
 
         SPLIT_CLUSTER.out.split_cluster_fastas
         .transpose()
-        .view()
         .filter { sample, target, split_cluster_fasta -> split_cluster_fasta.countFasta() > params.min_reads_per_cluster}
         .set { split_cluster_fastas }
 
