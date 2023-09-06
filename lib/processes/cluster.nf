@@ -1,14 +1,16 @@
-centroid_fasta="clusters_centroid.fasta"
-consensus_fasta="clusters_consensus.fasta"
+centroid_fasta="centroid.fasta"
+consensus_fasta="consensus.fasta"
 vsearch_dir="vsearch_clusters"
 
 process CLUSTER {
+    publishDir "${params.output}/${sample}/clustering/${type}", pattern: "${consensus_fasta}" mode: 'copy'
+
     input:
         tuple val( sample ), val( target ), path( detected_umis_fasta )
         val ( type )
     output:
+        tuple val( "${sample}" ), val( "${target}" ), path( "${consensus_fasta}" ), emit:consensus_fasta
         tuple val( "${sample}" ), val( "${target}" ), path( "cluster*" ), emit:cluster_fastas
-        path( "${centroid_fasta}" ) 
         
     """
         vsearch \
