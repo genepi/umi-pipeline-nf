@@ -8,7 +8,7 @@ process SPLIT_CLUSTER {
     val (type )
     path umi_split_cluster_python
   output:
-    tuple val( "${sample}" ), val( "${target}" ), path( "cluster*" ), emit:split_cluster_fastqs
+    tuple val( "${sample}" ), val( "${target}" ), path( "cluster*_*" ), emit:split_cluster_fastas
  
   script:
   """

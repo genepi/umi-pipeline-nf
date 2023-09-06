@@ -68,7 +68,7 @@ def parse_args(argv):
     return args
 
 def get_split_cluster(reads, max_edit_dist):
-    close_reads = []
+    subcluster = []
     distant_reads = []
     parent = reads[0].seq
     
@@ -83,16 +83,14 @@ def get_split_cluster(reads, max_edit_dist):
         if result["editDistance"] == -1:
             distant_reads.append(read)
         else:
-            close_reads.append(read)
-    return close_reads, distant_reads                    
+            subcluster.append(read)
+    return subcluster, distant_reads                    
 
 def write_subcluster(subcluster, subcluster_name):
     with open(subcluster_name, "w") as out_f:
         for read in subcluster:
-            print("@{}".format(read.name), file=out_f)
+            print(">{}".format(read.name), file=out_f)
             print("{}".format(read.seq), file=out_f)
-            print("+", file=out_f)
-            print("{}".format(read.qual), file=out_f)
 
 def parse_clusters(args):
     min_reads = args.MIN_CLUSTER_READS
@@ -100,20 +98,23 @@ def parse_clusters(args):
     output_folder = args.OUTPUT
     max_edit_dist = args.MAX_EDIT_DIST
     
-    n_subcluster = 1       
-    with pyfastx.Fastq(cluster) as reads:
-        residual_reads = len(reads)
-        while residual_reads > min_reads:
-            subcluster, residual_reads = get_split_cluster(reads, max_edit_dist)
-            
-            if len(subcluster) > min_reads:
-                write_subcluster(
-                    subcluster,
-                    os.path.join(output_folder, "{}_{}".format(cluster, n_subcluster))
-                    )
-                
-    # Emit empty file to satisfy nextflow downstrean process 
-    open(os.path.join(output_folder, "{}_empty".format(cluster)), "w")
+    n_subcluster = 0       
+    residual_reads = pyfastx.Fasta(cluster)
+    
+    n_residual_reads = len(residual_reads)
+    while n_residual_reads > min_reads:
+        subcluster, residual_reads = get_split_cluster(residual_reads, max_edit_dist)
+        n_residual_reads = len(residual_reads)
+        if len(subcluster) > min_reads:
+            write_subcluster(
+                subcluster,
+                os.path.join(output_folder, "{}_{}".format(cluster, n_subcluster))
+                )
+            n_subcluster += 1
+    
+    if n_subcluster == 0:     
+        # Emit empty file to satisfy nextflow downstrean process 
+        open(os.path.join(output_folder, "{}_empty".format(cluster)), "w")
 
 def main(argv=sys.argv[1:]):
     """

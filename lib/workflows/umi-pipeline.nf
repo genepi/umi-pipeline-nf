@@ -48,7 +48,7 @@ include {MAP_READS; MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS
 include {SPLIT_READS} from  '../processes/split_reads.nf'
 include {DETECT_UMI_FASTQ} from '../processes/detect_umi_fastq.nf'
 include {CLUSTER; CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
-include {SPLIT_CLUSTER; SPLIT_CLUSTER as SPLIT_CLUSTER_CONSENSUS} from '../processes/cluster.nf'
+include {SPLIT_CLUSTER; SPLIT_CLUSTER as SPLIT_CLUSTER_CONSENSUS} from '../processes/split_cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
 include {DETECT_UMI_CONSENSUS_FASTQ} from '../processes/detect_umi_consensus_fastq.nf'
@@ -85,17 +85,20 @@ workflow UMI_PIPELINE {
 
         // filter clusters that are below the minimal reads per cluster threshold
         // usually up to 80% of the clusters are below the threshold
-        CLUSTER.out.cluster_fastqs
-        .filter { sample, target, cluster_fastq -> cluster_fastq.countFastq() > params.min_reads_per_cluster}
-        .set { cluster_fastqs }
+        CLUSTER.out.cluster_fastas
+        .transpose()
+        .filter { sample, target, cluster_fasta -> cluster_fasta.countFasta() > params.min_reads_per_cluster}
+        .set { cluster_fastas }
 
-        SPLIT_CLUSTER( cluster_fastqs, raw, umi_split_cluster_python )
+        SPLIT_CLUSTER( cluster_fastas, raw, umi_split_cluster_python )
 
-        SPLIT_CLUSTER.out.split_cluster_fastqs
-        .filter { sample, target, split_cluster_fastq -> split_cluster_fastq.countFastq() > params.min_reads_per_cluster}
-        .set { split_cluster_fastqs }
+        SPLIT_CLUSTER.out.split_cluster_fastas
+        .transpose()
+        .view()
+        .filter { sample, target, split_cluster_fasta -> split_cluster_fasta.countFasta() > params.min_reads_per_cluster}
+        .set { split_cluster_fastas }
 
-        REFORMAT_FILTER_CLUSTER( split_cluster_fastqs, raw, umi_parse_clusters )
+        REFORMAT_FILTER_CLUSTER( split_cluster_fastas, raw, umi_parse_clusters )
 
         // count number of final clusters per sample to end cluster polishing sooner
         // TODO test for small number of clusters if pipeline gets stuck
@@ -103,7 +106,7 @@ workflow UMI_PIPELINE {
         .groupTuple(by: 1)
         .map{ sample, type, fastqs -> barcode_sizes.put("$sample", fastqs.size)}
 
-        POLISH_CLUSTER( flatten_smolecule_fastqs, consensus )
+        POLISH_CLUSTER( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastq, consensus )
 
         POLISH_CLUSTER.out.consensus_fastq
         .map{ sample, type, fastq -> tuple( groupKey(sample, barcode_sizes.get("$sample")), type, fastq) }
@@ -115,7 +118,7 @@ workflow UMI_PIPELINE {
         MAP_CONSENSUS( MERGE_CONSENSUS_FASTQ.out.merged_consensus_fastq, consensus, reference )
         DETECT_UMI_CONSENSUS_FASTQ( MERGE_CONSENSUS_FASTQ.out.merged_consensus_fastq, consensus, umi_extract )
         CLUSTER_CONSENSUS( DETECT_UMI_CONSENSUS_FASTQ.out.umi_extract_fastq , consensus )
-        REFORMAT_CONSENSUS_CLUSTER( CLUSTER_CONSENSUS.out.consensus_fastq, final_consensus, umi_reformat_consensus )
+        REFORMAT_CONSENSUS_CLUSTER( CLUSTER_CONSENSUS.out.consensus_fasta, final_consensus, umi_reformat_consensus )
         MAP_FINAL_CONSENSUS( REFORMAT_CONSENSUS_CLUSTER.out.consensus_fastq, final_consensus, reference )
         
         if( params.call_variants ){

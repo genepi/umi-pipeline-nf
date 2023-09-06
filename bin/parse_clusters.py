@@ -4,7 +4,7 @@ import os
 import sys
 import re
 
-import pysam
+import pyfastx
 
 
 def parse_args(argv):
@@ -120,17 +120,17 @@ def get_read_qual(entry):
 def get_mean_qual(qual):
     return sum(map(lambda char: ord(char), qual)) / len(qual)
 
-def get_split_reads(cluster_fasta_umi):
+def get_split_reads(cluster):
     reads_fwd = []
     reads_rev = []
-    with pysam.FastxFile(cluster_fasta_umi) as fh:
-        for entry in fh:
-            strand = get_read_strand(entry)
-            
-            if strand == "+":
-                reads_fwd.append(entry)
-            else:
-                reads_rev.append(entry)
+    reads = pyfastx.Fasta(cluster)
+    
+    for entry in reads:
+        strand = get_read_strand(entry)
+        if strand == "+":
+            reads_fwd.append(entry)
+        else:
+            reads_rev.append(entry)
     return reads_fwd, reads_rev
 
 def get_sorted_reads(reads):
@@ -177,79 +177,6 @@ def get_filtered_reads(reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_read
 
     return reads_fwd, reads_rev, write_cluster, skipped_fwd, skipped_rev
 
-def polish_cluster(
-    cluster_id,
-    vsearch_folder,
-    output_folder,
-    min_reads,
-    max_reads,
-    filter,
-    stats_out_filename,
-    tsv,
-    balance_strands,
-    format
-):
-    reads_found = 0
-    reads_written = 0
-    reads_written_fwd = 0
-    reads_written_rev = 0
-
-    reads_skipped = 0
-    cluster_written = 0
-
-    reads_fwd = []
-    reads_rev = []
-
-    cluster_fasta_umi = os.path.join(
-        vsearch_folder, "cluster{}".format(cluster_id))
-    # parsed_cluster = os.path.join(
-    #    output_folder, "cluster{}.{}".format(cluster_id, format))
-    smolecule_file = os.path.join(
-        output_folder, "smolecule{}.{}".format(cluster_id, format))
-
-    # parse_cluster(cluster_fasta_umi, parsed_cluster, format)
-
-    reads_fwd, reads_rev = get_split_reads(cluster_fasta_umi)
-    n_fwd = len(reads_fwd)
-    n_rev = len(reads_rev)
-    reads_found = n_fwd + n_rev
-
-    # Fail fast if no stat file must be written
-    if not tsv:
-        if reads_found < min_reads:
-            cluster_written = 0
-            reads_written = 0
-            reads_skipped = reads_found
-            return cluster_written, reads_found, reads_skipped, reads_written
-    else:
-        if filter == "quality":
-            reads_fwd = get_sorted_reads(reads_fwd)
-            reads_rev = get_sorted_reads(reads_rev)
-
-    reads_fwd, reads_rev, write_cluster, reads_skipped_fwd, reads_skipped_rev = get_filtered_reads(
-        reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_reads, max_reads, balance_strands)
-
-    if write_cluster:
-        cluster_written = 1
-        reads_written_fwd = len(reads_fwd)
-        reads_written_rev = len(reads_rev)
-        
-        reads = reads_fwd + reads_rev
-        write_smolecule(cluster_id, reads, smolecule_file, format)
-    else:
-        cluster_written = 0
-
-    if tsv:
-        write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found, n_fwd,
-                       n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev)
-
-    return (
-        cluster_written,
-        reads_found,
-        reads_skipped_fwd + reads_skipped_rev,
-        reads_written_rev + reads_written_fwd
-    )
-
 def write_smolecule(cluster_id, reads, smolecule_file, format):
     with open(smolecule_file, "w") as out_f:
         for n, entry in enumerate(reads):
@@ -290,48 +217,60 @@ def write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found,
               )
 
 def parse_clusters(args):
-    min_read_per_cluster = args.MIN_CLUSTER_READS
-    max_read_per_cluster = args.MAX_CLUSTER_READS
+    min_reads = args.MIN_CLUSTER_READS
+    max_reads = args.MAX_CLUSTER_READS
     filter = args.FILTER
     format = args.OUT_FORMAT
     cluster = args.CLUSTER
-    output = args.OUTPUT
+    output_folder = args.OUTPUT
     balance_strands = args.BAL_STRANDS
     tsv = args.TSV
     
     stats_out_filename = "vsearch_cluster_stats"
-    n_clusters = 0
-    n_written = 0
     reads_found = 0
-    reads_skipped = 0
-    reads_written = 0
+    reads_found = 0
+    reads_written_fwd = 0
+    reads_written_rev = 0
+    cluster_written = 0
+
+    reads_fwd = []
+    reads_rev = []
+    cluster_id = get_cluster_id(cluster)
+        
+    smolecule_file = os.path.join(
+        output_folder, "smolecule{}.{}".format(cluster_id, format))
+    stats_out_filename = os.path.join(
+            output_folder, "{}.tsv".format(stats_out_filename))
+        
+    reads_fwd, reads_rev = get_split_reads(cluster)
+    n_fwd = len(reads_fwd)
+    n_rev = len(reads_rev)
+    reads_found = n_fwd + n_rev
+
+    if filter == "quality":
+        reads_fwd = get_sorted_reads(reads_fwd)
+        reads_rev = get_sorted_reads(reads_rev)
+
+    reads_fwd, reads_rev, write_cluster, reads_skipped_fwd, reads_skipped_rev = get_filtered_reads(
+        reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_reads, max_reads, balance_strands)
+
+    if write_cluster:
+        cluster_written = 1
+        reads_written_fwd = len(reads_fwd)
+        reads_written_rev = len(reads_rev)
+        
+        reads = reads_fwd + reads_rev
+        write_smolecule(cluster_id, reads, smolecule_file, format)
+    else:
+        cluster_written = 0
 
     if tsv:
-        stats_out_filename = os.path.join(
-            output, "{}.tsv".format(stats_out_filename))
         if not(os.path.exists(stats_out_filename)):
             write_tsv_line(stats_out_filename, "cluster_id", "cluster_written", "reads_found", "reads_found_fwd",
-                       "reads_found_rev", "reads_written_fwd", "reads_written_rev", "reads_skipped_fwd", "reads_skipped_rev")
-
-    with pysam.FastxFile(cluster) as fh:
-        cluster_id = get_cluster_id(cluster)
-        a, b, c, d = polish_cluster(
-            cluster_id,
-            output,
-            min_read_per_cluster,
-            max_read_per_cluster,
-            filter,
-            stats_out_filename,
-            tsv,
-            balance_strands,
-            format
-        )
-        n_clusters += 1
-        n_written += a
-        reads_found += b
-        reads_skipped += c
-        reads_written += d
-
+                    "reads_found_rev", "reads_written_fwd", "reads_written_rev", "reads_skipped_fwd", "reads_skipped_rev")
+            
+        write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found, n_fwd,
+                    n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev)
 
 def main(argv=sys.argv[1:]):
     """
