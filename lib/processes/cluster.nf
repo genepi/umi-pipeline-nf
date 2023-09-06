@@ -9,8 +9,7 @@ process CLUSTER {
         tuple val( sample ), val( target ), path( detected_umis_fasta )
         val ( type )
     output:
-        tuple val( "${sample}" ), val( "${target}" ), path( "${consensus_fasta}" ), emit:consensus_fasta
-        path( "${vsearch_dir}" ), emit: vsearch_dir
+        tuple val( "${sample}" ), val( "${target}" ), path( "${vsearch_dir}/cluster*" ), emit:cluster_fastas
         path( "${centroid_fasta}" ) 
         
     """
