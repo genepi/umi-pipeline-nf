@@ -20,6 +20,7 @@ umi_filter_reads            = file( "${projectDir}/bin/filter_reads.py", checkIf
 umi_extract                 = file( "${projectDir}/bin/extract_umis.py", checkIfExists: true)
 umi_parse_clusters          = file( "${projectDir}/bin/parse_clusters.py", checkIfExists: true)
 umi_reformat_consensus      = file( "${projectDir}/bin/reformat_consensus.py", checkIfExists: true )
+umi_split_cluster_python    = file( "${projectDir}/bin/split_cluster.py", checkIfExists: true )
 
 // subdirectory and file prefixes
 raw                         = "raw"
@@ -47,6 +48,7 @@ include {MAP_READS; MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS
 include {SPLIT_READS} from  '../processes/split_reads.nf'
 include {DETECT_UMI_FASTA} from '../processes/detect_umi_fasta.nf'
 include {CLUSTER; CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
+include {SPLIT_CLUSTER; SPLIT_CLUSTER as SPLIT_CLUSTER_CONSENSUS} from '../processes/cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
 include {DETECT_UMI_CONSENSUS_FASTA} from '../processes/detect_umi_consensus_fasta.nf'
@@ -84,10 +86,16 @@ workflow UMI_PIPELINE {
         // filter clusters that are below the minimal reads per cluster threshold
         // usually up to 80% of the clusters are below the threshold
         CLUSTER.out.cluster_fastas
-        .filter { sample, target, cluster_fasta -> cluster_fasta.countFasta() > params.min_reads_per_cluster}
+        .filter { sample, target, cluster_fasta -> cluster_fasta.countFastq() > params.min_reads_per_cluster}
         .set { cluster_fastas }
 
-        REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters)
+        SPLIT_CLUSTER( cluster_fastas, raw, umi_split_cluster_python )
+
+        SPLIT_CLUSTER.out.split_cluster_fastas
+        .filter { sample, target, split_cluster_fasta -> split_cluster_fasta.countFastq() > params.min_reads_per_cluster}
+        .set { split_cluster_fastas }
+
+        REFORMAT_FILTER_CLUSTER( split_cluster_fastas, raw, umi_parse_clusters)
 
         // count number of final clusters per sample to end cluster polishing sooner
         // TODO test for small number of clusters if pipeline gets stuck
