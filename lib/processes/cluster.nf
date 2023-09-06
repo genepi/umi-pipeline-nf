@@ -3,20 +3,17 @@ consensus_fasta="clusters_consensus.fasta"
 vsearch_dir="vsearch_clusters"
 
 process CLUSTER {
-    publishDir "${params.output}/${sample}/clustering/${type}", mode: 'copy'
-
     input:
         tuple val( sample ), val( target ), path( detected_umis_fasta )
         val ( type )
     output:
-        tuple val( "${sample}" ), val( "${target}" ), path( "${vsearch_dir}/cluster*" ), emit:cluster_fastas
+        tuple val( "${sample}" ), val( "${target}" ), path( "cluster*" ), emit:cluster_fastas
         path( "${centroid_fasta}" ) 
         
     """
-        mkdir -p ${vsearch_dir} && \
         vsearch \
         --clusterout_id \
-        --clusters ${vsearch_dir}/cluster \
+        --clusters cluster \
         --centroids ${centroid_fasta} \
         --consout ${consensus_fasta} \
         --minseqlength ${params.min_length} \
