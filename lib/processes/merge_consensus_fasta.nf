@@ -1,14 +1,14 @@
-merged_fasta="merged_consensus.fasta"
-process MERGE_CONSENSUS_FASTA {
+merged_fastq="merged_consensus.fastq"
+process MERGE_CONSENSUS_FASTQ {
     
     input:
-        tuple val( sample ), val( target ), path( consensus_fastas )
+        tuple val( sample ), val( target ), path( consensus_fastqs )
     
     output:
-        tuple val( "${sample}" ), val( "${target}" ), path( "${merged_fasta}"), emit: merged_consensus_fasta
+        tuple val( "${sample}" ), val( "${target}" ), path( "${merged_fastq}"), emit: merged_consensus_fastq
     
     script:
     """
-        cat ${consensus_fastas} > ${merged_fasta}
+        cat ${consensus_fastqs} > ${merged_fastq}
     """
 }

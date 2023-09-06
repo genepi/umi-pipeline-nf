@@ -1,14 +1,14 @@
-process DETECT_UMI_CONSENSUS_FASTA {
+process DETECT_UMI_CONSENSUS_FASTQ {
     publishDir "${params.output}/${sample}/stats/${type}", pattern: "*.tsv", mode: 'copy'
-    publishDir "${params.output}/${sample}/fasta_umi/${type}", pattern: "*fasta", mode: 'copy'
+    publishDir "${params.output}/${sample}/fastq_umi/${type}", pattern: "*fastq", mode: 'copy'
 
     input:
-        tuple val( sample ), val( target ), path ( fasta )
+        tuple val( sample ), val( target ), path ( fastq )
         val ( type )
         path umi_extract_python
     
     output:
-        tuple val( "${sample}" ), val( "${fasta.baseName}" ), path ( "*fasta" ), emit: umi_extract_fasta
+        tuple val( "${sample}" ), val( "${fastq.baseName}" ), path ( "*fastq" ), emit: umi_extract_fastq
         path "*.tsv"
 
     script:
@@ -20,6 +20,6 @@ process DETECT_UMI_CONSENSUS_FASTA {
         --max-error ${params.umi_errors} \
         $write_report \
         -o . \
-        ${fasta}
+        ${fastq}
     """
 }

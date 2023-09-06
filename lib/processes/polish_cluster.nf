@@ -2,11 +2,11 @@ process POLISH_CLUSTER {
     tag "${sample}"
 
     input:
-        tuple val( sample ), val( target ), path( smolecule_clusters_fasta )
+        tuple val( sample ), val( target ), path( smolecule_clusters_fastq )
         val ( type )
 
     output:
-        tuple val( "${sample}" ), val( "${target}" ), path( "${smolecule_clusters_fasta.baseName}_consensus.fasta" ), emit: consensus_fasta
+        tuple val( "${sample}" ), val( "${target}" ), path( "${smolecule_clusters_fastq.baseName}_consensus.fastq" ), emit: consensus_fastq
 
     script:
     """
@@ -16,8 +16,8 @@ process POLISH_CLUSTER {
           --depth 2 \
           --model ${params.medaka_model} \
           --method spoa . \
-          ${smolecule_clusters_fasta} 2> smolecule.log
+          ${smolecule_clusters_fastq} 2> smolecule.log
         
-        mv consensus.fasta ${smolecule_clusters_fasta.baseName}_consensus.fasta
+        mv consensus.fastq ${smolecule_clusters_fastq.baseName}_consensus.fastq
     """
 }

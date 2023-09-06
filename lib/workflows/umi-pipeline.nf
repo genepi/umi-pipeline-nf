@@ -99,13 +99,9 @@ workflow UMI_PIPELINE {
 
         // count number of final clusters per sample to end cluster polishing sooner
         // TODO test for small number of clusters if pipeline gets stuck
-        REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastq
+        REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastq
         .groupTuple(by: 1)
         .map{ sample, type, fastqs -> barcode_sizes.put("$sample", fastqs.size)}
-
-        REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastqs
-        .transpose(by: 2)
-        .set { flatten_smolecule_fastqs }
 
         POLISH_CLUSTER( flatten_smolecule_fastqs, consensus )
 
