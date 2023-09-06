@@ -80,9 +80,19 @@ workflow UMI_PIPELINE {
         SPLIT_READS( MAP_READS.out.bam_consensus, COPY_BED.out.bed, raw, umi_filter_reads )
         DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastx, raw, umi_extract )
         CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta, raw )
-        REFORMAT_FILTER_CLUSTER( CLUSTER.out.consensus_fasta, raw, CLUSTER.out.vsearch_dir, umi_parse_clusters)
 
-        REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
+        // filter clusters that are below the minimal reads per cluster threshold
+        // usually up to 80% of the clusters are below the threshold
+        CLUSTER.out.cluster_fastas
+        .filter { sample, target, cluster_fasta -> cluster_fasta.countFasta() > params.min_reads_per_cluster}
+        .set { cluster_fastas }
+
+        REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters)
+
+        // count number of final clusters per sample to end cluster polishing sooner
+        // TODO test for small number of clusters if pipeline gets stuck
+        REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fasta
+        .groupTuple(by: 1)
         .map{ sample, type, fastas -> barcode_sizes.put("$sample", fastas.size)}
 
         REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
