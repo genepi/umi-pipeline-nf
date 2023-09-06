@@ -15,7 +15,7 @@ process SPLIT_CLUSTER {
         python ${umi_split_cluster_python} \
          --min_reads_per_cluster ${params.min_reads_per_cluster} \
          --max_umi_dist_cluster ${params.max_umi_dist_cluster} \
-         --cluster_fasta ${cluster} \
+         --cluster ${cluster} \
          -o .
   """
 }
