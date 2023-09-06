@@ -48,7 +48,7 @@ def parse_args(argv):
     )
 
     parser.add_argument(
-        "--max_umi_dist_cluster",
+        "--max_dist_umi",
         dest="MAX_EDIT_DIST",
         type=int,
         default=2,

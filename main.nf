@@ -46,6 +46,8 @@ if(params.help){
 
               --umi_errors                    Max differences between extracted UMIs of the read and UMI pattern [default: 3]
 
+              --max_dist_umi                  Max difference of UMIs per cluster [default: 3]
+
               --min_reads_per_cluster         Min number of raw reads required for a consensus read [default: 20]
 
               --max_reads_per_cluster         Max number of raw reads used for a consensus read [default: 60]
