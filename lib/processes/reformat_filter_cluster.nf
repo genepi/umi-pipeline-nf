@@ -19,7 +19,7 @@ process REFORMAT_FILTER_CLUSTER {
           --filter_strategy ${params.filter_strategy_clusters} \
           --min_reads_per_clusters ${params.min_reads_per_cluster} \
           --max_reads_per_clusters ${params.max_reads_per_cluster} \
-          --cluster_fasta ${cluster_fasta} \
+          --cluster ${cluster_fasta} \
           --output_format ${params.output_format} \
           $balance_strands \
           $write_report \
