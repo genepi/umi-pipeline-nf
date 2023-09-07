@@ -1,5 +1,5 @@
 process REFORMAT_FILTER_CLUSTER {
-    publishDir "${params.output}/${sample}/clustering/${type}", pattern: "smolecule*", mode: 'copy'
+    publishDir "${params.output}/${sample}/clustering/${type}/smolecule", pattern: "smolecule*", mode: 'copy'
 
     input:
         tuple val( sample ), val( target ), path( cluster_fastq )

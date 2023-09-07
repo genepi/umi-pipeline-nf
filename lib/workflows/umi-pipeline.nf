@@ -48,7 +48,7 @@ include {MAP_READS; MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS
 include {SPLIT_READS} from  '../processes/split_reads.nf'
 include {DETECT_UMI_FASTQ; DETECT_UMI_FASTQ as DETECT_UMI_CONSENSUS_FASTQ} from '../processes/detect_umi_fastq.nf'
 include {CLUSTER; CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
-include {SPLIT_CLUSTER; SPLIT_CLUSTER as SPLIT_CLUSTER_CONSENSUS} from '../processes/split_cluster.nf'
+include {SPLIT_CLUSTER} from '../processes/split_cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 include {MERGE_CLUSTER_STATS} from '../processes/merge_cluster_stats.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
@@ -121,7 +121,7 @@ workflow UMI_PIPELINE {
         .groupTuple( by: [0,1] )
         .set { merge_consensus }
 
-        MERGE_CONSENSUS_FASTQ(merge_consensus)
+        MERGE_CONSENSUS_FASTQ(merge_consensus, consensus)
         
         MAP_CONSENSUS( MERGE_CONSENSUS_FASTQ.out.merged_consensus_fastq, consensus, reference )
         DETECT_UMI_CONSENSUS_FASTQ( MERGE_CONSENSUS_FASTQ.out.merged_consensus_fastq, consensus, umi_extract )

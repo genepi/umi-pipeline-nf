@@ -102,10 +102,10 @@ def parse_clusters(args):
     residual_reads = pyfastx.Fasta(cluster)
     
     n_residual_reads = len(residual_reads)
-    while n_residual_reads > min_reads:
+    while n_residual_reads >= min_reads:
         subcluster, residual_reads = get_split_cluster(residual_reads, max_edit_dist)
         n_residual_reads = len(residual_reads)
-        if len(subcluster) > min_reads:
+        if len(subcluster) >= min_reads:
             write_subcluster(
                 subcluster,
                 os.path.join(output_folder, "{}_{}".format(cluster, n_subcluster))
