@@ -1,6 +1,7 @@
 import argparse
 import logging
 import sys
+import os
 
 import pyfastx
 
@@ -37,6 +38,14 @@ def parse_args(argv):
     )
 
     parser.add_argument(
+        "--consensus_fasta", dest="CONS_FASTA", required=True, type=str, help="consensus fasta file"
+    )
+
+    parser.add_argument(
+        "-o", "--output", dest="OUTPUT", required=True, help="Output folder"
+    )
+    
+    parser.add_argument(
         "-t", "--threads", dest="THREADS", type=int, default=1, help="Number of threads."
     )
 
@@ -46,9 +55,10 @@ def parse_args(argv):
 
 
 def parse_stdin(args):
-    cluster_filename = "/dev/stdout"
-    consensus_filename = "/dev/stdin"
-
+    consensus_filename = args.CONS_FASTA
+    output_folder = args.OUTPUT
+    cluster_filename = os.path.join(output_folder, "final.fastq")
+    
     with open(cluster_filename, "w") as out:
         reads = pyfastx.Fasta(consensus_filename)
         
@@ -56,8 +66,11 @@ def parse_stdin(args):
             cols = read.name.split(";")
             read_id = cols[0]
             read_seq = cols[6].split("=")[1]
-            print(">{}".format(read_id), file=out)
+            read_qual = cols[7].split("=")[1]
+            print("@{}".format(read_id), file=out)
             print(read_seq, file=out)
+            print("+", file=out)
+            print(read_qual, file=out)
 
 
 def main(argv=sys.argv[1:]):

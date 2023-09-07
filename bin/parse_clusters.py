@@ -280,15 +280,16 @@ def parse_clusters(args):
     
     n_residual_reads = len(residual_reads)
     while n_residual_reads >= min_reads:
+        cluster_id = "{}_{}".format(cluster_id, n_subcluster)
+        
         subcluster, residual_reads = get_split_cluster(residual_reads, max_edit_dist)
         n_residual_reads = len(residual_reads)
-        if len(subcluster) >= min_reads:
-            write_subcluster(
-                subcluster,
-                os.path.join(output_folder, "{}_{}".format(cluster, n_subcluster))
-                )
-            n_subcluster += 1
-        
+        write_subcluster(
+            subcluster,
+            os.path.join(output_folder, "{}_{}".format(cluster, n_subcluster))
+            )
+        n_subcluster += 1
+    
         reads_fwd, reads_rev = get_split_reads(subcluster)
         n_fwd = len(reads_fwd)
         n_rev = len(reads_rev)
