@@ -1,14 +1,16 @@
 process REFORMAT_FILTER_CLUSTER {
     publishDir "${params.output}/${sample}/clustering/${type}/smolecule", pattern: "smolecule*", mode: 'copy'
+    publishDir "${params.output}/${sample}/clustering/${type}/split_clusters", pattern: "cluster*", mode: 'copy'
 
     input:
-        tuple val( sample ), val( target ), path( cluster_fastq )
+        tuple val( sample ), val( target ), path( cluster )
         val( type )
         path umi_parse_clusters_python
 
     output:
         tuple val( "${sample}" ), val( "${target}" ), path( "smolecule*"), optional: true, emit: smolecule_cluster_fastq
         tuple val( sample ), val ( target ), path( "*.tsv" ), emit: cluster_stats
+        tuple val( "${sample}" ), val( "${target}" ), path( "${cluster}_*"), optional: true
 
     script:
         def balance_strands = params.balance_strands ? "--balance_strands" : ""
@@ -18,7 +20,8 @@ process REFORMAT_FILTER_CLUSTER {
           --filter_strategy ${params.filter_strategy_clusters} \
           --min_reads_per_clusters ${params.min_reads_per_cluster} \
           --max_reads_per_clusters ${params.max_reads_per_cluster} \
-          --cluster ${cluster_fastq} \
+          --max_dist_umi ${params.max_dist_umi} \
+          --cluster ${cluster} \
           --output_format ${params.output_format} \
           $balance_strands \
           $write_report \

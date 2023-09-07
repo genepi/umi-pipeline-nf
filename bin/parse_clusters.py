@@ -2,9 +2,9 @@ import argparse
 import logging
 import os
 import sys
-import re
 
 import pyfastx
+import edlib
 
 
 def parse_args(argv):
@@ -71,6 +71,14 @@ def parse_args(argv):
     )
 
     parser.add_argument(
+        "--max_dist_umi",
+        dest="MAX_EDIT_DIST",
+        type=int,
+        default=2,
+        help="Max distance of UMIs per cluster. Used to split cluster into subclusters",
+    )
+    
+    parser.add_argument(
         "-o", "--output", dest="OUTPUT", required=True, help="Output folder"
     )
 
@@ -98,39 +106,58 @@ def parse_args(argv):
 def get_cluster_id(cluster):
     return cluster.split("cluster")[1]
 
-def get_read_seq(entry):
-    return entry.name.split(";seq=")[1].split(";")[0]
+def get_read_seq(read):
+    return read.name.split(";seq=")[1].split(";")[0]
 
-def get_read_qual(entry):
-    return entry.name.split(";qual=")[1]
+def get_read_qual(read):
+    return read.name.split(";qual=")[1]
 
-def get_read_strand(entry):
-    return entry.name.split(";strand=")[1].split(";")[0]
+def get_read_strand(read):
+    return read.name.split(";strand=")[1].split(";")[0]
 
-def get_read_name(entry):
-    return entry.name.split(";")[0]
+def get_read_name(read):
+    return read.name.split(";")[0]
 
-def get_read_mean_qual(entry):
-    qual = get_read_qual(entry)
+def get_read_mean_qual(read):
+    qual = get_read_qual(read)
     return get_mean_qual(qual)
 
-def get_read_qual(entry):
-    return entry.name.split("qual=")[1].split(";seqs=")[0]
+def get_read_qual(read):
+    return read.name.split("qual=")[1].split(";seqs=")[0]
 
 def get_mean_qual(qual):
     return sum(map(lambda char: ord(char), qual)) / len(qual)
 
-def get_split_reads(cluster):
+def get_split_cluster(reads, max_edit_dist):
+    subcluster = []
+    distant_reads = []
+    parent = reads[0].seq
+    
+    for read in reads:
+        # calculate edit distance between parent and all other reads in the cluster
+        result = edlib.align(
+            parent,
+            read.seq,
+            mode="HW",
+            k=max_edit_dist
+        )
+        if result["editDistance"] == -1:
+            distant_reads.append(read)
+        else:
+            subcluster.append(read)
+    return subcluster, distant_reads                    
+
+
+def get_split_reads(reads):
     reads_fwd = []
     reads_rev = []
-    reads = pyfastx.Fasta(cluster)
     
-    for entry in reads:
-        strand = get_read_strand(entry)
+    for read in reads:
+        strand = get_read_strand(read)
         if strand == "+":
-            reads_fwd.append(entry)
+            reads_fwd.append(read)
         else:
-            reads_rev.append(entry)
+            reads_rev.append(read)
     return reads_fwd, reads_rev
 
 def get_sorted_reads(reads):
@@ -179,28 +206,33 @@ def get_filtered_reads(reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_read
 
 def write_smolecule(cluster_id, reads, smolecule_file, format):
     with open(smolecule_file, "w") as out_f:
-        for n, entry in enumerate(reads):
-            seq = get_read_seq(entry)
+        for n, read in enumerate(reads):
+            seq = get_read_seq(read)
             read_name = "{}_{}".format(cluster_id, n)
             if format == "fastq":
-                qual = get_read_qual(entry)
-                write_fastq_entry(read_name, seq, qual, out_f)
+                qual = get_read_qual(read)
+                write_fastq_read(read_name, seq, qual, out_f)
             else:
-                write_fasta_entry(read_name, seq, out_f)
+                write_fasta_read(read_name, seq, out_f)
 
 
-def write_fastq_entry(read_name, read_seq, qual, out_f):
+def write_fastq_read(read_name, read_seq, qual, out_f):
     print("@{}".format(read_name), file=out_f)
     print("{}".format(read_seq), file=out_f)
     print("+", file=out_f)
     print("{}".format(qual), file=out_f)
 
 
-def write_fasta_entry(read_name, read_seq, out_f):
+def write_fasta_read(read_name, read_seq, out_f):
     print(">{}".format(read_name), file=out_f)
     print("{}".format(read_seq), file=out_f)
 
-
+def write_subcluster(subcluster, subcluster_name):
+    with open(subcluster_name, "w") as out_f:
+        for read in subcluster:
+            print(">{}".format(read.name), file=out_f)
+            print("{}".format(read.seq), file=out_f)
+            
 def write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found, n_fwd, n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev):
     with open(stats_out_filename, "a") as out_f:
         print(cluster_id,
@@ -225,6 +257,7 @@ def parse_clusters(args):
     output_folder = args.OUTPUT
     balance_strands = args.BAL_STRANDS
     tsv = args.TSV
+    max_edit_dist = args.MAX_EDIT_DIST
     
     reads_found = 0
     reads_found = 0
@@ -235,37 +268,52 @@ def parse_clusters(args):
     reads_fwd = []
     reads_rev = []
     cluster_id = get_cluster_id(cluster)
+    
+    n_subcluster = 0       
         
     smolecule_file = os.path.join(
         output_folder, "smolecule{}.{}".format(cluster_id, format))
     stats_out_filename = os.path.join(
-            output_folder, "{}_stats.tsv".format(cluster))
+            output_folder, "stats_{}.tsv".format(cluster))
+    
+    residual_reads = pyfastx.Fasta(cluster)
+    
+    n_residual_reads = len(residual_reads)
+    while n_residual_reads >= min_reads:
+        subcluster, residual_reads = get_split_cluster(residual_reads, max_edit_dist)
+        n_residual_reads = len(residual_reads)
+        if len(subcluster) >= min_reads:
+            write_subcluster(
+                subcluster,
+                os.path.join(output_folder, "{}_{}".format(cluster, n_subcluster))
+                )
+            n_subcluster += 1
         
-    reads_fwd, reads_rev = get_split_reads(cluster)
-    n_fwd = len(reads_fwd)
-    n_rev = len(reads_rev)
-    reads_found = n_fwd + n_rev
+        reads_fwd, reads_rev = get_split_reads(subcluster)
+        n_fwd = len(reads_fwd)
+        n_rev = len(reads_rev)
+        reads_found = n_fwd + n_rev
 
-    if filter == "quality":
-        reads_fwd = get_sorted_reads(reads_fwd)
-        reads_rev = get_sorted_reads(reads_rev)
+        if filter == "quality":
+            reads_fwd = get_sorted_reads(reads_fwd)
+            reads_rev = get_sorted_reads(reads_rev)
 
-    reads_fwd, reads_rev, write_cluster, reads_skipped_fwd, reads_skipped_rev = get_filtered_reads(
-        reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_reads, max_reads, balance_strands)
+        reads_fwd, reads_rev, write_cluster, reads_skipped_fwd, reads_skipped_rev = get_filtered_reads(
+            reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_reads, max_reads, balance_strands)
 
-    if write_cluster:
-        cluster_written = 1
-        reads_written_fwd = len(reads_fwd)
-        reads_written_rev = len(reads_rev)
-        
-        reads = reads_fwd + reads_rev
-        write_smolecule(cluster_id, reads, smolecule_file, format)
-    else:
-        cluster_written = 0
+        if write_cluster:
+            cluster_written = 1
+            reads_written_fwd = len(reads_fwd)
+            reads_written_rev = len(reads_rev)
+            
+            reads = reads_fwd + reads_rev
+            write_smolecule(cluster_id, reads, smolecule_file, format)
+        else:
+            cluster_written = 0
 
-    if tsv:
-        write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found, n_fwd,
-        n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev)
+        if tsv:
+            write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found, n_fwd,
+            n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev)
 
 def main(argv=sys.argv[1:]):
     """

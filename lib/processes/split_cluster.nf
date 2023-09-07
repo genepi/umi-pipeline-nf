@@ -9,7 +9,7 @@ process SPLIT_CLUSTER {
     tuple val( "${sample}" ), val( "${target}" ), path( "${cluster}_*" ), optional: true, emit:split_cluster_fastas
  
   script:
-    def min_reads_per_cluster = type == "raw" ? "${params.min_reads_per_cluster}" : 1
+
   """
         python ${umi_split_cluster_python} \
          --min_reads_per_cluster $min_reads_per_cluster \

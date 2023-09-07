@@ -91,13 +91,7 @@ workflow UMI_PIPELINE {
         .filter { sample, target, cluster_fasta -> cluster_fasta.countFasta() > params.min_reads_per_cluster}
         .set { cluster_fastas }
 
-        SPLIT_CLUSTER( cluster_fastas, raw, umi_split_cluster_python )
-
-        SPLIT_CLUSTER.out.split_cluster_fastas
-        .transpose()
-        .set { split_cluster_fastas }
-
-        REFORMAT_FILTER_CLUSTER( split_cluster_fastas, raw, umi_parse_clusters )
+        REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters )
         
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastq
         .groupTuple( by: [0, 1] )

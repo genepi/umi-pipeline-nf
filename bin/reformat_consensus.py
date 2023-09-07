@@ -50,7 +50,7 @@ def parse_stdin(args):
     consensus_filename = "/dev/stdin"
 
     with open(cluster_filename, "w") as out:
-        reads = pyfastx.fasta(consensus_filename)
+        reads = pyfastx.Fasta(consensus_filename)
         
         for read in reads:
             cols = read.name.split(";")
