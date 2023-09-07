@@ -100,13 +100,16 @@ workflow UMI_PIPELINE {
         REFORMAT_FILTER_CLUSTER( split_cluster_fastas, raw, umi_parse_clusters )
         
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastq
-        .groupTuple( by: [0,1] )
-        .map{ sample, type, fastqs -> n_parsed_cluster.put("$sample", fastqs.size)}
-        .transpose()
+        .groupTuple( by: [0, 1] )
+        .map{ sample, type, fastqs -> n_parsed_cluster.put("$sample", fastqs.collect().size)}
+        
+        REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastq
+        .groupTuple( by: [0, 1])
+        .transpose( by: 2)
         .set{ smolecule_cluster_fastqs }
 
         REFORMAT_FILTER_CLUSTER.out.cluster_stats
-        .groupTuple( by: [0,1] )
+        .groupTuple( by: [0, 1] )
         .set{ cluster_stats }
 
         MERGE_CLUSTER_STATS( cluster_stats, raw )
