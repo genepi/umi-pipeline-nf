@@ -1,5 +1,4 @@
 process REFORMAT_FILTER_CLUSTER {
-    publishDir "${params.output}/${sample}/stats/${type}", pattern: "*.tsv", mode: 'copy'
     publishDir "${params.output}/${sample}/clustering/${type}", pattern: "smolecule*", mode: 'copy'
       
     input:
@@ -9,7 +8,7 @@ process REFORMAT_FILTER_CLUSTER {
 
     output:
         tuple val( "${sample}" ), val( "${target}" ), path( "smolecule*"), optional: true, emit: smolecule_cluster_fastq
-        path( "*.tsv" )
+        path( "*.tsv" ), emit: cluster_stats
 
     script:
         def balance_strands = params.balance_strands ? "--balance_strands" : ""

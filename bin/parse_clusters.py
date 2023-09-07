@@ -96,7 +96,7 @@ def parse_args(argv):
 
 
 def get_cluster_id(cluster):
-    return re.findall(r'[\d.]+', cluster)[0]
+    return cluster.split("cluster")[1]
 
 def get_read_seq(entry):
     return entry.name.split(";seq=")[1].split(";")[0]
@@ -265,12 +265,12 @@ def parse_clusters(args):
         cluster_written = 0
 
     if tsv:
-        if not(os.path.exists(stats_out_filename)):
+        if os.path.isfile(stats_out_filename):
+            write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found, n_fwd,
+            n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev)
+        else:
             write_tsv_line(stats_out_filename, "cluster_id", "cluster_written", "reads_found", "reads_found_fwd",
-                    "reads_found_rev", "reads_written_fwd", "reads_written_rev", "reads_skipped_fwd", "reads_skipped_rev")
-            
-        write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found, n_fwd,
-                    n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev)
+            "reads_found_rev", "reads_written_fwd", "reads_written_rev", "reads_skipped_fwd", "reads_skipped_rev")
 
 def main(argv=sys.argv[1:]):
     """

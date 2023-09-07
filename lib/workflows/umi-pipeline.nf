@@ -26,7 +26,8 @@ umi_split_cluster_python    = file( "${projectDir}/bin/split_cluster.py", checkI
 raw                         = "raw"
 consensus                   = "consensus"
 final_consensus             = "final"
-barcode_sizes               = [:]
+n_split_cluster             = [:]
+n_parsed_cluster            = [:]
 
 
 // STAGE CHANNELS
@@ -50,12 +51,14 @@ include {DETECT_UMI_FASTQ} from '../processes/detect_umi_fastq.nf'
 include {CLUSTER; CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
 include {SPLIT_CLUSTER; SPLIT_CLUSTER as SPLIT_CLUSTER_CONSENSUS} from '../processes/split_cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
+//include {MERGE_CLUSTER_STATS} from '../processes/reformat_filter_cluster.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
 include {DETECT_UMI_CONSENSUS_FASTQ} from '../processes/detect_umi_consensus_fastq.nf'
 include {REFORMAT_CONSENSUS_CLUSTER} from '../processes/reformat_consensus_cluster.nf'
 include {LOFREQ} from '../processes/variant_calling/lofreq.nf'
 include {MUTSERVE} from '../processes/variant_calling/mutserve.nf'
 include {FREEBAYES} from '../processes/variant_calling/freebayes.nf'
+
 
 // SUB-WORKFLOWS
 workflow UMI_PIPELINE {
@@ -94,22 +97,15 @@ workflow UMI_PIPELINE {
 
         SPLIT_CLUSTER.out.split_cluster_fastas
         .transpose()
-        .filter { sample, target, split_cluster_fasta -> split_cluster_fasta.countFasta() > params.min_reads_per_cluster}
         .set { split_cluster_fastas }
 
         REFORMAT_FILTER_CLUSTER( split_cluster_fastas, raw, umi_parse_clusters )
 
-        // count number of final clusters per sample to end cluster polishing sooner
-        // TODO test for small number of clusters if pipeline gets stuck
-        REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastq
-        .groupTuple(by: 1)
-        .map{ sample, type, fastqs -> barcode_sizes.put("$sample", fastqs.size)}
-
         POLISH_CLUSTER( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastq, consensus )
 
         POLISH_CLUSTER.out.consensus_fastq
-        .map{ sample, type, fastq -> tuple( groupKey(sample, barcode_sizes.get("$sample")), type, fastq) }
-        .groupTuple()
+        //.map{ sample, type, fastq -> tuple( groupKey(sample, n_parsed_cluster.get("$sample")), type, fastq) }
+        .groupTuple( )
         .set { merge_consensus }
 
         MERGE_CONSENSUS_FASTQ(merge_consensus)

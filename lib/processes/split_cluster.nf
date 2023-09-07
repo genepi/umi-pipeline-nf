@@ -8,7 +8,7 @@ process SPLIT_CLUSTER {
     val (type )
     path umi_split_cluster_python
   output:
-    tuple val( "${sample}" ), val( "${target}" ), path( "cluster*_*" ), emit:split_cluster_fastas
+    tuple val( "${sample}" ), val( "${target}" ), path( "${cluster}_*" ), optional: true, emit:split_cluster_fastas
  
   script:
   """
@@ -16,6 +16,6 @@ process SPLIT_CLUSTER {
          --min_reads_per_cluster ${params.min_reads_per_cluster} \
          --max_dist_umi ${params.max_dist_umi} \
          --cluster ${cluster} \
-         -o .
+         -o . 
   """
 }
