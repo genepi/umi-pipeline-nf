@@ -2,7 +2,7 @@ import argparse
 import logging
 import sys
 
-import pysam
+import pyfastx
 
 
 def parse_args(argv):
@@ -50,13 +50,14 @@ def parse_stdin(args):
     consensus_filename = "/dev/stdin"
 
     with open(cluster_filename, "w") as out:
-        with pysam.FastxFile(consensus_filename) as fh:
-            for entry in fh:
-                cols = entry.name.split(";")
-                read_id = cols[0]
-                read_seq = cols[6].split("=")[1]
-                print(">{}".format(read_id), file=out)
-                print(read_seq, file=out)
+        reads = pyfastx.fasta(consensus_filename)
+        
+        for read in reads:
+            cols = read.name.split(";")
+            read_id = cols[0]
+            read_seq = cols[6].split("=")[1]
+            print(">{}".format(read_id), file=out)
+            print(read_seq, file=out)
 
 
 def main(argv=sys.argv[1:]):
