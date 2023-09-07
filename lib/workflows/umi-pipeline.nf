@@ -26,7 +26,6 @@ umi_split_cluster_python    = file( "${projectDir}/bin/split_cluster.py", checkI
 raw                         = "raw"
 consensus                   = "consensus"
 final_consensus             = "final"
-n_split_cluster             = [:]
 n_parsed_cluster            = [:]
 
 
@@ -47,13 +46,12 @@ include {MERGE_CONSENSUS_FASTQ} from '../processes/merge_consensus_fastq.nf'
 include {SUBSAMPLING} from '../processes/subsampling.nf'
 include {MAP_READS; MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS} from '../processes/map_reads.nf'
 include {SPLIT_READS} from  '../processes/split_reads.nf'
-include {DETECT_UMI_FASTQ} from '../processes/detect_umi_fastq.nf'
+include {DETECT_UMI_FASTQ; DETECT_UMI_FASTQ as DETECT_UMI_CONSENSUS_FASTQ} from '../processes/detect_umi_fastq.nf'
 include {CLUSTER; CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
 include {SPLIT_CLUSTER; SPLIT_CLUSTER as SPLIT_CLUSTER_CONSENSUS} from '../processes/split_cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
-//include {MERGE_CLUSTER_STATS} from '../processes/reformat_filter_cluster.nf'
+include {MERGE_CLUSTER_STATS} from '../processes/merge_cluster_stats.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
-include {DETECT_UMI_CONSENSUS_FASTQ} from '../processes/detect_umi_consensus_fastq.nf'
 include {REFORMAT_CONSENSUS_CLUSTER} from '../processes/reformat_consensus_cluster.nf'
 include {LOFREQ} from '../processes/variant_calling/lofreq.nf'
 include {MUTSERVE} from '../processes/variant_calling/mutserve.nf'
@@ -100,12 +98,24 @@ workflow UMI_PIPELINE {
         .set { split_cluster_fastas }
 
         REFORMAT_FILTER_CLUSTER( split_cluster_fastas, raw, umi_parse_clusters )
+        
+        REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastq
+        .groupTuple( by: [0,1] )
+        .map{ sample, type, fastqs -> n_parsed_cluster.put("$sample", fastqs.size)}
+        .transpose()
+        .set{ smolecule_cluster_fastqs }
 
-        POLISH_CLUSTER( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastq, consensus )
+        REFORMAT_FILTER_CLUSTER.out.cluster_stats
+        .groupTuple( by: [0,1] )
+        .set{ cluster_stats }
+
+        MERGE_CLUSTER_STATS( cluster_stats, raw )
+
+        POLISH_CLUSTER( smolecule_cluster_fastqs, consensus )
 
         POLISH_CLUSTER.out.consensus_fastq
-        //.map{ sample, type, fastq -> tuple( groupKey(sample, n_parsed_cluster.get("$sample")), type, fastq) }
-        .groupTuple( )
+        .map{ sample, type, fastq -> tuple( groupKey(sample, n_parsed_cluster.get("$sample")), type, fastq) }
+        .groupTuple( by: [0,1] )
         .set { merge_consensus }
 
         MERGE_CONSENSUS_FASTQ(merge_consensus)

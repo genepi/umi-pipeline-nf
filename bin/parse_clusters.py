@@ -226,7 +226,6 @@ def parse_clusters(args):
     balance_strands = args.BAL_STRANDS
     tsv = args.TSV
     
-    stats_out_filename = "vsearch_cluster_stats"
     reads_found = 0
     reads_found = 0
     reads_written_fwd = 0
@@ -240,7 +239,7 @@ def parse_clusters(args):
     smolecule_file = os.path.join(
         output_folder, "smolecule{}.{}".format(cluster_id, format))
     stats_out_filename = os.path.join(
-            output_folder, "{}.tsv".format(stats_out_filename))
+            output_folder, "{}_stats.tsv".format(cluster))
         
     reads_fwd, reads_rev = get_split_reads(cluster)
     n_fwd = len(reads_fwd)

@@ -111,10 +111,6 @@ def parse_clusters(args):
                 os.path.join(output_folder, "{}_{}".format(cluster, n_subcluster))
                 )
             n_subcluster += 1
-    
-    #if n_subcluster == 0:     
-    #    # Emit empty file to satisfy nextflow downstrean process 
-    #    open(os.path.join(output_folder, "{}_empty".format(cluster)), "w")
 
 def main(argv=sys.argv[1:]):
     """
