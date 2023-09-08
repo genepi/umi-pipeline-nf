@@ -217,7 +217,7 @@ def write_smolecule(cluster_id, reads, smolecule_file, format):
     with open(smolecule_file, "w") as out_f:
         for n, read in enumerate(reads):
             seq = get_read_seq(read)
-            read_name = "{}_{}".format(cluster_id, n)
+            read_name = "{}sub{}".format(cluster_id, n)
             if format == "fastq":
                 qual = get_read_qual(read)
                 write_fastq_read(read_name, seq, qual, out_f)
@@ -268,21 +268,20 @@ def parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, 
     reads_rev = []
     cluster_id = get_cluster_id(cluster)
     
-    n_subcluster = 0   
-        
-    smolecule_file = os.path.join(
-        output_folder, "smolecule{}.{}".format(cluster_id, format))
+    n_subcluster = 0
     
     residual_reads, n_residual_reads = get_reads(cluster)
     
     while n_residual_reads >= min_reads:
-            cluster_id_subcluster = "{}_{}".format(cluster_id, n_subcluster)
+            cluster_id_subcluster = "{}sub{}".format(cluster_id, n_subcluster)
+            smolecule_file = os.path.join(
+                output_folder, "smolecule{}.{}".format(cluster_id_subcluster, format)) 
             
             subcluster, residual_reads = get_split_cluster(residual_reads, max_edit_dist)
             n_residual_reads = len(residual_reads)
             write_subcluster(
                 subcluster,
-                os.path.join(output_folder, "{}_{}".format(cluster, n_subcluster))
+                os.path.join(output_folder, "{}sub{}".format(cluster, n_subcluster))
                 )
             n_subcluster += 1
         
