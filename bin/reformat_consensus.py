@@ -3,7 +3,7 @@ import logging
 import sys
 import os
 
-import pyfastx
+import pysam
 
 
 def parse_args(argv):
@@ -59,9 +59,7 @@ def parse_stdin(args):
     output_folder = args.OUTPUT
     cluster_filename = os.path.join(output_folder, "final.fastq")
     
-    with open(cluster_filename, "w") as out:
-        reads = pyfastx.Fasta(consensus_filename)
-        
+    with open(cluster_filename, "w") as out, pysam.FastxFile(consensus_filename) as reads:        
         for read in reads:
             cols = read.name.split(";")
             read_id = cols[0]

@@ -3,7 +3,7 @@ import logging
 import os
 import sys
 
-import pyfastx
+import pysam
 import edlib
 
 
@@ -127,6 +127,13 @@ def get_read_qual(read):
 
 def get_mean_qual(qual):
     return sum(map(lambda char: ord(char), qual)) / len(qual)
+
+def get_reads(cluster):
+    residual_reads = []
+    with pysam.FastxFile(cluster) as reads:
+        for read in reads:
+            residual_reads.append(read)
+    return residual_reads
 
 def get_split_cluster(reads, max_edit_dist):
     subcluster = []
@@ -269,52 +276,52 @@ def parse_clusters(args):
     reads_rev = []
     cluster_id = get_cluster_id(cluster)
     
-    n_subcluster = 0       
+    n_subcluster = 0   
         
     smolecule_file = os.path.join(
         output_folder, "smolecule{}.{}".format(cluster_id, format))
     stats_out_filename = os.path.join(
             output_folder, "stats_{}.tsv".format(cluster))
     
-    residual_reads = pyfastx.Fasta(cluster)
-    
+    residual_reads = get_reads(cluster)
     n_residual_reads = len(residual_reads)
-    while n_residual_reads >= min_reads:
-        cluster_id = "{}_{}".format(cluster_id, n_subcluster)
-        
-        subcluster, residual_reads = get_split_cluster(residual_reads, max_edit_dist)
-        n_residual_reads = len(residual_reads)
-        write_subcluster(
-            subcluster,
-            os.path.join(output_folder, "{}_{}".format(cluster, n_subcluster))
-            )
-        n_subcluster += 1
     
-        reads_fwd, reads_rev = get_split_reads(subcluster)
-        n_fwd = len(reads_fwd)
-        n_rev = len(reads_rev)
-        reads_found = n_fwd + n_rev
-
-        if filter == "quality":
-            reads_fwd = get_sorted_reads(reads_fwd)
-            reads_rev = get_sorted_reads(reads_rev)
-
-        reads_fwd, reads_rev, write_cluster, reads_skipped_fwd, reads_skipped_rev = get_filtered_reads(
-            reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_reads, max_reads, balance_strands)
-
-        if write_cluster:
-            cluster_written = 1
-            reads_written_fwd = len(reads_fwd)
-            reads_written_rev = len(reads_rev)
+    while n_residual_reads >= min_reads:
+            cluster_id = "{}_{}".format(cluster_id, n_subcluster)
             
-            reads = reads_fwd + reads_rev
-            write_smolecule(cluster_id, reads, smolecule_file, format)
-        else:
-            cluster_written = 0
+            subcluster, residual_reads = get_split_cluster(residual_reads, max_edit_dist)
+            n_residual_reads = len(residual_reads)
+            write_subcluster(
+                subcluster,
+                os.path.join(output_folder, "{}_{}".format(cluster, n_subcluster))
+                )
+            n_subcluster += 1
+        
+            reads_fwd, reads_rev = get_split_reads(subcluster)
+            n_fwd = len(reads_fwd)
+            n_rev = len(reads_rev)
+            reads_found = n_fwd + n_rev
 
-        if tsv:
-            write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found, n_fwd,
-            n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev)
+            if filter == "quality":
+                reads_fwd = get_sorted_reads(reads_fwd)
+                reads_rev = get_sorted_reads(reads_rev)
+
+            reads_fwd, reads_rev, write_cluster, reads_skipped_fwd, reads_skipped_rev = get_filtered_reads(
+                reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_reads, max_reads, balance_strands)
+
+            if write_cluster:
+                cluster_written = 1
+                reads_written_fwd = len(reads_fwd)
+                reads_written_rev = len(reads_rev)
+                
+                reads = reads_fwd + reads_rev
+                write_smolecule(cluster_id, reads, smolecule_file, format)
+            else:
+                cluster_written = 0
+
+            if tsv:
+                write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found, n_fwd,
+                n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev)
 
 def main(argv=sys.argv[1:]):
     """

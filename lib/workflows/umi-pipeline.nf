@@ -20,7 +20,6 @@ umi_filter_reads            = file( "${projectDir}/bin/filter_reads.py", checkIf
 umi_extract                 = file( "${projectDir}/bin/extract_umis.py", checkIfExists: true)
 umi_parse_clusters          = file( "${projectDir}/bin/parse_clusters.py", checkIfExists: true)
 umi_reformat_consensus      = file( "${projectDir}/bin/reformat_consensus.py", checkIfExists: true )
-umi_split_cluster_python    = file( "${projectDir}/bin/split_cluster.py", checkIfExists: true )
 
 // subdirectory and file prefixes
 raw                         = "raw"
@@ -48,7 +47,6 @@ include {MAP_READS; MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS
 include {SPLIT_READS} from  '../processes/split_reads.nf'
 include {DETECT_UMI_FASTQ; DETECT_UMI_FASTQ as DETECT_UMI_CONSENSUS_FASTQ} from '../processes/detect_umi_fastq.nf'
 include {CLUSTER; CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
-include {SPLIT_CLUSTER} from '../processes/split_cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 include {MERGE_CLUSTER_STATS} from '../processes/merge_cluster_stats.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
