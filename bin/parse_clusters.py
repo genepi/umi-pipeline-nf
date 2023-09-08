@@ -276,7 +276,7 @@ def parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, 
     residual_reads, n_residual_reads = get_reads(cluster)
     
     while n_residual_reads >= min_reads:
-            cluster_id = "{}_{}".format(cluster_id, n_subcluster)
+            cluster_id_subcluster = "{}_{}".format(cluster_id, n_subcluster)
             
             subcluster, residual_reads = get_split_cluster(residual_reads, max_edit_dist)
             n_residual_reads = len(residual_reads)
@@ -304,12 +304,12 @@ def parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, 
                 reads_written_rev = len(reads_rev)
                 
                 reads = reads_fwd + reads_rev
-                write_smolecule(cluster_id, reads, smolecule_file, format)
+                write_smolecule(cluster_id_subcluster, reads, smolecule_file, format)
             else:
                 cluster_written = 0
 
             if tsv:  
-                write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found, n_fwd,
+                write_tsv_line(stats_out_filename, cluster_id_subcluster, cluster_written, reads_found, n_fwd,
                 n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev)
 
 def parse_cluster_wrapper(args):
