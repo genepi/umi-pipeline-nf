@@ -2,6 +2,7 @@ import argparse
 import logging
 import os
 import sys
+import time
 
 import threading as t
 
@@ -330,7 +331,6 @@ def parse_cluster_wrapper(args):
         write_tsv_line(stats_out_filename, "cluster_id", "cluster_written", "reads_found", "reads_found_fwd",
                     "reads_found_rev", "reads_written_fwd", "reads_written_rev", "reads_skipped_fwd", "reads_skipped_rev")
 
-    
     for cluster in clusters:
         parse_cluster_thread = t.Thread(target=parse_cluster, args=(
             min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename
@@ -338,6 +338,7 @@ def parse_cluster_wrapper(args):
         parse_cluster_thread.start()
         #parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename)
 
+    
 def main(argv=sys.argv[1:]):
     """
     Basic command line interface to telemap.
