@@ -53,6 +53,14 @@ def parse_args(argv):
 
     return args
 
+def get_read_seq(read):
+    return read.name.split(";seq=")[1].split(";")[0]
+
+def get_read_qual(read):
+    return read.name.split(";qual=")[1].split(";seqs=")[0]
+
+def get_read_name(read):
+    return read.name.split(";")[0]
 
 def parse_stdin(args):
     consensus_filename = args.CONS_FASTA
@@ -61,11 +69,10 @@ def parse_stdin(args):
     
     with open(cluster_filename, "w") as out, pysam.FastxFile(consensus_filename) as reads:        
         for read in reads:
-            cols = read.name.split(";")
-            read_id = cols[0]
-            read_seq = cols[6].split("=")[1]
-            read_qual = cols[7].split("=")[1]
-            print("@{}".format(read_id), file=out)
+            read_name = get_read_name(read)
+            read_seq = get_read_seq(read)
+            read_qual = get_read_qual(read)
+            print("@{}".format(read_name), file=out)
             print(read_seq, file=out)
             print("+", file=out)
             print(read_qual, file=out)

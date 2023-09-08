@@ -104,7 +104,7 @@ def parse_args(argv):
 
 
 def get_cluster_id(cluster):
-    return cluster.split("cluster")[1]
+    return cluster.split("cluster")[-1]
 
 def get_read_seq(read):
     return read.name.split(";seq=")[1].split(";")[0]
@@ -122,29 +122,28 @@ def get_read_mean_qual(read):
     qual = get_read_qual(read)
     return get_mean_qual(qual)
 
-def get_read_qual(read):
-    return read.name.split("qual=")[1].split(";seqs=")[0]
-
 def get_mean_qual(qual):
     return sum(map(lambda char: ord(char), qual)) / len(qual)
 
 def get_reads(cluster):
     residual_reads = []
+    n_residual_reads = 0
     with pysam.FastxFile(cluster) as reads:
         for read in reads:
             residual_reads.append(read)
-    return residual_reads
+            n_residual_reads += 1
+    return residual_reads, n_residual_reads
 
 def get_split_cluster(reads, max_edit_dist):
     subcluster = []
     distant_reads = []
-    parent = reads[0].seq
+    parent = reads[0].sequence
     
     for read in reads:
         # calculate edit distance between parent and all other reads in the cluster
         result = edlib.align(
             parent,
-            read.seq,
+            read.sequence,
             mode="HW",
             k=max_edit_dist
         )
@@ -238,7 +237,7 @@ def write_subcluster(subcluster, subcluster_name):
     with open(subcluster_name, "w") as out_f:
         for read in subcluster:
             print(">{}".format(read.name), file=out_f)
-            print("{}".format(read.seq), file=out_f)
+            print("{}".format(read.sequence), file=out_f)
             
 def write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found, n_fwd, n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev):
     with open(stats_out_filename, "a") as out_f:
@@ -283,8 +282,7 @@ def parse_clusters(args):
     stats_out_filename = os.path.join(
             output_folder, "stats_{}.tsv".format(cluster))
     
-    residual_reads = get_reads(cluster)
-    n_residual_reads = len(residual_reads)
+    residual_reads, n_residual_reads = get_reads(cluster)
     
     while n_residual_reads >= min_reads:
             cluster_id = "{}_{}".format(cluster_id, n_subcluster)
