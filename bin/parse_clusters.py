@@ -3,6 +3,8 @@ import logging
 import os
 import sys
 
+import threading as t
+
 import pysam
 import edlib
 
@@ -87,7 +89,7 @@ def parse_args(argv):
     )
 
     parser.add_argument(
-        "--cluster", dest="CLUSTER", required=True, type=str, help="cluster fastx"
+        "--clusters", dest="CLUSTERS", nargs= "+", required=True, type=str, help="cluster fastxs"
     )
 
     parser.add_argument(
@@ -254,17 +256,7 @@ def write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found,
               file=out_f,
               )
 
-def parse_clusters(args):
-    min_reads = args.MIN_CLUSTER_READS
-    max_reads = args.MAX_CLUSTER_READS
-    filter = args.FILTER
-    format = args.OUT_FORMAT
-    cluster = args.CLUSTER
-    output_folder = args.OUTPUT
-    balance_strands = args.BAL_STRANDS
-    tsv = args.TSV
-    max_edit_dist = args.MAX_EDIT_DIST
-    
+def parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename):  
     reads_found = 0
     reads_found = 0
     reads_written_fwd = 0
@@ -279,8 +271,6 @@ def parse_clusters(args):
         
     smolecule_file = os.path.join(
         output_folder, "smolecule{}.{}".format(cluster_id, format))
-    stats_out_filename = os.path.join(
-            output_folder, "stats_{}.tsv".format(cluster))
     
     residual_reads, n_residual_reads = get_reads(cluster)
     
@@ -317,9 +307,36 @@ def parse_clusters(args):
             else:
                 cluster_written = 0
 
-            if tsv:
+            if tsv:  
                 write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found, n_fwd,
                 n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev)
+
+def parse_cluster_wrapper(args):
+    min_reads = args.MIN_CLUSTER_READS
+    max_reads = args.MAX_CLUSTER_READS
+    filter = args.FILTER
+    format = args.OUT_FORMAT
+    clusters = args.CLUSTERS
+    output_folder = args.OUTPUT
+    balance_strands = args.BAL_STRANDS
+    tsv = args.TSV
+    max_edit_dist = args.MAX_EDIT_DIST
+    
+    stats_out_filename = "split_cluster_stats"
+    
+    if tsv:
+        stats_out_filename = os.path.join(
+            output_folder, "{}.tsv".format(stats_out_filename))
+        write_tsv_line(stats_out_filename, "cluster_id", "cluster_written", "reads_found", "reads_found_fwd",
+                    "reads_found_rev", "reads_written_fwd", "reads_written_rev", "reads_skipped_fwd", "reads_skipped_rev")
+
+    
+    for cluster in clusters:
+        parse_cluster_thread = t.Thread(target=parse_cluster, args=(
+            min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename
+        ))
+        parse_cluster_thread.start()
+        #parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename)
 
 def main(argv=sys.argv[1:]):
     """
@@ -338,7 +355,7 @@ def main(argv=sys.argv[1:]):
     logging.basicConfig(level=numeric_level, format="%(message)s")
 
     try:
-        parse_clusters(args)
+        parse_cluster_wrapper(args)
     except RuntimeError as e:
         logging.error(e)
 

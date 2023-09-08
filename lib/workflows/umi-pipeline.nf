@@ -82,29 +82,14 @@ workflow UMI_PIPELINE {
         DETECT_UMI_FASTQ( SPLIT_READS.out.split_reads_fastx, raw, umi_extract )
         CLUSTER( DETECT_UMI_FASTQ.out.umi_extract_fastq, raw )
 
-        // filter clusters that are below the minimal reads per cluster threshold
-        // usually up to 80% of the clusters are below the threshold
-        CLUSTER.out.cluster_fastas
-        .transpose()
-        .filter { sample, target, cluster_fasta -> cluster_fasta.countFasta() > params.min_reads_per_cluster}
-        .set { cluster_fastas }
-
-        REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters )
+        REFORMAT_FILTER_CLUSTER( CLUSTER.out.cluster_fastas, raw, umi_parse_clusters )
         
-        REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastq
-        .groupTuple( by: [0, 1] )
-        .map{ sample, type, fastqs -> n_parsed_cluster.put("$sample", fastqs.collect().size)}
+        REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
+        .map{ sample, type, fastqs -> n_parsed_cluster.put("$sample", fastqs.size)}
         
-        REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastq
-        .groupTuple( by: [0, 1])
+        REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
         .transpose( by: 2)
         .set{ smolecule_cluster_fastqs }
-
-        REFORMAT_FILTER_CLUSTER.out.cluster_stats
-        .groupTuple( by: [0, 1] )
-        .set{ cluster_stats }
-
-        MERGE_CLUSTER_STATS( cluster_stats, raw )
 
         POLISH_CLUSTER( smolecule_cluster_fastqs, consensus )
 
