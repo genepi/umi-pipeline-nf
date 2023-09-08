@@ -217,7 +217,7 @@ def write_smolecule(cluster_id, reads, smolecule_file, format):
     with open(smolecule_file, "w") as out_f:
         for n, read in enumerate(reads):
             seq = get_read_seq(read)
-            read_name = "{}sub{}".format(cluster_id, n)
+            read_name = "{}_{}".format(cluster_id, n)
             if format == "fastq":
                 qual = get_read_qual(read)
                 write_fastq_read(read_name, seq, qual, out_f)
@@ -281,7 +281,7 @@ def parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, 
             n_residual_reads = len(residual_reads)
             write_subcluster(
                 subcluster,
-                os.path.join(output_folder, "{}sub{}".format(cluster, n_subcluster))
+                os.path.join(output_folder, "{}_{}".format(cluster, n_subcluster))
                 )
             n_subcluster += 1
         
