@@ -239,9 +239,9 @@ def filter_reads(args):
 def write_tsv(n_total, n_unmapped, n_secondary, n_supplementary, n_ontarget, n_concatamer, n_short, n_reads_region, incl_sec, stats_out_filename, region):
     if n_total > 0:
         if incl_sec:
-            filtered_perc = 100 * n_supplementary // n_total
+            filtered_perc = 100 * n_reads_region // n_total
         else:
-            filtered_perc = 100 * (n_secondary + n_supplementary) // n_total
+            filtered_perc = 100 * (n_secondary + n_reads_region) // n_total
 
         unmapped_perc = 100 * n_unmapped // n_total
         secondary_perc = 100 * n_secondary // n_total
