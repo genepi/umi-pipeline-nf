@@ -48,7 +48,7 @@ def parse_args(argv):
         "--adapter-length",
         dest="ADAPTER_LENGTH",
         type=int,
-        default=250,
+        default=200,
         help="Length of adapter",
     )
     parser.add_argument(
