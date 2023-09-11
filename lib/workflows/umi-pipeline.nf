@@ -86,6 +86,7 @@ workflow UMI_PIPELINE {
         
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
         .filter{ sample, type, fastqs -> fastqs.class == ArrayList}
+        //.subscribe { sample, type, fastqs -> println "${fastqs.size}" }
         .set{ smolecule_cluster_fastqs_list }
 
         smolecule_cluster_fastqs_list
@@ -96,10 +97,10 @@ workflow UMI_PIPELINE {
         .set{ smolecule_cluster_fastqs }
 
         POLISH_CLUSTER( smolecule_cluster_fastqs, consensus )
-
+        
         POLISH_CLUSTER.out.consensus_fastq
         .map{ sample, type, fastq -> tuple( groupKey(sample, n_parsed_cluster.get("$sample")), type, fastq) }
-        .groupTuple( by: [0,1] )
+        .groupTuple( )
         .set { merge_consensus }
 
         MERGE_CONSENSUS_FASTQ(merge_consensus, consensus)
