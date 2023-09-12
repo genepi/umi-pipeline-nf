@@ -258,58 +258,54 @@ def write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found,
               )
 
 def parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename):  
-    reads_found = 0
-    reads_found = 0
-    reads_written_fwd = 0
-    reads_written_rev = 0
-    cluster_written = 0
-
-    reads_fwd = []
-    reads_rev = []
-    cluster_id = get_cluster_id(cluster)
-    
-    n_subcluster = 0
-    
     residual_reads, n_residual_reads = get_reads(cluster)
+    n_subcluster = 0
+    cluster_id = get_cluster_id(cluster)  
     
     while n_residual_reads >= min_reads:
-            cluster_id_subcluster = "{}sub{}".format(cluster_id, n_subcluster)
-            smolecule_file = os.path.join(
-                output_folder, "smolecule{}.{}".format(cluster_id_subcluster, format)) 
-            
-            subcluster, residual_reads = get_split_cluster(residual_reads, max_edit_dist)
-            n_residual_reads = len(residual_reads)
-            write_subcluster(
-                subcluster,
-                os.path.join(output_folder, "{}_{}".format(cluster, n_subcluster))
-                )
-            n_subcluster += 1
+        reads_found = 0
+        reads_found = 0
+        reads_written_fwd = 0
+        reads_written_rev = 0
+        cluster_written = 0
+
+        cluster_id_subcluster = "{}sub{}".format(cluster_id, n_subcluster)
+        smolecule_file = os.path.join(
+            output_folder, "smolecule{}.{}".format(cluster_id_subcluster, format)) 
         
-            reads_fwd, reads_rev = get_split_reads(subcluster)
-            n_fwd = len(reads_fwd)
-            n_rev = len(reads_rev)
-            reads_found = n_fwd + n_rev
+        subcluster, residual_reads = get_split_cluster(residual_reads, max_edit_dist)
+        n_residual_reads = len(residual_reads)
+        write_subcluster(
+            subcluster,
+            os.path.join(output_folder, "{}_{}".format(cluster, n_subcluster))
+            )
+        n_subcluster += 1
+    
+        reads_fwd, reads_rev = get_split_reads(subcluster)
+        n_fwd = len(reads_fwd)
+        n_rev = len(reads_rev)
+        reads_found = n_fwd + n_rev
 
-            if filter == "quality":
-                reads_fwd = get_sorted_reads(reads_fwd)
-                reads_rev = get_sorted_reads(reads_rev)
+        if filter == "quality":
+            reads_fwd = get_sorted_reads(reads_fwd)
+            reads_rev = get_sorted_reads(reads_rev)
 
-            reads_fwd, reads_rev, write_cluster, reads_skipped_fwd, reads_skipped_rev = get_filtered_reads(
-                reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_reads, max_reads, balance_strands)
+        reads_fwd, reads_rev, write_cluster, reads_skipped_fwd, reads_skipped_rev = get_filtered_reads(
+            reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_reads, max_reads, balance_strands)
 
-            if write_cluster:
-                cluster_written = 1
-                reads_written_fwd = len(reads_fwd)
-                reads_written_rev = len(reads_rev)
-                
-                reads = reads_fwd + reads_rev
-                write_smolecule(cluster_id_subcluster, reads, smolecule_file, format)
-            else:
-                cluster_written = 0
+        if write_cluster:
+            cluster_written = 1
+            reads_written_fwd = len(reads_fwd)
+            reads_written_rev = len(reads_rev)
+            
+            reads = reads_fwd + reads_rev
+            write_smolecule(cluster_id_subcluster, reads, smolecule_file, format)
+        else:
+            cluster_written = 0
 
-            if tsv:  
-                write_tsv_line(stats_out_filename, cluster_id_subcluster, cluster_written, reads_found, n_fwd,
-                n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev)
+        if tsv:  
+            write_tsv_line(stats_out_filename, cluster_id_subcluster, cluster_written, reads_found, n_fwd,
+            n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev)
 
 def parse_cluster_wrapper(args):
     min_reads = args.MIN_CLUSTER_READS
