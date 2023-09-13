@@ -29,6 +29,6 @@ process CLUSTER {
         --iddef 0 \
         --minwordmatches 0 \
         --qmask none \
-        --id 0.85
+        --id 0.8
     """
 }
