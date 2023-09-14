@@ -177,12 +177,7 @@ def filter_reads(args):
     n_supplementary = 0
     n_secondary = 0
     n_total = 0
-
-    filtered_perc = 0
-    unmapped_perc = 0
-    ontarget_perc = 0
-    concatermer_perc = 0
-    short_perc = 0
+    n_long = 0
 
     with pysam.AlignmentFile(bam_file, "rb") as bam:
         region = parse_bed(bed_regions)
@@ -227,16 +222,22 @@ def filter_reads(args):
                 write_read(read, output, region, "short", out_format)
                 continue
             n_reads_region += 1
+            
+            if read.reference_length > (region_length * ( 2 - min_overlap)):
+                n_long += 1
+                write_read(read, output, region, "long", out_format)
+                continue
+            n_reads_region += 1
             write_read(read, output, region, "filtered", out_format)
 
     if tsv:
         stats_out_filename = os.path.join(
             output, "{}.tsv".format(stats_out_filename))
         write_tsv(n_total, n_unmapped, n_secondary, n_supplementary, n_ontarget,
-                  n_concatamer, n_short, n_reads_region, incl_sec, stats_out_filename, region)
+                  n_concatamer, n_short, n_long, n_reads_region, incl_sec, stats_out_filename, region)
 
 
-def write_tsv(n_total, n_unmapped, n_secondary, n_supplementary, n_ontarget, n_concatamer, n_short, n_reads_region, incl_sec, stats_out_filename, region):
+def write_tsv(n_total, n_unmapped, n_secondary, n_supplementary, n_ontarget, n_concatamer, n_short, n_long, n_reads_region, incl_sec, stats_out_filename, region):
     if n_total > 0:
         if incl_sec:
             filtered_perc = 100 * n_reads_region // n_total
@@ -251,6 +252,7 @@ def write_tsv(n_total, n_unmapped, n_secondary, n_supplementary, n_ontarget, n_c
         if ontarget_perc > 0:
             concatermer_perc = 100 * n_concatamer // n_ontarget
             short_perc = 100 * n_short // n_ontarget
+            long_perc = 100 * n_long // n_ontarget
 
     with open(stats_out_filename, "a") as out_f:
         print(
@@ -263,6 +265,7 @@ def write_tsv(n_total, n_unmapped, n_secondary, n_supplementary, n_ontarget, n_c
             "reads_on_target",
             "reads_concatamer",
             "reads_short",
+            "reads_long",
             "reads_filtered",
             "include_secondary",
             sep="\t",
@@ -278,6 +281,7 @@ def write_tsv(n_total, n_unmapped, n_secondary, n_supplementary, n_ontarget, n_c
             n_ontarget,
             n_concatamer,
             n_short,
+            n_long,
             n_reads_region,
             incl_sec,
             sep="\t",
@@ -293,6 +297,7 @@ def write_tsv(n_total, n_unmapped, n_secondary, n_supplementary, n_ontarget, n_c
             ontarget_perc,
             concatermer_perc,
             short_perc,
+            long_perc,
             filtered_perc,
             incl_sec,
             sep="\t",
