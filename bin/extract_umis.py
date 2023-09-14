@@ -106,18 +106,27 @@ def parse_args(argv):
     return args
 
 
-def clip_entry(entry, clip_fwd, clip_rev, max_adapter_length, format):
-    entry.sequence = entry.sequence[clip_fwd:-(max_adapter_length - clip_rev)]
+def clip_entry(entry, umi_start_fwd, umi_start_rev, max_adapter_length, format):
+    clip_fwd = umi_start_fwd
+    if max_adapter_length == umi_start_rev:
+        clip_rev = None
+    else: 
+        clip_rev = umi_start_rev - max_adapter_length
+    
+    entry.sequence = entry.sequence[clip_fwd:clip_rev]
     
     if format == "fastq":
-        entry.quality = entry.quality[clip_fwd:-(max_adapter_length - clip_rev)]
+        entry.quality = entry.quality[clip_fwd:clip_rev]
     
     return entry
 
 def extract_umi(query_seq, query_qual, pattern, max_edit_dist, format, direction):
     umi_qual = None
     equalities = [("M", "A"), ("M", "C"), ("R", "A"), ("R", "G"), ("W", "A"), ("W", "T"), ("S", "C"), ("S", "G"), ("Y", "C"), ("Y", "T"), ("K", "G"), ("K", "T"), ("V", "A"), ("V", "C"),
-                  ("V", "G"), ("H", "A"), ("H", "C"), ("H", "T"), ("D", "A"), ("D", "G"), ("D", "T"), ("B", "C"), ("B", "G"), ("B", "T"), ("N", "A"), ("N", "C"), ("N", "G"), ("N", "T")]
+                  ("V", "G"), ("H", "A"), ("H", "C"), ("H", "T"), ("D", "A"), ("D", "G"), ("D", "T"), ("B", "C"), ("B", "G"), ("B", "T"), ("N", "A"), ("N", "C"), ("N", "G"), ("N", "T"),
+                  ("m", "a"), ("m", "c"), ("r", "a"), ("r", "g"), ("w", "a"), ("w", "t"), ("s", "c"), ("s", "g"), ("y", "c"), ("y", "t"), ("k", "g"), ("k", "t"), ("v", "a"), ("v", "c"),
+                  ("v", "g"), ("h", "a"), ("h", "c"), ("h", "t"), ("d", "a"), ("d", "g"), ("d", "t"), ("b", "c"), ("b", "g"), ("b", "t"), ("n", "a"), ("n", "c"), ("n", "g"), ("n", "t"), 
+                  ("a", "A"), ("c", "C"), ("t", "T"), ("g", "G")]
 
     result = edlib.align(
         pattern,
@@ -137,14 +146,14 @@ def extract_umi(query_seq, query_qual, pattern, max_edit_dist, format, direction
     umi = query_seq[umi_start_pos:umi_end_pos]
     
     if direction == "fwd":
-        clip = umi_start_pos
+        umi_start = umi_start_pos
     else:
-        clip = umi_end_pos
+        umi_start = umi_end_pos
 
     if format == "fastq":
         umi_qual = query_qual[locs[0]:locs[1]+1]
 
-    return edit_dist, umi, umi_qual, clip
+    return edit_dist, umi, umi_qual, umi_start
 
 
 def extract_adapters(entry, max_adapter_length, format):
@@ -335,11 +344,11 @@ def extract_umis(
             strand_stats[strand] += 1
 
             # Extract fwd UMI
-            result_5p_fwd_umi_dist, result_5p_fwd_umi_seq, result_5p_fwd_umi_qual, clip_fwd = extract_umi(
+            result_5p_fwd_umi_dist, result_5p_fwd_umi_seq, result_5p_fwd_umi_qual, umi_start_fwd = extract_umi(
                 read_5p_seq, read_5p_qual, umi_fwd, max_pattern_dist, format, "fwd"
             )
             # Extract rev UMI
-            result_3p_rev_umi_dist, result_3p_rev_umi_seq, result_3p_rev_umi_qual, clip_rev = extract_umi(
+            result_3p_rev_umi_dist, result_3p_rev_umi_seq, result_3p_rev_umi_qual, umi_start_rev = extract_umi(
                 read_3p_seq, read_3p_qual, umi_rev, max_pattern_dist, format, "rev"
             )
 
@@ -347,7 +356,7 @@ def extract_umis(
                 continue
 
             clipped_entry = clip_entry(
-                entry, clip_fwd, clip_rev, max_adapter_length, format
+                entry, umi_start_fwd, umi_start_rev, max_adapter_length, format
             )
             
             n_both_umi += 1

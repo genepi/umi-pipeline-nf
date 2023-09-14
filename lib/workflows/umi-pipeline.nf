@@ -52,9 +52,9 @@ include {MERGE_CLUSTER_STATS} from '../processes/merge_cluster_stats.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
 include {FILTER_CONSENSUS_FASTQ} from '../processes/filter_consensus_fastq.nf'
 include {REFORMAT_CONSENSUS_CLUSTER} from '../processes/reformat_consensus_cluster.nf'
-include {LOFREQ} from '../processes/variant_calling/lofreq.nf'
-include {MUTSERVE} from '../processes/variant_calling/mutserve.nf'
-include {FREEBAYES} from '../processes/variant_calling/freebayes.nf'
+include {LOFREQ as LOFREQ_CONSENSUS; LOFREQ as LOFREQ_FINAL_CONSENSUS} from '../processes/variant_calling/lofreq.nf'
+include {MUTSERVE as MUTSERVE_CONSENSUS; MUTSERVE as MUTSERVE_FINAL_CONSENSUS} from '../processes/variant_calling/mutserve.nf'
+include {FREEBAYES as FREEBAYES_CONSENSUS; FREEBAYES as FREEBAYES_FINAL_CONSENSUS} from '../processes/variant_calling/freebayes.nf'
 
 
 // SUB-WORKFLOWS
@@ -120,14 +120,14 @@ workflow UMI_PIPELINE {
         
         if( params.call_variants ){
             if( params.variant_caller == "lofreq" ){
-                LOFREQ( MAP_CONSENSUS.out.bam_consensus, consensus, reference, reference_fai )
-                LOFREQ( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
+                LOFREQ_CONSENSUS( MAP_CONSENSUS.out.bam_consensus, consensus, reference, reference_fai )
+                LOFREQ_FINAL_CONSENSUS( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
             }else if( params.variant_caller == "mutserve"){
-                MUTSERVE( MAP_CONSENSUS.out.bam_consensus, consensus, COPY_BED.out.bed, reference, reference_fai )
-                MUTSERVE( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, COPY_BED.out.bed, reference, reference_fai )
+                MUTSERVE_CONSENSUS( MAP_CONSENSUS.out.bam_consensus, consensus, COPY_BED.out.bed, reference, reference_fai )
+                MUTSERVE_FINAL_CONSENSUS( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, COPY_BED.out.bed, reference, reference_fai )
             }else if( params.variant_caller == "freebayes"){
-                FREEBAYES( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
-                FREEBAYES( MAP_CONSENSUS.out.bam_consensus, consensus, reference, reference_fai )
+                FREEBAYES_CONSENSUS( MAP_CONSENSUS.out.bam_consensus, consensus, reference, reference_fai )
+                FREEBAYES_FINAL_CONSENSUS( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
             }else{
                 exit 1, "${params.variant_caller} is not a valid option. \nPossible variant caller are <lofreq/mutserve/freebayes>"
             
