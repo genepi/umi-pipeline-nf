@@ -50,6 +50,7 @@ include {CLUSTER; CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 include {MERGE_CLUSTER_STATS} from '../processes/merge_cluster_stats.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
+include {FILTER_CONSENSUS_FASTQ} from '../processes/filter_consensus_fastq.nf'
 include {REFORMAT_CONSENSUS_CLUSTER} from '../processes/reformat_consensus_cluster.nf'
 include {LOFREQ} from '../processes/variant_calling/lofreq.nf'
 include {MUTSERVE} from '../processes/variant_calling/mutserve.nf'
@@ -65,11 +66,9 @@ workflow UMI_PIPELINE {
         if( params.subsampling ){
             MERGE_FASTQ( fastq_files_ch )
             SUBSAMPLING( MERGE_FASTQ.out.merged_fastq )
-            SUBSAMPLING.out.subsampled_fastq
             .set { merged_fastq }
         } else {
             MERGE_FASTQ( fastq_files_ch )
-            MERGE_FASTQ.out.merged_fastq
             .set { merged_fastq }
         }
 
@@ -86,7 +85,6 @@ workflow UMI_PIPELINE {
         
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
         .filter{ sample, type, fastqs -> fastqs.class == ArrayList}
-        //.subscribe { sample, type, fastqs -> println "${fastqs.size}" }
         .set{ smolecule_cluster_fastqs_list }
 
         smolecule_cluster_fastqs_list
@@ -101,12 +99,21 @@ workflow UMI_PIPELINE {
         POLISH_CLUSTER.out.consensus_fastq
         .map{ sample, type, fastq -> tuple( groupKey(sample, n_parsed_cluster.get("$sample")), type, fastq) }
         .groupTuple( )
-        .set { merge_consensus }
+        .set{ merge_consensus }
 
-        MERGE_CONSENSUS_FASTQ(merge_consensus, consensus)
         
-        MAP_CONSENSUS( MERGE_CONSENSUS_FASTQ.out.merged_consensus_fastq, consensus, reference )
-        DETECT_UMI_CONSENSUS_FASTQ( MERGE_CONSENSUS_FASTQ.out.merged_consensus_fastq, consensus, umi_extract )
+        if ( params.output_format == "fastq"){
+            MERGE_CONSENSUS_FASTQ(merge_consensus, consensus)
+            FILTER_CONSENSUS_FASTQ(MERGE_CONSENSUS_FASTQ.out.merged_consensus_fastq, consensus)
+            FILTER_CONSENSUS_FASTQ.out.filtered_consensus_fastq
+            .set{ consensus_fastq }
+        } else {
+            MERGE_CONSENSUS_FASTQ(merge_consensus, consensus)
+            .set{ consensus_fastq }
+        }
+
+        MAP_CONSENSUS( consensus_fastq, consensus, reference )
+        DETECT_UMI_CONSENSUS_FASTQ( consensus_fastq, consensus, umi_extract )
         CLUSTER_CONSENSUS( DETECT_UMI_CONSENSUS_FASTQ.out.umi_extract_fastq , consensus )
         REFORMAT_CONSENSUS_CLUSTER( CLUSTER_CONSENSUS.out.consensus_fasta, final_consensus, umi_reformat_consensus )
         MAP_FINAL_CONSENSUS( REFORMAT_CONSENSUS_CLUSTER.out.consensus_fastq, final_consensus, reference )
