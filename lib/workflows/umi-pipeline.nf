@@ -120,11 +120,14 @@ workflow UMI_PIPELINE {
         
         if( params.call_variants ){
             if( params.variant_caller == "lofreq" ){
+                LOFREQ( MAP_CONSENSUS.out.bam_consensus, consensus, reference, reference_fai )
                 LOFREQ( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
             }else if( params.variant_caller == "mutserve"){
+                MUTSERVE( MAP_CONSENSUS.out.bam_consensus, consensus, COPY_BED.out.bed, reference, reference_fai )
                 MUTSERVE( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, COPY_BED.out.bed, reference, reference_fai )
             }else if( params.variant_caller == "freebayes"){
                 FREEBAYES( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
+                FREEBAYES( MAP_CONSENSUS.out.bam_consensus, consensus, reference, reference_fai )
             }else{
                 exit 1, "${params.variant_caller} is not a valid option. \nPossible variant caller are <lofreq/mutserve/freebayes>"
             
