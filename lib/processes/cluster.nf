@@ -13,7 +13,7 @@ process CLUSTER {
         tuple val( "${sample}" ), val( "${target}" ), path( "cluster*" ), emit:cluster_fastas
         
     script:
-        def id = "${type}" == "consensus" ? 0.8 : 0.99
+        def id = "${type}" == "consensus" ? 0.7 : 0.99
     """
         vsearch \
         --clusterout_id \
