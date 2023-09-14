@@ -12,6 +12,8 @@ process CLUSTER {
         tuple val( "${sample}" ), val( "${target}" ), path( "${consensus_fasta}" ), emit:consensus_fasta
         tuple val( "${sample}" ), val( "${target}" ), path( "cluster*" ), emit:cluster_fastas
         
+    script:
+        def id = "${type}" == "consensus" ? 0.8 : 0.99
     """
         vsearch \
         --clusterout_id \
@@ -29,6 +31,6 @@ process CLUSTER {
         --iddef 0 \
         --minwordmatches 0 \
         --qmask none \
-        --id 0.8
+        --id $id
     """
 }
