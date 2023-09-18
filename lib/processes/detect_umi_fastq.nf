@@ -18,6 +18,7 @@ process DETECT_UMI_FASTQ {
         --fwd-umi ${params.fwd_umi} \
         --rev-umi ${params.rev_umi} \
         --max-error ${params.umi_errors} \
+        --adapter_length ${params.adapter_length} \
         --output_format ${params.output_format} \
         $write_report \
         -o . ${fastq}

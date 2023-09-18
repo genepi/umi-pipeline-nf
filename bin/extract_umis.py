@@ -45,7 +45,7 @@ def parse_args(argv):
         help="Max edit distance for UMI",
     )
     parser.add_argument(
-        "--adapter-length",
+        "--adapter_length",
         dest="ADAPTER_LENGTH",
         type=int,
         default=200,
@@ -106,12 +106,12 @@ def parse_args(argv):
     return args
 
 
-def clip_entry(entry, umi_start_fwd, umi_start_rev, max_adapter_length, format):
+def clip_entry(entry, umi_start_fwd, umi_start_rev, adapter_length, format):
     clip_fwd = umi_start_fwd
-    if max_adapter_length == umi_start_rev:
+    if adapter_length == umi_start_rev:
         clip_rev = None
     else: 
-        clip_rev = umi_start_rev - max_adapter_length
+        clip_rev = umi_start_rev - adapter_length
     
     entry.sequence = entry.sequence[clip_fwd:clip_rev]
     
@@ -156,19 +156,19 @@ def extract_umi(query_seq, query_qual, pattern, max_edit_dist, format, direction
     return edit_dist, umi, umi_qual, umi_start
 
 
-def extract_adapters(entry, max_adapter_length, format):
+def extract_adapters(entry, adapter_length, format):
     read_5p_seq = None
     read_5p_qual = None
     read_3p_seq = None
     read_3p_qual = None
 
-    if len(entry.sequence) > max_adapter_length:
-        read_5p_seq = entry.sequence[:max_adapter_length]
-        read_3p_seq = entry.sequence[-max_adapter_length:]
+    if len(entry.sequence) > adapter_length:
+        read_5p_seq = entry.sequence[:adapter_length]
+        read_3p_seq = entry.sequence[-adapter_length:]
         
         if format == "fastq":
-            read_5p_qual = entry.quality[:max_adapter_length]
-            read_3p_qual = entry.quality[-max_adapter_length:]
+            read_5p_qual = entry.quality[:adapter_length]
+            read_3p_qual = entry.quality[-adapter_length:]
 
     return read_5p_seq, read_3p_seq, read_5p_qual, read_3p_qual
 
@@ -312,7 +312,7 @@ def write_tsv(
 def extract_umis(
     args
 ):
-    max_adapter_length = args.ADAPTER_LENGTH
+    adapter_length = args.ADAPTER_LENGTH
     max_pattern_dist = args.MAX_ERROR
     output_folder = args.OUT
     tsv = args.TSV
@@ -335,7 +335,7 @@ def extract_umis(
             n_total += 1
 
             read_5p_seq, read_3p_seq, read_5p_qual, read_3p_qual = extract_adapters(
-                entry, max_adapter_length, format
+                entry, adapter_length, format
             )
 
             if read_5p_seq is None or read_3p_seq is None:
@@ -356,7 +356,7 @@ def extract_umis(
                 continue
 
             clipped_entry = clip_entry(
-                entry, umi_start_fwd, umi_start_rev, max_adapter_length, format
+                entry, umi_start_fwd, umi_start_rev, adapter_length, format
             )
             
             n_both_umi += 1

@@ -48,6 +48,14 @@ def parse_args(argv):
         default=0.9,
         help="Min overlap with target region",
     )
+    
+    parser.add_argument(
+        "--adapter_length",
+        dest="ADAPTER_LENGTH",
+        type=int,
+        default=200,
+        help="Length of adapter",
+    )
 
     parser.add_argument(
         "--include_secondary_reads",
@@ -160,7 +168,7 @@ def write_fastq(read, out_f):
 def filter_reads(args):
     bed_regions = args.BED[0]
     bam_file = args.BAM
-    max_clipping = 250
+    adapter_length = args.ADAPTER_LENGTH
     min_overlap = args.MIN_OVERLAP
     incl_sec = args.INCL_SEC
     output = args.OUT
@@ -210,17 +218,17 @@ def filter_reads(args):
                 continue
 
             n_ontarget += 1
-            if read.query_alignment_length < (read.query_length - 2 * max_clipping):
+            if read.query_alignment_length < (read.query_length - 2 * adapter_length):
                 n_concatamer += 1
                 write_read(read, output, region, "concatamer", out_format)
                 continue
 
-            if read.query_length < (region_length * min_overlap):
+            if read.query_alignment_length < (region_length * min_overlap):
                 n_short += 1
                 write_read(read, output, region, "short", out_format)
                 continue
             
-            if read.query_length > (region_length * ( 2 - min_overlap)):
+            if read.query_length > (region_length * ( 2 - min_overlap) + 2 * adapter_length):
                 n_long += 1
                 write_read(read, output, region, "long", out_format)
                 continue

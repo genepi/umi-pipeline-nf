@@ -20,6 +20,7 @@ process SPLIT_READS {
         python ${python_filter_reads} \
           --min_overlap ${params.min_overlap} \
           --output_format ${params.output_format} \
+          --adapter_length ${params.adapter_length} \
           $include_secondary_reads \
           $write_report \
           -o . ${bed} \
