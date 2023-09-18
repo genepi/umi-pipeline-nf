@@ -199,8 +199,8 @@ def filter_reads(args):
                 continue
 
             if read.is_secondary:
+                n_secondary += 1
                 if not incl_sec:
-                    n_secondary += 1
                     write_read(read, output, region, "secondary", out_format)
                     continue
 
@@ -210,23 +210,21 @@ def filter_reads(args):
                 continue
 
             n_ontarget += 1
-            if read.query_alignment_length < (
-                read.query_length - 2 * max_clipping
-            ):
+            if read.query_alignment_length < (read.query_length - 2 * max_clipping):
                 n_concatamer += 1
                 write_read(read, output, region, "concatamer", out_format)
                 continue
 
-            if read.reference_length < (region_length * min_overlap):
+            if read.query_length < (region_length * min_overlap):
                 n_short += 1
                 write_read(read, output, region, "short", out_format)
                 continue
-            n_reads_region += 1
             
-            if read.reference_length > (region_length * ( 2 - min_overlap)):
+            if read.query_length > (region_length * ( 2 - min_overlap)):
                 n_long += 1
                 write_read(read, output, region, "long", out_format)
                 continue
+            
             n_reads_region += 1
             write_read(read, output, region, "filtered", out_format)
 

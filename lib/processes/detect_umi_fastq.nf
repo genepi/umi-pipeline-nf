@@ -12,7 +12,7 @@ process DETECT_UMI_FASTQ {
         path "*.tsv"
 
     script:
-        def write_report = "${params.write_reports}" ? "--tsv" : ""
+        def write_report = params.write_reports ? "--tsv" : ""
     """
         python ${umi_extract_python} \
         --fwd-umi ${params.fwd_umi} \
