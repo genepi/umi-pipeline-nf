@@ -18,6 +18,7 @@ process MUTSERVE {
       --output ${type}.vcf \
       --write-raw \
       --reference ${reference} \
+      --insertions \
       --deletions \
       --contig-name \$(awk '{ print \$1 }' ${bed}) \
       ${bam}
