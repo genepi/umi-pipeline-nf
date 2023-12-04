@@ -1,7 +1,6 @@
 process REFORMAT_FILTER_CLUSTER {
     tag "${sample}"
     publishDir "${params.output}/${sample}/clustering/${type}/smolecule", pattern: "smolecule*", mode: 'copy'
-    publishDir "${params.output}/${sample}/clustering/${type}/split_clusters", pattern: "cluster*", mode: 'copy'
     publishDir "${params.output}/${sample}/stats/${type}", pattern: "*tsv", mode: 'copy'
 
     input:
