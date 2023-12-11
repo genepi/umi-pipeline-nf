@@ -1,4 +1,5 @@
 process POLISH_CLUSTER {
+    cpus 2
     tag "${sample}"
 
     input:
