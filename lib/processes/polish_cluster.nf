@@ -1,5 +1,6 @@
+cpus=2
 process POLISH_CLUSTER {
-    cpus 2
+    cpus "${cpus}"
     tag "${sample}"
 
     input:
@@ -12,7 +13,7 @@ process POLISH_CLUSTER {
     script:
     """
         medaka smolecule \
-          --threads ${params.threads} \
+          --threads $cpus \
           --length 50 \
           --depth 2 \
           --model ${params.medaka_model} \
