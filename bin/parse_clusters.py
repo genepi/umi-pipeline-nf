@@ -147,7 +147,7 @@ def get_split_cluster(reads, max_edit_dist):
         result = edlib.align(
             parent,
             read.sequence,
-            mode="NW",
+            mode="HW",
             k=max_edit_dist
         )
         if result["editDistance"] == -1:
