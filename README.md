@@ -37,3 +37,4 @@ nextflow run AmstlerStephan/umi-pipeline-nf -r main -c <custom.config> -profile 
 ### Credits
 
 These scripts were originally written for use by [GENEPI](https://genepi.i-med.ac.at/), by ([@StephanAmstler](https://github.com/AmstlerStephan)).
+The version corresponds to the latest update of the master thesis. 
