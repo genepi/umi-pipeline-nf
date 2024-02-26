@@ -21,7 +21,7 @@ umi-pipeline-nf is inspired by a snakemake-based analysis pipeline ([ONT UMI ana
 
 ## Main Adaptations
 
-* It comes with docker containers making **installation simple, portable** and **results highly reproducible**.
+* It comes with a docker/singularity container making **installation simple, easy to use on clusters** and **results highly reproducible**.
 * The pipeline is **optimized for parallelization**.
 * **Additional UMI cluster splitting** step to remove admixed UMI clusters.
 * Read filtering strategy per UMI cluster was adapted to **preserve the highest quality reads**.
