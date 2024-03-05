@@ -8,14 +8,19 @@ Umi-pipeline-nf
 The pipeline can be run for the whole fastq_pass folder of your nanopore run and, per default, outputs the aligned consensus sequences of each UMI cluster in bam file. The optional variant calling creates a vcf file for all variants that are found in the consensus sequences.
 umi-pipeline-nf is inspired by a snakemake-based analysis pipeline ([ONT UMI analysis pipeline](https://github.com/nanoporetech/pipeline-umi-amplicon); originally developed by [Karst et al, Nat Biotechnol 18:165–169, 2021](https://www.nature.com/articles/s41592-020-01041-y)). We implemented the pipeline in [Nextflow](https://www.nextflow.io) and included several optimizations and [additional functionalities](#main-adaptations).  
 
+![Workflow](docs/images/umi-pipeline-nf_metro-map.svg)
+
 ## Workflow
 
-1. Input reads are aligned against a reference genome.
-2. The flanking UMI sequences of all reads are extracted.
-3. The extracted UMIs are used to cluster the reads.
-4. Per cluster, highly accurate consensus sequences are created.
-5. The consensus sequences are aligned against the reference sequenced.
-6. An optional variant calling step can be performed.
+1. Input Fastq-files are merged and filtered.
+2. Input reads are aligned against a reference genome and filtered to keep only full-length on-target reads.
+3. The flanking UMI sequences of all reads are extracted.
+4. The extracted UMIs are used to cluster the reads.
+5. Per cluster, highly accurate consensus sequences are created.
+6. The consensus sequences are aligned against the reference sequenced.
+7. An optional variant calling step can be performed.
+8. UMI-extraction, clustering, consensus sequence creation, and mapping are repeated.
+9. An optional variant calling step can be performed.
 
 > See the [output documentation](docs/output.md) for a detailed overview of the pipeline and its output files.
 
