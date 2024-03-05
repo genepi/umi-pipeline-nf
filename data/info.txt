@@ -1,7 +1,22 @@
-This folder contains testdata to run the pipeline from a proof-of-principle run 
-(run9, barcode04 [=barcode01] and barcode07 [=barcode02])
+This folder contains test data to run the pipeline from a proof-of-principle run.
+The test data originated from mixtures of two plasmids containing different sequences (KIV-2A or KIV-2B).
 
-The test data originated from mixtures of two plasmids containing different sequences.
-Barcode01 has a mixture level of:
-Barcode02 has a mixture level of: 
+Barcode02:
+Raw reads: 10,336
+Found clusters: 1,383
+Clusters equal or above the minimal cluster size (18): 30
+Clusters equal or above the minimal cluster size (18) after read balancing: 14
+Consensus sequences before polishing: 14
+Final consensus sequences after polishing: 13
+1 Sequence KIV-2B can be found in both (consensus and final) bam files.
+
+Barcode03:
+Barcode03 has a mixture level of 33% KIV-2A and 67% KIV-2B.
+Raw reads: 6,509
+Found clusters: 240
+Clusters equal or above the minimal cluster size (18): 104
+Clusters equal or above the minimal cluster size (18) after read balancing: 14
+Consensus sequences before polishing: 91
+Final consensus sequences after polishing: 76
+51 Sequence KIV-2B can be found in both (consensus and final) bam files.
 
