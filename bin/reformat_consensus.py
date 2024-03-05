@@ -1,6 +1,7 @@
 import argparse
 import logging
 import sys
+import os
 
 import pysam
 
@@ -37,6 +38,14 @@ def parse_args(argv):
     )
 
     parser.add_argument(
+        "--consensus_fasta", dest="CONS_FASTA", required=True, type=str, help="consensus fasta file"
+    )
+
+    parser.add_argument(
+        "-o", "--output", dest="OUTPUT", required=True, help="Output folder"
+    )
+    
+    parser.add_argument(
         "-t", "--threads", dest="THREADS", type=int, default=1, help="Number of threads."
     )
 
@@ -44,19 +53,29 @@ def parse_args(argv):
 
     return args
 
+def get_read_seq(read):
+    return read.name.split(";seq=")[1].split(";")[0]
+
+def get_read_qual(read):
+    return read.name.split(";qual=")[1].split(";seqs=")[0]
+
+def get_read_name(read):
+    return read.name.split(";")[0]
 
 def parse_stdin(args):
-    cluster_filename = "/dev/stdout"
-    consensus_filename = "/dev/stdin"
-
-    with open(cluster_filename, "w") as out:
-        with pysam.FastxFile(consensus_filename) as fh:
-            for entry in fh:
-                cols = entry.name.split(";")
-                read_id = cols[0]
-                read_seq = cols[6].split("=")[1]
-                print(">{}".format(read_id), file=out)
-                print(read_seq, file=out)
+    consensus_filename = args.CONS_FASTA
+    output_folder = args.OUTPUT
+    cluster_filename = os.path.join(output_folder, "final.fastq")
+    
+    with open(cluster_filename, "w") as out, pysam.FastxFile(consensus_filename) as reads:        
+        for read in reads:
+            read_name = get_read_name(read)
+            read_seq = get_read_seq(read)
+            read_qual = get_read_qual(read)
+            print("@{}".format(read_name), file=out)
+            print(read_seq, file=out)
+            print("+", file=out)
+            print(read_qual, file=out)
 
 
 def main(argv=sys.argv[1:]):

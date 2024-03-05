@@ -45,10 +45,10 @@ def parse_args(argv):
         help="Max edit distance for UMI",
     )
     parser.add_argument(
-        "--adapter-length",
+        "--adapter_length",
         dest="ADAPTER_LENGTH",
         type=int,
-        default=250,
+        default=200,
         help="Length of adapter",
     )
     parser.add_argument(
@@ -106,10 +106,27 @@ def parse_args(argv):
     return args
 
 
-def extract_umi(query_seq, query_qual, pattern, max_edit_dist, format):
+def clip_entry(entry, umi_start_fwd, umi_start_rev, adapter_length, format):
+    clip_fwd = umi_start_fwd
+    if adapter_length == umi_start_rev:
+        clip_rev = None
+    else: 
+        clip_rev = umi_start_rev - adapter_length
+    
+    entry.sequence = entry.sequence[clip_fwd:clip_rev]
+    
+    if format == "fastq":
+        entry.quality = entry.quality[clip_fwd:clip_rev]
+    
+    return entry
+
+def extract_umi(query_seq, query_qual, pattern, max_edit_dist, format, direction):
     umi_qual = None
     equalities = [("M", "A"), ("M", "C"), ("R", "A"), ("R", "G"), ("W", "A"), ("W", "T"), ("S", "C"), ("S", "G"), ("Y", "C"), ("Y", "T"), ("K", "G"), ("K", "T"), ("V", "A"), ("V", "C"),
-                  ("V", "G"), ("H", "A"), ("H", "C"), ("H", "T"), ("D", "A"), ("D", "G"), ("D", "T"), ("B", "C"), ("B", "G"), ("B", "T"), ("N", "A"), ("N", "C"), ("N", "G"), ("N", "T")]
+                  ("V", "G"), ("H", "A"), ("H", "C"), ("H", "T"), ("D", "A"), ("D", "G"), ("D", "T"), ("B", "C"), ("B", "G"), ("B", "T"), ("N", "A"), ("N", "C"), ("N", "G"), ("N", "T"),
+                  ("m", "a"), ("m", "c"), ("r", "a"), ("r", "g"), ("w", "a"), ("w", "t"), ("s", "c"), ("s", "g"), ("y", "c"), ("y", "t"), ("k", "g"), ("k", "t"), ("v", "a"), ("v", "c"),
+                  ("v", "g"), ("h", "a"), ("h", "c"), ("h", "t"), ("d", "a"), ("d", "g"), ("d", "t"), ("b", "c"), ("b", "g"), ("b", "t"), ("n", "a"), ("n", "c"), ("n", "g"), ("n", "t"), 
+                  ("a", "A"), ("c", "C"), ("t", "T"), ("g", "G")]
 
     result = edlib.align(
         pattern,
@@ -120,31 +137,38 @@ def extract_umi(query_seq, query_qual, pattern, max_edit_dist, format):
         additionalEqualities=equalities,
     )
     if result["editDistance"] == -1:
-        return None, None, None
+        return None, None, None, None
 
     edit_dist = result["editDistance"]
     locs = result["locations"][0]
-    umi = query_seq[locs[0]:locs[1]+1]
+    umi_start_pos = locs[0]
+    umi_end_pos = locs[1] + 1
+    umi = query_seq[umi_start_pos:umi_end_pos]
+    
+    if direction == "fwd":
+        umi_start = umi_start_pos
+    else:
+        umi_start = umi_end_pos
 
     if format == "fastq":
         umi_qual = query_qual[locs[0]:locs[1]+1]
 
-    return edit_dist, umi, umi_qual
+    return edit_dist, umi, umi_qual, umi_start
 
 
-def extract_adapters(entry, max_adapter_length, format):
+def extract_adapters(entry, adapter_length, format):
     read_5p_seq = None
     read_5p_qual = None
     read_3p_seq = None
     read_3p_qual = None
 
-    if len(entry.sequence) > max_adapter_length:
-        read_5p_seq = entry.sequence[:max_adapter_length]
-        read_3p_seq = entry.sequence[-max_adapter_length:]
+    if len(entry.sequence) > adapter_length:
+        read_5p_seq = entry.sequence[:adapter_length]
+        read_3p_seq = entry.sequence[-adapter_length:]
         
         if format == "fastq":
-            read_5p_qual = entry.quality[:max_adapter_length]
-            read_3p_qual = entry.quality[-max_adapter_length:]
+            read_5p_qual = entry.quality[:adapter_length]
+            read_3p_qual = entry.quality[-adapter_length:]
 
     return read_5p_seq, read_3p_seq, read_5p_qual, read_3p_qual
 
@@ -288,7 +312,7 @@ def write_tsv(
 def extract_umis(
     args
 ):
-    max_adapter_length = args.ADAPTER_LENGTH
+    adapter_length = args.ADAPTER_LENGTH
     max_pattern_dist = args.MAX_ERROR
     output_folder = args.OUT
     tsv = args.TSV
@@ -311,7 +335,7 @@ def extract_umis(
             n_total += 1
 
             read_5p_seq, read_3p_seq, read_5p_qual, read_3p_qual = extract_adapters(
-                entry, max_adapter_length, format
+                entry, adapter_length, format
             )
 
             if read_5p_seq is None or read_3p_seq is None:
@@ -320,22 +344,26 @@ def extract_umis(
             strand_stats[strand] += 1
 
             # Extract fwd UMI
-            result_5p_fwd_umi_dist, result_5p_fwd_umi_seq, result_5p_fwd_umi_qual = extract_umi(
-                read_5p_seq, read_5p_qual, umi_fwd, max_pattern_dist, format
+            result_5p_fwd_umi_dist, result_5p_fwd_umi_seq, result_5p_fwd_umi_qual, umi_start_fwd = extract_umi(
+                read_5p_seq, read_5p_qual, umi_fwd, max_pattern_dist, format, "fwd"
             )
             # Extract rev UMI
-            result_3p_rev_umi_dist, result_3p_rev_umi_seq, result_3p_rev_umi_qual = extract_umi(
-                read_3p_seq, read_3p_qual, umi_rev, max_pattern_dist, format
+            result_3p_rev_umi_dist, result_3p_rev_umi_seq, result_3p_rev_umi_qual, umi_start_rev = extract_umi(
+                read_3p_seq, read_3p_qual, umi_rev, max_pattern_dist, format, "rev"
             )
 
             if not result_5p_fwd_umi_seq or not result_3p_rev_umi_seq:
                 continue
 
+            clipped_entry = clip_entry(
+                entry, umi_start_fwd, umi_start_rev, adapter_length, format
+            )
+            
             n_both_umi += 1
 
             if format == "fasta":
                 write_fasta(
-                    entry,
+                    clipped_entry,
                     strand,
                     result_5p_fwd_umi_dist,
                     result_3p_rev_umi_dist,
@@ -346,7 +374,7 @@ def extract_umis(
 
             if format == "fastq":
                 write_fastq(
-                    entry,
+                    clipped_entry,
                     strand,
                     result_5p_fwd_umi_dist,
                     result_3p_rev_umi_dist,

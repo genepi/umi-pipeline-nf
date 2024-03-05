@@ -1,5 +1,5 @@
 process FREEBAYES {
-    publishDir "${params.output}/${params.variant_caller}/${sample}/", mode: 'copy'
+    publishDir "${params.output}/${params.variant_caller}/${sample}/${type}", mode: 'copy'
 
     input:
       tuple val( sample ), val( target ), path( bam ), path( bai )
@@ -12,8 +12,6 @@ process FREEBAYES {
 
     script:
     """
-      freebayes --version
-      freebayes -f ${reference} ${bam} | vcfallelicprimitives -kg >${type}.vcf
-
+      freebayes -f ${reference} -F 0.009 -p 80 ${bam} | vcfallelicprimitives -kg >${type}.vcf
     """
 }

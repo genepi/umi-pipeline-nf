@@ -1,18 +1,17 @@
 process REFORMAT_FILTER_CLUSTER {
-    publishDir "${params.output}/${sample}/stats/${type}", pattern: "*.tsv", mode: 'copy'
-    publishDir "${params.output}/${sample}/clustering/${type}", pattern: "smolecule*", mode: 'copy'
-    publishDir "${params.output}/${sample}/clustering/${type}/clusters", pattern: "cluster*.${params.output_format}", mode: 'copy'
-      
+    tag "${sample}"
+    publishDir "${params.output}/${sample}/clustering/${type}/smolecule", pattern: "smolecule*", mode: 'copy'
+    publishDir "${params.output}/${sample}/stats/${type}", pattern: "*tsv", mode: 'copy'
+
     input:
-        tuple val(sample), val(target), path(consensus_fasta)
+        tuple val( sample ), val( target ), path( cluster )
         val( type )
-        path vsearch_dir
         path umi_parse_clusters_python
 
     output:
-        tuple val( "${sample}" ), val( "${target}" ), path( "smolecule*"), emit: smolecule_clusters_fastas
-        path ("*${params.output_format}")
-        path( "*.tsv" )
+        tuple val( "${sample}" ), val( "${target}" ), path( "smolecule*"), optional: true, emit: smolecule_cluster_fastqs
+        tuple val( sample ), val ( target ), path( "*.tsv" ), optional: true
+        tuple val( "${sample}" ), val( "${target}" ), path( "cluster*"), optional: true
 
     script:
         def balance_strands = params.balance_strands ? "--balance_strands" : ""
@@ -22,8 +21,8 @@ process REFORMAT_FILTER_CLUSTER {
           --filter_strategy ${params.filter_strategy_clusters} \
           --min_reads_per_clusters ${params.min_reads_per_cluster} \
           --max_reads_per_clusters ${params.max_reads_per_cluster} \
-          --vsearch_consensus ${consensus_fasta} \
-          --vsearch_folder ${vsearch_dir} \
+          --max_dist_umi ${params.max_dist_umi} \
+          --cluster ${cluster} \
           --output_format ${params.output_format} \
           $balance_strands \
           $write_report \
