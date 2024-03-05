@@ -13,12 +13,14 @@ umi-pipeline-nf is based on the snakemake [ONT UMI analysis pipeline](https://gi
 ## Workflow
 
 1. Input Fastq-files are merged and filtered.
-2. Input reads are aligned against a reference genome.
+2. Input reads are aligned against a reference genome and filtered to keep only full-length on-target reads.
 3. The flanking UMI sequences of all reads are extracted.
 4. The extracted UMIs are used to cluster the reads.
 5. Per cluster, highly accurate consensus sequences are created.
 6. The consensus sequences are aligned against the reference sequenced.
 7. An optional variant calling step can be performed.
+8. UMI-extraction, clustering, consensus sequence creation, and mapping are repeated.
+9. An optional variant calling step can be performed.
 
 > See the [output documentation](docs/output.md) for a detailed overview of the pipeline and its output files.
 
