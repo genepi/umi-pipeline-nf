@@ -13,7 +13,7 @@ umi-pipeline-nf is inspired by a snakemake-based analysis pipeline ([ONT UMI ana
 ## Workflow
 
 1. Input Fastq-files are merged and filtered.
-2. Input reads are aligned against a reference genome and filtered to keep only full-length on-target reads.
+2. Reads are aligned against a reference genome and filtered to keep only full-length on-target reads.
 3. The flanking UMI sequences of all reads are extracted.
 4. The extracted UMIs are used to cluster the reads.
 5. Per cluster, highly accurate consensus sequences are created.
