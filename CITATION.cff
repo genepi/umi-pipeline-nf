@@ -1,12 +1,33 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
+message: If you use this software, please cite it as below.
+title: Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex Lipoprotein(a) KIV-2 VNTR
 authors:
-- family-names: Amstler
-  given-names: Stephan
-  orcid: https://orcid.org/0009-0007-7214-7481
-title: "Umi-pipeline-nf - A nextflow pipeline to analyse UMI-tagged amplicons from nanopore sequencing."
-version: 0.2.0
-identifiers:
-  - type: doi
-    value: 10.1101/2024.03.01.582741
-url: https://github.com/genepi/umi-pipeline-nf
+  - family: Amstler
+    given: Stephan
+  - family: Streiter
+    given: Gertraud
+  - family: Pfurtscheller
+    given: Cathrin
+  - family: Forer
+    given: Lukas
+  - family: Di Maio
+    given: Silvia
+  - family: Weissensteiner
+    given: Hansi
+  - family: Paulweber
+    given: Bernhard
+  - family: Schoenherr
+    given: Sebastian
+  - family: Kronenberg
+    given: Florian
+  - family: Coassin
+    given: Stefan
+doi: 10.1101/2024.03.01.582741
+date-released: 2024-03-05
+license: Apache-2.0
+repository-code: https://github.com/genepi/umi-pipeline-nf
+preferred-citation: |
+  Amstler, S., Streiter, G., Pfurtscheller, C., Forer, L., Di Maio, S., Weissensteiner, H., Paulweber, B., Schoenherr, S., Kronenberg, F., Coassin, S. (2024). Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex Lipoprotein(a) KIV-2 VNTR. bioRxiv, 2024.03.01.582741.
+  doi: 10.1101/2024.03.01.582741
+preferred-citation-repository: |
+  Amstler, S., Streiter, G., Pfurtscheller, C., Forer, L., Di Maio, S., Weissensteiner, H., Paulweber, B., Schoenherr, S., Kronenberg, F., Coassin, S. (2024). UMI Pipeline Nextflow Repository. https://github.com/genepi/umi-pipeline-nf
