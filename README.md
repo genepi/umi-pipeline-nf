@@ -6,7 +6,7 @@ Umi-pipeline-nf
 
 **Umi-pipeline-nf** creates highly accurate single-molecule consensus sequences for unique molecular identifier (UMI)-tagged amplicons from nanopore sequencing data.  
 The pipeline can be run for the whole fastq_pass folder of your nanopore run and, per default, outputs the aligned consensus sequences of each UMI cluster in bam file. The optional variant calling creates a vcf file for all variants that are found in the consensus sequences.
-umi-pipeline-nf is inspired by a snakemake-based analysis pipeline ([ONT UMI analysis pipeline](https://github.com/nanoporetech/pipeline-umi-amplicon); originally developed by [Karst et al, Nat Biotechnol 18:165–169, 2021](https://www.nature.com/articles/s41592-020-01041-y)). We migrated the pipeline in [Nextflow](https://www.nextflow.io), included several optimizations and [additional functionalities](#main-adaptations).  
+umi-pipeline-nf orignates from a snakemake-based analysis pipeline ([ONT UMI analysis pipeline](https://github.com/nanoporetech/pipeline-umi-amplicon); originally developed by [Karst et al, Nat Biotechnol 18:165–169, 2021](https://www.nature.com/articles/s41592-020-01041-y)). We migrated the pipeline to [Nextflow](https://www.nextflow.io) and included several optimizations and [additional functionalities](#main-adaptations).  
 
 ![Workflow](docs/images/umi-pipeline-nf_metro-map.svg)
 
@@ -58,5 +58,5 @@ nextflow run genepi/umi-pipeline-nf -r v0.1.0 -c <custom.config> -profile docker
 
 The pipeline was written by ([@StephanAmstler](https://github.com/AmstlerStephan)).  
 Nextflow template pipeline: [EcSeq](https://github.com/ecSeq).  
-Snakemake-based ONT pipeline: [nanoporetech/pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon).  
+Snakemake-based ONT pipeline for UMI nanopore sequencing analysis: [nanoporetech/pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon).  
 UMI-corrected nanopore sequencing analysis first shown by: [SorenKarst/longread_umi](https://github.com/SorenKarst/longread_umi).
