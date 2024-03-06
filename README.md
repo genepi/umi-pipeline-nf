@@ -50,7 +50,7 @@ nextflow run genepi/umi-pipeline-nf -r v0.2.0 -profile test,docker
 3.1 Download and adapt the config/custom.config with paths to your data (relative and absolute paths possible).
 
 ```bash
-nextflow run genepi/umi-pipeline-nf -r v0.2.0 -c <custom.config> -profile docker 
+nextflow run genepi/umi-pipeline-nf -r v0.2.0 -c <custom.config> -profile custom,<docker,singularity> 
 ```
 
 ## Citation 
