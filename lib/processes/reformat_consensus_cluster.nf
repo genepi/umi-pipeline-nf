@@ -1,5 +1,5 @@
 process REFORMAT_CONSENSUS_CLUSTER {
-    publishDir "${params.output}/${sample}/fasta/${type}", mode: 'copy'
+    publishDir "${params.output}/${sample}/fastq/${type}", mode: 'copy'
 
     input:
       tuple val( sample ), val( target ), path( cluster_consensus_fasta )
@@ -7,10 +7,13 @@ process REFORMAT_CONSENSUS_CLUSTER {
       path umi_reformat_consensus
 
     output:
-      tuple val( "${sample}" ), val( "${target}" ), path( "${type}.fasta" ), emit:consensus_fasta
+      tuple val( "${sample}" ), val( "${target}" ), path( "*.fastq" ), emit:consensus_fastq
 
     script:
     """
-        cat ${cluster_consensus_fasta} | python "${umi_reformat_consensus}" > ${type}.fasta
+        python ${umi_reformat_consensus} \
+          --consensus_fasta ${cluster_consensus_fasta} \
+          -o .
+        
     """
 }

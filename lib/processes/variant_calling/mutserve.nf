@@ -1,5 +1,5 @@
 process MUTSERVE {
-    publishDir "${params.output}/${params.variant_caller}/${sample}/", mode: 'copy'
+    publishDir "${params.output}/${params.variant_caller}/${sample}/${type}", mode: 'copy'
   
     input:
       tuple val( sample ), val( target ), path( bam ), path( bai )
@@ -18,6 +18,7 @@ process MUTSERVE {
       --output ${type}.vcf \
       --write-raw \
       --reference ${reference} \
+      --insertions \
       --deletions \
       --contig-name \$(awk '{ print \$1 }' ${bed}) \
       ${bam}

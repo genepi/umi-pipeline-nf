@@ -25,7 +25,7 @@ umi_reformat_consensus      = file( "${projectDir}/bin/reformat_consensus.py", c
 raw                         = "raw"
 consensus                   = "consensus"
 final_consensus             = "final"
-barcode_sizes               = [:]
+n_parsed_cluster            = [:]
 
 
 // STAGE CHANNELS
@@ -41,19 +41,20 @@ Channel.fromPath("${params.input}/*", type: 'dir')
 
 include {COPY_BED} from '../processes/copy_bed.nf'
 include {MERGE_FASTQ} from '../processes/merge_input.nf'
-include {MERGE_CONSENSUS_FASTA} from '../processes/merge_consensus_fasta.nf'
+include {MERGE_CONSENSUS_FASTQ} from '../processes/merge_consensus_fastq.nf'
 include {SUBSAMPLING} from '../processes/subsampling.nf'
 include {MAP_READS; MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS} from '../processes/map_reads.nf'
 include {SPLIT_READS} from  '../processes/split_reads.nf'
-include {DETECT_UMI_FASTA} from '../processes/detect_umi_fasta.nf'
+include {DETECT_UMI_FASTQ; DETECT_UMI_FASTQ as DETECT_UMI_CONSENSUS_FASTQ} from '../processes/detect_umi_fastq.nf'
 include {CLUSTER; CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
-include {DETECT_UMI_CONSENSUS_FASTA} from '../processes/detect_umi_consensus_fasta.nf'
+include {FILTER_CONSENSUS_FASTQ} from '../processes/filter_consensus_fastq.nf'
 include {REFORMAT_CONSENSUS_CLUSTER} from '../processes/reformat_consensus_cluster.nf'
-include {LOFREQ} from '../processes/variant_calling/lofreq.nf'
-include {MUTSERVE} from '../processes/variant_calling/mutserve.nf'
-include {FREEBAYES} from '../processes/variant_calling/freebayes.nf'
+include {LOFREQ as LOFREQ_CONSENSUS; LOFREQ as LOFREQ_FINAL_CONSENSUS} from '../processes/variant_calling/lofreq.nf'
+include {MUTSERVE as MUTSERVE_CONSENSUS; MUTSERVE as MUTSERVE_FINAL_CONSENSUS} from '../processes/variant_calling/mutserve.nf'
+include {FREEBAYES as FREEBAYES_CONSENSUS; FREEBAYES as FREEBAYES_FINAL_CONSENSUS} from '../processes/variant_calling/freebayes.nf'
+
 
 // SUB-WORKFLOWS
 workflow UMI_PIPELINE {
@@ -64,11 +65,9 @@ workflow UMI_PIPELINE {
         if( params.subsampling ){
             MERGE_FASTQ( fastq_files_ch )
             SUBSAMPLING( MERGE_FASTQ.out.merged_fastq )
-            SUBSAMPLING.out.subsampled_fastq
             .set { merged_fastq }
         } else {
             MERGE_FASTQ( fastq_files_ch )
-            MERGE_FASTQ.out.merged_fastq
             .set { merged_fastq }
         }
 
@@ -78,39 +77,56 @@ workflow UMI_PIPELINE {
 
         MAP_READS( merged_filtered_fastq, raw, reference )
         SPLIT_READS( MAP_READS.out.bam_consensus, COPY_BED.out.bed, raw, umi_filter_reads )
-        DETECT_UMI_FASTA( SPLIT_READS.out.split_reads_fastx, raw, umi_extract )
-        CLUSTER( DETECT_UMI_FASTA.out.umi_extract_fasta, raw )
-        REFORMAT_FILTER_CLUSTER( CLUSTER.out.consensus_fasta, raw, CLUSTER.out.vsearch_dir, umi_parse_clusters)
+        DETECT_UMI_FASTQ( SPLIT_READS.out.split_reads_fastx, raw, umi_extract )
+        CLUSTER( DETECT_UMI_FASTQ.out.umi_extract_fastq, raw )
 
-        REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
-        .map{ sample, type, fastas -> barcode_sizes.put("$sample", fastas.size)}
-
-        REFORMAT_FILTER_CLUSTER.out.smolecule_clusters_fastas
-        .transpose(by: 2)
-        .set { flatten_smolecule_fastas }
-
-        POLISH_CLUSTER( flatten_smolecule_fastas, consensus )
-
-        POLISH_CLUSTER.out.consensus_fasta
-        .map{ sample, type, fasta -> tuple( groupKey(sample, barcode_sizes.get("$sample")), type, fasta) }
-        .groupTuple()
-        .set { merge_consensus }
-
-        MERGE_CONSENSUS_FASTA(merge_consensus)
+        REFORMAT_FILTER_CLUSTER( CLUSTER.out.cluster_fastas, raw, umi_parse_clusters )
         
-        MAP_CONSENSUS( MERGE_CONSENSUS_FASTA.out.merged_consensus_fasta, consensus, reference )
-        DETECT_UMI_CONSENSUS_FASTA( MERGE_CONSENSUS_FASTA.out.merged_consensus_fasta, consensus, umi_extract )
-        CLUSTER_CONSENSUS( DETECT_UMI_CONSENSUS_FASTA.out.umi_extract_fasta , consensus )
+        REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
+        .filter{ sample, type, fastqs -> fastqs.class == ArrayList}
+        .set{ smolecule_cluster_fastqs_list }
+
+        smolecule_cluster_fastqs_list
+        .map{ sample, type, fastqs -> n_parsed_cluster.put("$sample", fastqs.size)}
+        
+        smolecule_cluster_fastqs_list
+        .transpose( by: 2 )
+        .set{ smolecule_cluster_fastqs }
+
+        POLISH_CLUSTER( smolecule_cluster_fastqs, consensus )
+        
+        POLISH_CLUSTER.out.consensus_fastq
+        .map{ sample, type, fastq -> tuple( groupKey(sample, n_parsed_cluster.get("$sample")), type, fastq) }
+        .groupTuple( )
+        .set{ merge_consensus }
+
+        
+        if ( params.output_format == "fastq"){
+            MERGE_CONSENSUS_FASTQ(merge_consensus, consensus)
+            FILTER_CONSENSUS_FASTQ(MERGE_CONSENSUS_FASTQ.out.merged_consensus_fastq, consensus)
+            FILTER_CONSENSUS_FASTQ.out.filtered_consensus_fastq
+            .set{ consensus_fastq }
+        } else {
+            MERGE_CONSENSUS_FASTQ(merge_consensus, consensus)
+            .set{ consensus_fastq }
+        }
+
+        MAP_CONSENSUS( consensus_fastq, consensus, reference )
+        DETECT_UMI_CONSENSUS_FASTQ( consensus_fastq, consensus, umi_extract )
+        CLUSTER_CONSENSUS( DETECT_UMI_CONSENSUS_FASTQ.out.umi_extract_fastq , consensus )
         REFORMAT_CONSENSUS_CLUSTER( CLUSTER_CONSENSUS.out.consensus_fasta, final_consensus, umi_reformat_consensus )
-        MAP_FINAL_CONSENSUS( REFORMAT_CONSENSUS_CLUSTER.out.consensus_fasta, final_consensus, reference )
+        MAP_FINAL_CONSENSUS( REFORMAT_CONSENSUS_CLUSTER.out.consensus_fastq, final_consensus, reference )
         
         if( params.call_variants ){
             if( params.variant_caller == "lofreq" ){
-                LOFREQ( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
+                LOFREQ_CONSENSUS( MAP_CONSENSUS.out.bam_consensus, consensus, reference, reference_fai )
+                LOFREQ_FINAL_CONSENSUS( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
             }else if( params.variant_caller == "mutserve"){
-                MUTSERVE( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, COPY_BED.out.bed, reference, reference_fai )
+                MUTSERVE_CONSENSUS( MAP_CONSENSUS.out.bam_consensus, consensus, COPY_BED.out.bed, reference, reference_fai )
+                MUTSERVE_FINAL_CONSENSUS( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, COPY_BED.out.bed, reference, reference_fai )
             }else if( params.variant_caller == "freebayes"){
-                FREEBAYES( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
+                FREEBAYES_CONSENSUS( MAP_CONSENSUS.out.bam_consensus, consensus, reference, reference_fai )
+                FREEBAYES_FINAL_CONSENSUS( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
             }else{
                 exit 1, "${params.variant_caller} is not a valid option. \nPossible variant caller are <lofreq/mutserve/freebayes>"
             
