@@ -1,3 +1,8 @@
+"""
+This is a modified version of the code present in:
+https://github.com/nanoporetech/pipeline-umi-amplicon/blob/master/lib/umi_amplicon_tools/reformat_consensus.py
+"""
+
 import argparse
 import logging
 import sys
