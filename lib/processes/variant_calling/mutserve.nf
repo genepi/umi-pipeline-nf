@@ -14,7 +14,7 @@ process MUTSERVE {
     
     script:
     """
-      mutserve call  \
+      java -jar /opt/mutserve_LPA_adapted.jar call  \
       --output ${type}.vcf \
       --write-raw \
       --reference ${reference} \

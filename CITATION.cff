@@ -1,12 +1,57 @@
-cff-version: 1.2.0
+cff-version: "1.2.0"
 message: "If you use this software, please cite it as below."
+title: "Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex Lipoprotein(a) KIV-2 VNTR"
 authors:
-- family-names: Amstler
-  given-names: Stephan
-  orcid: https://orcid.org/0009-0007-7214-7481
-title: "Umi-pipeline-nf - A nextflow pipeline to analyse UMI-tagged amplicons from nanopore sequencing."
-version: 0.2.0
-identifiers:
-  - type: doi
-    value: 10.1101/2024.03.01.582741
-url: https://github.com/genepi/umi-pipeline-nf
+  - family-names: "Amstler"
+    given-names: "Stephan"
+  - family-names: "Streiter"
+    given-names: "Gertraud"
+  - family-names: "Pfurtscheller"
+    given-names: "Cathrin"
+  - family-names: "Forer"
+    given-names: "Lukas"
+  - family-names: "Di Maio"
+    given-names: "Silvia"
+  - family-names: "Weissensteiner"
+    given-names: "Hansi"
+  - family-names: "Paulweber"
+    given-names: "Bernhard"
+  - family-names: "Schoenherr"
+    given-names: "Sebastian"
+  - family-names: "Kronenberg"
+    given-names: "Florian"
+  - family-names: "Coassin"
+    given-names: "Stefan"
+doi: "10.1101/2024.03.01.582741"
+date-released: "2024-03-05"
+license: "Apache-2.0"
+repository-code: "https://github.com/genepi/umi-pipeline-nf"
+preferred-citation:
+  type: "article"
+  authors:
+  - family-names: "Amstler"
+    given-names: "Stephan"
+  - family-names: "Streiter"
+    given-names: "Gertraud"
+  - family-names: "Pfurtscheller"
+    given-names: "Cathrin"
+  - family-names: "Forer"
+    given-names: "Lukas"
+  - family-names: "Di Maio"
+    given-names: "Silvia"
+  - family-names: "Weissensteiner"
+    given-names: "Hansi"
+  - family-names: "Paulweber"
+    given-names: "Bernhard"
+  - family-names: "Schoenherr"
+    given-names: "Sebastian"
+  - family-names: "Kronenberg"
+    given-names: "Florian"
+  - family-names: "Coassin"
+    given-names: "Stefan"
+  doi: "10.1101/2024.03.01.582741"
+  journal: "bioRxiv"
+  day: 5
+  month: 3
+  title: "Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex Lipoprotein(a) KIV-2 VNTR"
+  year: 2024

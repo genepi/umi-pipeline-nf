@@ -53,6 +53,12 @@ nextflow run genepi/umi-pipeline-nf -r v0.1.0 -profile test,docker
 nextflow run genepi/umi-pipeline-nf -r v0.1.0 -c <custom.config> -profile docker 
 ```
 
+## Citation 
+
+If you use the pipeline please cite our Paper:
+
+Amstler S, Streiter G, Pfurtscheller C, Forer L, Di Maio S, Weissensteiner H, Paulweber B, Schoenherr S, Kronenberg F, Coassin S. Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex Lipoprotein(a) KIV-2 VNTR. bioRxiv. 2024. doi: 10.1101/2024.03.01.582741.
+
 
 ### Credits
 
