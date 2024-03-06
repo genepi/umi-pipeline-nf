@@ -1,29 +1,27 @@
-centroid_fasta="clusters_centroid.fasta"
-consensus_fasta="clusters_consensus.fasta"
+consensus_fasta="consensus.fasta"
 vsearch_dir="vsearch_clusters"
 
 process CLUSTER {
-    publishDir "${params.output}/${sample}/clustering/${type}", mode: 'copy'
-
+    publishDir "${params.output}/${sample}/clustering/${type}", pattern: "${consensus_fasta}", mode: 'copy'
+    
     input:
-        tuple val( sample ), val( target ), path( detected_umis_fasta )
+        tuple val( sample ), val( target ), path( detected_umis_fastq )
         val ( type )
     output:
         tuple val( "${sample}" ), val( "${target}" ), path( "${consensus_fasta}" ), emit:consensus_fasta
-        path( "${vsearch_dir}" ), emit: vsearch_dir
-        path( "${centroid_fasta}" ) 
+        tuple val( "${sample}" ), val( "${target}" ), path( "cluster*" ), emit:cluster_fastas
         
+    script:
+        def id = "${type}" == "raw" ? 0.8 : 0.99
     """
-        mkdir -p ${vsearch_dir} && \
         vsearch \
         --clusterout_id \
-        --clusters ${vsearch_dir}/cluster \
-        --centroids ${centroid_fasta} \
+        --clusters cluster \
         --consout ${consensus_fasta} \
         --minseqlength ${params.min_length} \
         --maxseqlength ${params.max_length} \
         --threads ${params.threads} \
-        --cluster_fast ${detected_umis_fasta} \
+        --cluster_fast ${detected_umis_fastq} \
         --clusterout_sort \
         --gapopen 0E/5I \
         --gapext 0E/2I \
@@ -32,6 +30,6 @@ process CLUSTER {
         --iddef 0 \
         --minwordmatches 0 \
         --qmask none \
-        --id 0.85
+        --id $id
     """
 }

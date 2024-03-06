@@ -4,7 +4,7 @@ This document describes the output produced by the pipeline.
 ## Pipeline overview
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-![Workflow](images/Flowchart_UMI_nf.jpg)
+![Workflow](images/Flowchart.png)
 
 * [Merge and Filter Reads](#merge-and-filter-reads) - Merge and filter input fastq files
 * [Subsample Reads](#subsampling) - Subsample merged and filtered reads
