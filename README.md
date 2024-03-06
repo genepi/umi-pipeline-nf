@@ -21,14 +21,14 @@ Additional flags can be set to perform a variant calling ( [freebayes](https://g
 2. Download the pipeline and test it on a minimal dataset with a single command
 
 ```bash
-nextflow run AmstlerStephan/umi-pipeline-nf -profile test,docker
+nextflow run genepi/umi-pipeline-nf -profile test,docker
 ```
 
 3. Start running your own analysis!
 3.1 Download and adapt the config/custom.config with paths to your data (relative and absolute paths possible)
 
 ```bash
-nextflow run AmstlerStephan/umi-pipeline-nf -r main -c <custom.config> -profile docker 
+nextflow run genepi/umi-pipeline-nf -r default_clustering_strategy -latest -c <custom.config> -profile docker 
 ```
 
 > See the [usage documentation](docs/usage.md) for all of the available options when running the pipeline.
