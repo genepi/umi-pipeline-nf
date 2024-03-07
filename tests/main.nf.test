@@ -24,6 +24,7 @@ nextflow_pipeline {
 
         then {
             assert workflow.success
+            assert snapshot(process.out).match()
         }
 
     }
