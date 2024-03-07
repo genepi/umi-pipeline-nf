@@ -80,6 +80,9 @@ workflow UMI_PIPELINE {
         DETECT_UMI_FASTQ( SPLIT_READS.out.split_reads_fastx, raw, umi_extract )
         CLUSTER( DETECT_UMI_FASTQ.out.umi_extract_fastq, raw )
 
+        CLUSTER.out.cluster_fastas
+        .view()
+        
         REFORMAT_FILTER_CLUSTER( CLUSTER.out.cluster_fastas, raw, umi_parse_clusters )
         
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
