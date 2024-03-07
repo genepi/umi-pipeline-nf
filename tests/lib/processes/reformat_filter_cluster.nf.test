@@ -7,6 +7,9 @@ nextflow_process {
     test("Should output 24 smolecule files") {
 
         when {
+            params{
+                min_reads_per_cluster = 10
+            }
             process {
                 """
                 input[0] = Channel.of( 
@@ -54,6 +57,53 @@ nextflow_process {
     test("Should split cluster into 6 smolecule files") {
 
         when {
+            params{
+                min_reads_per_cluster = 10
+            }
+            process {
+                """
+                input[0] = Channel.of(["barcode06", "raw", "$baseDir/tests/input/reformat_filter_cluster/barcode06/cluster0"])
+                input[1] = Channel.of("raw")
+                input[2] = file( "$baseDir/bin/parse_clusters.py", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+    test("Should split cluster into 3 smolecule files") {
+
+        when {
+            params{
+                min_reads_per_cluster = 20
+            }
+            process {
+                """
+                input[0] = Channel.of(["barcode06", "raw", "$baseDir/tests/input/reformat_filter_cluster/barcode06/cluster0"])
+                input[1] = Channel.of("raw")
+                input[2] = file( "$baseDir/bin/parse_clusters.py", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+    test("Should have no output") {
+
+        when {
+            params{
+                min_reads_per_cluster = 100
+            }
             process {
                 """
                 input[0] = Channel.of(["barcode06", "raw", "$baseDir/tests/input/reformat_filter_cluster/barcode06/cluster0"])

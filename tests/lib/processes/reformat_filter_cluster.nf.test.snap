@@ -1,5 +1,86 @@
 {
-    "Should split cluster into 6 subcluster": {
+    "Should have no output": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    [
+                        "barcode06",
+                        "raw",
+                        "split_cluster_stats.tsv:md5,24771071ba5d37b4f7ad29c4efce2151"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "smolecule_cluster_fastqs": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-07T16:33:37.085983"
+    },
+    "Should split cluster into 3 smolecule files": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode06",
+                        "raw",
+                        [
+                            "smolecule0sub3.fastq:md5,2880ce7e430b18ed05afc104602cf640",
+                            "smolecule0sub4.fastq:md5,179834385b9729c0b6448c7ad02688b6",
+                            "smolecule0sub5.fastq:md5,bf307457591aa36e23359965f03cf701"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        "barcode06",
+                        "raw",
+                        "split_cluster_stats.tsv:md5,212f8dd6b7b8935baa6bdec3d8442913"
+                    ]
+                ],
+                "2": [
+                    [
+                        "barcode06",
+                        "raw",
+                        [
+                            "cluster0_0:md5,43434b02020cd2e41e33d92a10835f97",
+                            "cluster0_1:md5,ddd4dd5d0918df43c48776d7082e9734",
+                            "cluster0_2:md5,4bbd17234dd1ca4fd08baa11432dc8d8",
+                            "cluster0_3:md5,ff0974f819897361226e1fc67aeb0656",
+                            "cluster0_4:md5,f27185a6dcb557ed5cf56f3538941404",
+                            "cluster0_5:md5,d042b1457bc3a906d6d6b24a72e6e980"
+                        ]
+                    ]
+                ],
+                "smolecule_cluster_fastqs": [
+                    [
+                        "barcode06",
+                        "raw",
+                        [
+                            "smolecule0sub3.fastq:md5,2880ce7e430b18ed05afc104602cf640",
+                            "smolecule0sub4.fastq:md5,179834385b9729c0b6448c7ad02688b6",
+                            "smolecule0sub5.fastq:md5,bf307457591aa36e23359965f03cf701"
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-07T16:33:29.311606"
+    },
+    "Should split cluster into 6 smolecule files": {
         "content": [
             {
                 "0": [
@@ -57,7 +138,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.0"
         },
-        "timestamp": "2024-03-07T16:21:16.050375"
+        "timestamp": "2024-03-07T16:33:20.719888"
     },
     "Should output 24 smolecule files": {
         "content": [
