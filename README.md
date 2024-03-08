@@ -50,12 +50,12 @@ nextflow run genepi/umi-pipeline-nf -r v0.2.0 -profile test,docker
 3.1 Download and adapt the config/custom.config with paths to your data (relative and absolute paths possible).
 
 ```bash
-nextflow run genepi/umi-pipeline-nf -r v0.2.0 -c <custom.config> -profile docker 
+nextflow run genepi/umi-pipeline-nf -r v0.2.0 -c <custom.config> -profile custom,<docker,singularity> 
 ```
 
 ## Citation 
 
-If you use the pipeline please cite our Paper:
+If you use the pipeline please cite [our Paper](https://www.biorxiv.org/content/10.1101/2024.03.01.582741v1):
 
 Amstler S, Streiter G, Pfurtscheller C, Forer L, Di Maio S, Weissensteiner H, Paulweber B, Schoenherr S, Kronenberg F, Coassin S. Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex Lipoprotein(a) KIV-2 VNTR. bioRxiv. 2024. doi: 10.1101/2024.03.01.582741.
 
