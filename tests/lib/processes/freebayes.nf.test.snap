@@ -3,14 +3,14 @@
         "content": [
             {
                 "0": [
-                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e",
-                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e",
-                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    "final.vcf:md5,88efc7556e75a4896acb25af4fd891ea",
+                    "final.vcf:md5,8d2f225076db263df46ea74c3444d8a1",
+                    "final.vcf:md5,c1ef037ccb4f791326fda68ef02ab497"
                 ],
                 "variants": [
-                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e",
-                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e",
-                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    "final.vcf:md5,88efc7556e75a4896acb25af4fd891ea",
+                    "final.vcf:md5,8d2f225076db263df46ea74c3444d8a1",
+                    "final.vcf:md5,c1ef037ccb4f791326fda68ef02ab497"
                 ]
             }
         ],
@@ -18,16 +18,16 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.0"
         },
-        "timestamp": "2024-03-11T12:20:47.707037"
+        "timestamp": "2024-03-11T12:43:44.072561"
     },
     "Should run without failures": {
         "content": [
             {
                 "0": [
-                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    "final.vcf:md5,c1ef037ccb4f791326fda68ef02ab497"
                 ],
                 "variants": [
-                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    "final.vcf:md5,c1ef037ccb4f791326fda68ef02ab497"
                 ]
             }
         ],
@@ -35,6 +35,6 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.0"
         },
-        "timestamp": "2024-03-11T12:11:10.296608"
+        "timestamp": "2024-03-11T12:43:32.975611"
     }
 }

@@ -14,9 +14,9 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of(["barcode03", "final", "$baseDir/tests/input/variant_calling/barcode03/final.bam", "$baseDir/tests/input/variant_calling/barcode03/final.bam.bai"])
-                input[1] = Channel.of("raw")
-                input[2] = file("$baseDir/tests/pipeline/ref/lpa-ref2645.fasta")
-                input[3] = file("$baseDir/tests/pipeline/ref/lpa-ref2645.fasta.fai")
+                input[1] = Channel.of("final")
+                input[2] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta")
+                input[3] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta.fai")
                 """
             }
         }
@@ -39,12 +39,12 @@ nextflow_process {
                 """
                 input[0] = Channel.of(
                     ["barcode03", "final", "$baseDir/tests/input/variant_calling/barcode03/final.bam", "$baseDir/tests/input/variant_calling/barcode03/final.bam.bai"],
-                    ["barcode04", "final", "$baseDir/tests/input/variant_calling/barcode03/final.bam", "$baseDir/tests/input/variant_calling/barcode04/final.bam.bai"],
-                    ["barcode05", "final", "$baseDir/tests/input/variant_calling/barcode03/final.bam", "$baseDir/tests/input/variant_calling/barcode05/final.bam.bai"]
+                    ["barcode04", "final", "$baseDir/tests/input/variant_calling/barcode04/final.bam", "$baseDir/tests/input/variant_calling/barcode04/final.bam.bai"],
+                    ["barcode05", "final", "$baseDir/tests/input/variant_calling/barcode05/final.bam", "$baseDir/tests/input/variant_calling/barcode05/final.bam.bai"]
                     )
-                input[1] = Channel.of("raw", "raw", "raw")
-                input[2] = file("$baseDir/tests/pipeline/ref/lpa-ref2645.fasta")
-                input[3] = file("$baseDir/tests/pipeline/ref/lpa-ref2645.fasta.fai")
+                input[1] = Channel.of("final", "final", "final")
+                input[2] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta")
+                input[3] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta.fai")
                 """
             }
         }
@@ -55,5 +55,4 @@ nextflow_process {
         }
 
     }
-
 }
