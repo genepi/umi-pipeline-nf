@@ -16,6 +16,8 @@ process LOFREQ {
       --ref ${reference} \
       --out ${type}.vcf \
       --call-indels \
+      --min-cov 5 \
+      --no-default--filter \
       ${bam}
     """
 }
