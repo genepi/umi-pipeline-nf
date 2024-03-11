@@ -31,7 +31,6 @@ nextflow_process {
 
         when {
             params {
-                debug = true
                 variant_calling = true 
                 variant_caller = "freebayes"
             }
