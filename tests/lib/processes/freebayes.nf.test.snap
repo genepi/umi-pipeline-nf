@@ -1,0 +1,40 @@
+{
+    "Should output three files": {
+        "content": [
+            {
+                "0": [
+                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "variants": [
+                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-11T12:20:47.707037"
+    },
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                "variants": [
+                    "raw.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-11T12:11:10.296608"
+    }
+}
