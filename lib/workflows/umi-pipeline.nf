@@ -51,9 +51,9 @@ include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
 include {FILTER_CONSENSUS_FASTQ} from '../processes/filter_consensus_fastq.nf'
 include {REFORMAT_CONSENSUS_CLUSTER} from '../processes/reformat_consensus_cluster.nf'
-include {LOFREQ as LOFREQ_CONSENSUS; LOFREQ as LOFREQ_FINAL_CONSENSUS} from '../processes/variant_calling/lofreq.nf'
-include {MUTSERVE as MUTSERVE_CONSENSUS; MUTSERVE as MUTSERVE_FINAL_CONSENSUS} from '../processes/variant_calling/mutserve.nf'
-include {FREEBAYES as FREEBAYES_CONSENSUS; FREEBAYES as FREEBAYES_FINAL_CONSENSUS} from '../processes/variant_calling/freebayes.nf'
+include {LOFREQ as LOFREQ_CONSENSUS; LOFREQ as LOFREQ_FINAL_CONSENSUS} from '../processes/lofreq.nf'
+include {MUTSERVE as MUTSERVE_CONSENSUS; MUTSERVE as MUTSERVE_FINAL_CONSENSUS} from '../processes/mutserve.nf'
+include {FREEBAYES as FREEBAYES_CONSENSUS; FREEBAYES as FREEBAYES_FINAL_CONSENSUS} from '../processes/freebayes.nf'
 
 
 // SUB-WORKFLOWS
