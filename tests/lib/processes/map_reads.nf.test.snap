@@ -1,0 +1,155 @@
+{
+    "Maps raw reads and should run with success": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode03",
+                        "raw",
+                        "lpa2645_filtered.bam:md5,353c38069c5547c1c2b29901005aa4ba",
+                        "lpa2645_filtered.bam.bai:md5,d2ae2e344b931d57d578de9d0168e3bf"
+                    ],
+                    [
+                        "barcode04",
+                        "raw",
+                        "lpa2645_filtered.bam:md5,95f7870b27e6c25d51f1c3035982e775",
+                        "lpa2645_filtered.bam.bai:md5,5aec1a9db1aa998874d9718b0829d3c9"
+                    ],
+                    [
+                        "barcode05",
+                        "raw",
+                        "lpa2645_filtered.bam:md5,a92a00332d070254dabd5dc2d4f5f6d7",
+                        "lpa2645_filtered.bam.bai:md5,cbfa58e264d57943237eb164a0f5e20c"
+                    ]
+                ],
+                "bam_consensus": [
+                    [
+                        "barcode03",
+                        "raw",
+                        "lpa2645_filtered.bam:md5,353c38069c5547c1c2b29901005aa4ba",
+                        "lpa2645_filtered.bam.bai:md5,d2ae2e344b931d57d578de9d0168e3bf"
+                    ],
+                    [
+                        "barcode04",
+                        "raw",
+                        "lpa2645_filtered.bam:md5,95f7870b27e6c25d51f1c3035982e775",
+                        "lpa2645_filtered.bam.bai:md5,5aec1a9db1aa998874d9718b0829d3c9"
+                    ],
+                    [
+                        "barcode05",
+                        "raw",
+                        "lpa2645_filtered.bam:md5,a92a00332d070254dabd5dc2d4f5f6d7",
+                        "lpa2645_filtered.bam.bai:md5,cbfa58e264d57943237eb164a0f5e20c"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-12T12:18:13.470692"
+    },
+    "Maps consensus reads and should run with success": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode03",
+                        "consensus",
+                        "masked_consensus.bam:md5,ac5d001091f64dab4c421ca85869a145",
+                        "masked_consensus.bam.bai:md5,324b6bf42be201d9cdf74f0275f2e586"
+                    ],
+                    [
+                        "barcode04",
+                        "consensus",
+                        "masked_consensus.bam:md5,4ed9bf5eaf20841aece1f502be7ed02f",
+                        "masked_consensus.bam.bai:md5,49f7b64af291ff714546d17b506bab09"
+                    ],
+                    [
+                        "barcode05",
+                        "consensus",
+                        "masked_consensus.bam:md5,d9f28481b03575b5effad48a0eeb7bec",
+                        "masked_consensus.bam.bai:md5,1d1b3914e1d80990e0c3c7aa46d7a0be"
+                    ]
+                ],
+                "bam_consensus": [
+                    [
+                        "barcode03",
+                        "consensus",
+                        "masked_consensus.bam:md5,ac5d001091f64dab4c421ca85869a145",
+                        "masked_consensus.bam.bai:md5,324b6bf42be201d9cdf74f0275f2e586"
+                    ],
+                    [
+                        "barcode04",
+                        "consensus",
+                        "masked_consensus.bam:md5,4ed9bf5eaf20841aece1f502be7ed02f",
+                        "masked_consensus.bam.bai:md5,49f7b64af291ff714546d17b506bab09"
+                    ],
+                    [
+                        "barcode05",
+                        "consensus",
+                        "masked_consensus.bam:md5,d9f28481b03575b5effad48a0eeb7bec",
+                        "masked_consensus.bam.bai:md5,1d1b3914e1d80990e0c3c7aa46d7a0be"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-12T12:18:22.703575"
+    },
+    "Maps final consensus reads and should run with success": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode03",
+                        "final",
+                        "final.bam:md5,de16ff046affedd166d3dc624c815402",
+                        "final.bam.bai:md5,35cd386d66ab14048dd7bd943a1a65bc"
+                    ],
+                    [
+                        "barcode04",
+                        "final",
+                        "final.bam:md5,6eedc2858320a83d02e45b90348ef744",
+                        "final.bam.bai:md5,d418fbfb1201c11807e68cd74f5957d3"
+                    ],
+                    [
+                        "barcode05",
+                        "final",
+                        "final.bam:md5,836da95e56c95a237fe83d27bda7f89c",
+                        "final.bam.bai:md5,6ead0557928c1c6df93dc52e57c09b16"
+                    ]
+                ],
+                "bam_consensus": [
+                    [
+                        "barcode03",
+                        "final",
+                        "final.bam:md5,de16ff046affedd166d3dc624c815402",
+                        "final.bam.bai:md5,35cd386d66ab14048dd7bd943a1a65bc"
+                    ],
+                    [
+                        "barcode04",
+                        "final",
+                        "final.bam:md5,6eedc2858320a83d02e45b90348ef744",
+                        "final.bam.bai:md5,d418fbfb1201c11807e68cd74f5957d3"
+                    ],
+                    [
+                        "barcode05",
+                        "final",
+                        "final.bam:md5,836da95e56c95a237fe83d27bda7f89c",
+                        "final.bam.bai:md5,6ead0557928c1c6df93dc52e57c09b16"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-12T12:18:32.436607"
+    }
+}
