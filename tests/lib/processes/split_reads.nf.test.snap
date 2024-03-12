@@ -1,0 +1,57 @@
+{
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    "umi_filter_reads_stats.tsv:md5,447c5c33991475f7ac12a282f6259178",
+                    "umi_filter_reads_stats.tsv:md5,fe26ebdae3a92861100fd0c9d9e77a01"
+                ],
+                "1": [
+                    [
+                        "barcode02",
+                        "target",
+                        "lpa2645_filtered.fastq:md5,6f7584391d586022225f3ffd7e4cab0c"
+                    ],
+                    [
+                        "barcode03",
+                        "target",
+                        "lpa2645_filtered.fastq:md5,1e7f3fc141b941603df33f8787e1a16f"
+                    ]
+                ],
+                "2": [
+                    [
+                        "lpa2645_concatamer.fastq:md5,1c57b745684e8ce5176f262b6f34386e",
+                        "lpa2645_filtered.fastq:md5,6f7584391d586022225f3ffd7e4cab0c",
+                        "lpa2645_short.fastq:md5,0e4b8ef67b1dcea12ed5461ebc1579f7",
+                        "lpa2645_supplementary.fastq:md5,1378deac4a64bca963445955b8f7a179",
+                        "lpa2645_unmapped.fastq:md5,c26ced4efa2ea76effec29eae836f719"
+                    ],
+                    [
+                        "lpa2645_concatamer.fastq:md5,5c95639aa0ee14615cc6c5907d2d7cfe",
+                        "lpa2645_filtered.fastq:md5,1e7f3fc141b941603df33f8787e1a16f",
+                        "lpa2645_short.fastq:md5,b7ca476d4abf1f34a237c65d3e53f69e",
+                        "lpa2645_supplementary.fastq:md5,7822e1fc064853d8dc5c99a7bb80a45e",
+                        "lpa2645_unmapped.fastq:md5,d9ab531bfdef8344cea0b035ed78be02"
+                    ]
+                ],
+                "split_reads_fastx": [
+                    [
+                        "barcode02",
+                        "target",
+                        "lpa2645_filtered.fastq:md5,6f7584391d586022225f3ffd7e4cab0c"
+                    ],
+                    [
+                        "barcode03",
+                        "target",
+                        "lpa2645_filtered.fastq:md5,1e7f3fc141b941603df33f8787e1a16f"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-12T16:05:31.979583"
+    }
+}
