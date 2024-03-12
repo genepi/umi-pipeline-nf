@@ -1,0 +1,49 @@
+nextflow_process {
+
+    name "Test Process MERGE_FASTQ"
+    script "lib/processes/merge_input.nf"
+    process "MERGE_FASTQ"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                min_read_length = 1000
+                min_qscore = 9
+            }
+            process {
+                """
+                input[0] = Channel.from("$baseDir/tests/input/merge_fastq/")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+    test("Should output empty file") {
+
+        when {
+            params {
+                min_read_length = 10000
+                min_qscore = 9
+            }
+            process {
+                """
+                input[0] = Channel.from("$baseDir/tests/input/merge_fastq/")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+}

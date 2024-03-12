@@ -1,0 +1,52 @@
+{
+    "Should output empty file": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "merge_fastq",
+                        "target",
+                        "merged.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "merged_fastq": [
+                    [
+                        "merge_fastq",
+                        "target",
+                        "merged.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-12T11:18:40.366759"
+    },
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "merge_fastq",
+                        "target",
+                        "merged.fastq:md5,226ecd48aa7c4b401dcbb0a3fe771365"
+                    ]
+                ],
+                "merged_fastq": [
+                    [
+                        "merge_fastq",
+                        "target",
+                        "merged.fastq:md5,226ecd48aa7c4b401dcbb0a3fe771365"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-12T11:17:41.974206"
+    }
+}
