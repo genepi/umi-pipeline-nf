@@ -1,5 +1,5 @@
 {
-    "Should run without failures": {
+    "Should output several fastq files": {
         "content": [
             {
                 "0": [
@@ -52,6 +52,49 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.0"
         },
-        "timestamp": "2024-03-12T16:05:31.979583"
+        "timestamp": "2024-03-15T10:25:28.834728"
+    },
+    "Should output only one fastq file": {
+        "content": [
+            {
+                "0": [
+                    "umi_filter_reads_stats.tsv:md5,06a2c27b87830124c0b7bb40d97fd597",
+                    "umi_filter_reads_stats.tsv:md5,7493ac503d0c5037afc099bb7e0bcd2d"
+                ],
+                "1": [
+                    [
+                        "barcode04",
+                        "target",
+                        "lpa2645_filtered.fastq:md5,5a3d0d0b5e8a4c9585f648a0ce62227b"
+                    ],
+                    [
+                        "barcode05",
+                        "target",
+                        "lpa2645_filtered.fastq:md5,02d75f1eb9af1c2d249e7174c305f068"
+                    ]
+                ],
+                "2": [
+                    "lpa2645_filtered.fastq:md5,02d75f1eb9af1c2d249e7174c305f068",
+                    "lpa2645_filtered.fastq:md5,5a3d0d0b5e8a4c9585f648a0ce62227b"
+                ],
+                "split_reads_fastx": [
+                    [
+                        "barcode04",
+                        "target",
+                        "lpa2645_filtered.fastq:md5,5a3d0d0b5e8a4c9585f648a0ce62227b"
+                    ],
+                    [
+                        "barcode05",
+                        "target",
+                        "lpa2645_filtered.fastq:md5,02d75f1eb9af1c2d249e7174c305f068"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-15T10:25:38.939191"
     }
 }
