@@ -9,10 +9,13 @@ import os
 import sys
 import time
 
-import threading as t
+from threading import Thread
+import concurrent.futures
+
 
 import pysam
 import edlib
+
 
 
 def parse_args(argv):
@@ -262,10 +265,23 @@ def write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found,
               file=out_f,
               )
 
-def parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename):  
+# def parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename):
+def parse_cluster(cluster, args, stats_out_filename): 
+    min_reads = args.MIN_CLUSTER_READS
+    max_reads = args.MAX_CLUSTER_READS
+    filter = args.FILTER
+    format = args.OUT_FORMAT
+    output_folder = args.OUTPUT
+    balance_strands = args.BAL_STRANDS
+    tsv = args.TSV
+    max_edit_dist = args.MAX_EDIT_DIST
+    
     residual_reads, n_residual_reads = get_reads(cluster)
+    if n_residual_reads < min_reads:
+        return 
     n_subcluster = 0
     cluster_id = get_cluster_id(cluster)  
+    print("Parsing {}".format(cluster))
     
     while n_residual_reads >= min_reads:
         reads_found = 0
@@ -317,12 +333,13 @@ def parse_cluster_wrapper(args):
     max_reads = args.MAX_CLUSTER_READS
     filter = args.FILTER
     format = args.OUT_FORMAT
-    clusters = args.CLUSTERS
     output_folder = args.OUTPUT
     balance_strands = args.BAL_STRANDS
     tsv = args.TSV
     max_edit_dist = args.MAX_EDIT_DIST
-    
+    clusters = args.CLUSTERS
+    output_folder = args.OUTPUT
+    tsv = args.TSV
     stats_out_filename = "split_cluster_stats"
     
     if tsv:
@@ -330,13 +347,25 @@ def parse_cluster_wrapper(args):
             output_folder, "{}.tsv".format(stats_out_filename))
         write_tsv_line(stats_out_filename, "cluster_id", "cluster_written", "reads_found", "reads_found_fwd",
                     "reads_found_rev", "reads_written_fwd", "reads_written_rev", "reads_skipped_fwd", "reads_skipped_rev")
+    
+    n_clusters = len(clusters)
+    
+    num_threads = 200
 
-    for cluster in clusters:
-        # parse_cluster_thread = t.Thread(target=parse_cluster, args=(
-        #     min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename
-        # ))
-        # parse_cluster_thread.start()
-        parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
+       executor.map(
+           parse_cluster, 
+           clusters, 
+           [args] * n_clusters, 
+           [stats_out_filename] * n_clusters, 
+           )
+    
+    # for cluster in clusters:
+    # #    parse_cluster_thread = Thread(target=parse_cluster, args=(
+    # #         min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename
+    # #     ))
+    # #    parse_cluster_thread.start()
+    #     parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename)
 
     
 def main(argv=sys.argv[1:]):
