@@ -1,0 +1,67 @@
+{
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode03",
+                        "raw",
+                        "smolecule0sub0_consensus.fastq:md5,85c055b607a0ae893d1e8d2c0fe298af"
+                    ],
+                    [
+                        "barcode03",
+                        "raw",
+                        "smolecule1sub0_consensus.fastq:md5,0390b95558912435618e9a0569280a8f"
+                    ],
+                    [
+                        "barcode03",
+                        "raw",
+                        "smolecule2sub0_consensus.fastq:md5,0ef3b301741224bf4aad61b61d6eb7c2"
+                    ],
+                    [
+                        "barcode03",
+                        "raw",
+                        "smolecule3sub0_consensus.fastq:md5,7f4723552bfdd42432b6fb52d4483f56"
+                    ],
+                    [
+                        "barcode03",
+                        "raw",
+                        "smolecule4sub0_consensus.fastq:md5,813d3d07a2fe5a8ca343f758831208fd"
+                    ]
+                ],
+                "consensus_fastq": [
+                    [
+                        "barcode03",
+                        "raw",
+                        "smolecule0sub0_consensus.fastq:md5,85c055b607a0ae893d1e8d2c0fe298af"
+                    ],
+                    [
+                        "barcode03",
+                        "raw",
+                        "smolecule1sub0_consensus.fastq:md5,0390b95558912435618e9a0569280a8f"
+                    ],
+                    [
+                        "barcode03",
+                        "raw",
+                        "smolecule2sub0_consensus.fastq:md5,0ef3b301741224bf4aad61b61d6eb7c2"
+                    ],
+                    [
+                        "barcode03",
+                        "raw",
+                        "smolecule3sub0_consensus.fastq:md5,7f4723552bfdd42432b6fb52d4483f56"
+                    ],
+                    [
+                        "barcode03",
+                        "raw",
+                        "smolecule4sub0_consensus.fastq:md5,813d3d07a2fe5a8ca343f758831208fd"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-15T13:07:01.670879"
+    }
+}
