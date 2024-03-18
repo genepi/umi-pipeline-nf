@@ -350,7 +350,7 @@ def parse_cluster_wrapper(args):
     
     n_clusters = len(clusters)
     
-    num_threads = 200
+    num_threads = 4
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
        executor.map(
@@ -361,11 +361,11 @@ def parse_cluster_wrapper(args):
            )
     
     # for cluster in clusters:
-    # #    parse_cluster_thread = Thread(target=parse_cluster, args=(
-    # #         min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename
-    # #     ))
-    # #    parse_cluster_thread.start()
-    #     parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename)
+    #    parse_cluster_thread = Thread(target=parse_cluster, args=(
+    #         min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename
+    #     ))
+    #    parse_cluster_thread.start()
+    #    parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename)
 
     
 def main(argv=sys.argv[1:]):

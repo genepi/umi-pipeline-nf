@@ -23,7 +23,8 @@ nextflow_process {
             run("REFORMAT_FILTER_CLUSTER"){
                 script "$baseDir/lib/processes/reformat_filter_cluster.nf"
                 params{
-                    min_reads_per_cluster = 10
+                    min_reads_per_cluster = 20
+                    max_reads_per_cluster = 20
                 }
                 process {
                     """
@@ -40,8 +41,15 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs.transpose()
-                input[1] = Channel.of("consensus", "consensus", "consensus", "consensus", "consensus")
+                REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
+                .filter{ sample, type, fastqs -> fastqs.class == ArrayList}
+                .transpose( by: 2 )
+                .set{ smolecule_cluster_fastqs }
+
+                smolecule_cluster_fastqs.view()
+                
+                input[0] = smolecule_cluster_fastqs
+                input[1] = Channel.of(1..200)
                 """
             }
         }
