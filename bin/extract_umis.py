@@ -141,6 +141,8 @@ def extract_umi(query_seq, query_qual, pattern, max_edit_dist, format, direction
         k=max_edit_dist,
         additionalEqualities=equalities,
     )
+    print("{}\t{}\t{}".format(query_seq, result["editDistance"], result["locations"]))
+    
     if result["editDistance"] == -1:
         return None, None, None, None
 
@@ -148,6 +150,7 @@ def extract_umi(query_seq, query_qual, pattern, max_edit_dist, format, direction
     locs = result["locations"][0]
     umi_start_pos = locs[0]
     umi_end_pos = locs[1] + 1
+    # print("{}\t{}\t{}\t{}".format(query_seq, umi_start_pos, umi_end_pos, edit_dist, locs))
     umi = query_seq[umi_start_pos:umi_end_pos]
     
     if direction == "fwd":
@@ -156,7 +159,7 @@ def extract_umi(query_seq, query_qual, pattern, max_edit_dist, format, direction
         umi_start = umi_end_pos
 
     if format == "fastq":
-        umi_qual = query_qual[locs[0]:locs[1]+1]
+        umi_qual = query_qual[umi_start_pos:umi_end_pos]
 
     return edit_dist, umi, umi_qual, umi_start
 
@@ -325,15 +328,18 @@ def extract_umis(
     umi_fwd = args.FWD_UMI
     umi_rev = args.REV_UMI
     output_file_name = "detected_umis"
+    output_file_name_no_umis = "no_umis"
     format = args.OUT_FORMAT
 
     output_file = os.path.join(
         output_folder, "{}.{}".format(output_file_name, format))
+    output_file_no_umis = os.path.join(
+        output_folder, "{}.{}".format(output_file_name_no_umis, format))
 
     n_total = 0
     n_both_umi = 0
     strand_stats = {"+": 0, "-": 0}
-    with pysam.FastxFile(input_file) as fh, open(output_file, "w") as out:
+    with pysam.FastxFile(input_file) as fh, open(output_file, "w") as out, open(output_file_no_umis, "w") as out_no_umi:
         for entry in fh:
             strand = get_read_strand(entry)
             entry.name = get_read_name(entry)
@@ -358,6 +364,10 @@ def extract_umis(
             )
 
             if not result_5p_fwd_umi_seq or not result_3p_rev_umi_seq:
+                print("@{}".format(entry.name),file=out_no_umi)
+                print("{}{}".format(read_5p_seq, read_3p_seq), file=out_no_umi)
+                print("+", file=out_no_umi)
+                print("{}{}".format(read_5p_qual, read_3p_qual), file=out_no_umi)
                 continue
 
             clipped_entry = clip_entry(

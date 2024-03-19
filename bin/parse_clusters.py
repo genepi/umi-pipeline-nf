@@ -143,6 +143,7 @@ def get_reads(cluster):
         for read in reads:
             residual_reads.append(read)
             n_residual_reads += 1
+            print(read.sequence)
     return residual_reads, n_residual_reads
 
 def get_split_cluster(reads, max_edit_dist):
@@ -155,13 +156,14 @@ def get_split_cluster(reads, max_edit_dist):
         result = edlib.align(
             parent,
             read.sequence,
-            mode="HW",
+            mode="NW",
             k=max_edit_dist
         )
         if result["editDistance"] == -1:
             distant_reads.append(read)
         else:
             subcluster.append(read)
+        # print("{}\t{}\t{}\t".format(parent, read.sequence, result["editDistance"]))
     return subcluster, distant_reads                    
 
 
@@ -281,7 +283,7 @@ def parse_cluster(cluster, args, stats_out_filename):
         return 
     n_subcluster = 0
     cluster_id = get_cluster_id(cluster)  
-    print("Parsing {}".format(cluster))
+    # print("Parsing {}".format(cluster))
     
     while n_residual_reads >= min_reads:
         reads_found = 0
@@ -296,6 +298,7 @@ def parse_cluster(cluster, args, stats_out_filename):
         
         subcluster, residual_reads = get_split_cluster(residual_reads, max_edit_dist)
         n_residual_reads = len(residual_reads)
+        
         write_subcluster(
             subcluster,
             os.path.join(output_folder, "{}_{}".format(cluster, n_subcluster))
