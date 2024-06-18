@@ -34,16 +34,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker
-        uses: docker/build-push-action@v5
-        with:
-          context: ./env
-          file: ./env/Dockerfile
-          push: false
-          load: true
-          tags: "genepi/umi-pipeline-nf"
-          cache-from: type=gha          
-          cache-to: type=gha,mode=max
 
       - name: Run Tests (Shard ${{ matrix.shard }}/${{ strategy.job-total }})
-        run: nf-test test --ci --shard ${{ matrix.shard }}/${{ strategy.job-total }}
+        run: nf-test test --ci --shard ${{ matrix.shard }}/${{ strategy.job-total }} --container quay.io/genepi/umi-pipeline-nf:v0.2.1
