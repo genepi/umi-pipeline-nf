@@ -41,7 +41,7 @@ jobs:
           file: ./env/Dockerfile
           push: false
           load: true
-          tags: "genepi/umi-pipeline-nf/env"
+          tags: "genepi/umi-pipeline-nf"
           cache-from: type=gha          
           cache-to: type=gha,mode=max
 
