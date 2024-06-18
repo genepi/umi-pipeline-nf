@@ -14,7 +14,7 @@ nextflow_process {
                     ["barcode03", "raw", "$baseDir/tests/input/split_reads/barcode03/merged.bam", "$baseDir/tests/input/split_reads/barcode03/merged.bam.bai"]
                 )
                 input[1] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")
-                input[2] = Channel.of("raw", "raw")
+                input[2] = "raw"
                 input[3] = file("$baseDir/bin/filter_reads.py")
                 """
             }
@@ -37,7 +37,7 @@ nextflow_process {
                     ["barcode05", "raw", "$baseDir/tests/input/split_reads/barcode05/merged.bam", "$baseDir/tests/input/split_reads/barcode05/merged.bam.bai"]
                 )
                 input[1] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")
-                input[2] = Channel.of("raw", "raw")
+                input[2] = "raw"
                 input[3] = file("$baseDir/bin/filter_reads.py")
                 """
             }

@@ -41,7 +41,7 @@ nextflow_process {
             process {
                 """
                 input[0] = REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs.transpose()
-                input[1] = Channel.of("consensus", "consensus", "consensus", "consensus", "consensus")
+                input[1] = "Consensus"
                 """
             }
         }
