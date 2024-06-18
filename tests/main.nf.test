@@ -15,7 +15,7 @@ nextflow_pipeline {
                 bed 			= "$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed"
 
                 min_reads_per_cluster 	= 10
-                max_reads_per_cluster 	= 20
+                max_reads_per_cluster 	= 10
                 min_reads_per_barcode = 0
                 call_variants 		= true
                 variant_caller 		= "freebayes"
