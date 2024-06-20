@@ -31,22 +31,22 @@
                     [
                         "merge_fastq",
                         "target",
-                        "merged.fastq:md5,226ecd48aa7c4b401dcbb0a3fe771365"
+                        "merged.fastq:md5,1a65a32bc2d389105716ebebf13a3d40"
                     ]
                 ],
                 "merged_fastq": [
                     [
                         "merge_fastq",
                         "target",
-                        "merged.fastq:md5,226ecd48aa7c4b401dcbb0a3fe771365"
+                        "merged.fastq:md5,1a65a32bc2d389105716ebebf13a3d40"
                     ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.05.0"
         },
-        "timestamp": "2024-03-12T11:17:41.974206"
+        "timestamp": "2024-06-20T16:09:39.595045"
     }
 }
