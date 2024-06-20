@@ -1,0 +1,56 @@
+{
+    "Should output three files": {
+        "content": [
+            {
+                "0": [
+                    "final.txt:md5,1e5554e27b3b8a0687374df975a6c9cb",
+                    "final.txt:md5,871ecfddc44cb8b3aee5a3c482fa2900",
+                    "final.txt:md5,bdcd9fa23bcd1e226b07988460f9b162"
+                ],
+                "1": [
+                    "final_raw.txt:md5,94352f26d9095f38eb44ff730db75dbc",
+                    "final_raw.txt:md5,a647c13b88e318322308fa70526a8d96",
+                    "final_raw.txt:md5,f8da170e2122c7caffa8fb3efb311434"
+                ],
+                "variants": [
+                    "final.txt:md5,1e5554e27b3b8a0687374df975a6c9cb",
+                    "final.txt:md5,871ecfddc44cb8b3aee5a3c482fa2900",
+                    "final.txt:md5,bdcd9fa23bcd1e226b07988460f9b162"
+                ],
+                "variants_raw": [
+                    "final_raw.txt:md5,94352f26d9095f38eb44ff730db75dbc",
+                    "final_raw.txt:md5,a647c13b88e318322308fa70526a8d96",
+                    "final_raw.txt:md5,f8da170e2122c7caffa8fb3efb311434"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-11T12:49:45.12999"
+    },
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    "final.txt:md5,1e5554e27b3b8a0687374df975a6c9cb"
+                ],
+                "1": [
+                    "final_raw.txt:md5,94352f26d9095f38eb44ff730db75dbc"
+                ],
+                "variants": [
+                    "final.txt:md5,1e5554e27b3b8a0687374df975a6c9cb"
+                ],
+                "variants_raw": [
+                    "final_raw.txt:md5,94352f26d9095f38eb44ff730db75dbc"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-11T12:49:34.341905"
+    }
+}

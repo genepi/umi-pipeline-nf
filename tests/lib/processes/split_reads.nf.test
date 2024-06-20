@@ -1,0 +1,53 @@
+nextflow_process {
+
+    name "Test Process SPLIT_READS"
+    script "lib/processes/split_reads.nf"
+    process "SPLIT_READS"
+
+    test("Should output several fastq files") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of(
+                    ["barcode02", "raw", "$baseDir/tests/input/split_reads/barcode02/merged.bam", "$baseDir/tests/input/split_reads/barcode02/merged.bam.bai"],
+                    ["barcode03", "raw", "$baseDir/tests/input/split_reads/barcode03/merged.bam", "$baseDir/tests/input/split_reads/barcode03/merged.bam.bai"]
+                )
+                input[1] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")
+                input[2] = "raw"
+                input[3] = file("$baseDir/bin/filter_reads.py")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+    test("Should output only one fastq file") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of(
+                    ["barcode04", "raw", "$baseDir/tests/input/split_reads/barcode04/merged.bam", "$baseDir/tests/input/split_reads/barcode04/merged.bam.bai"],
+                    ["barcode05", "raw", "$baseDir/tests/input/split_reads/barcode05/merged.bam", "$baseDir/tests/input/split_reads/barcode05/merged.bam.bai"]
+                )
+                input[1] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")
+                input[2] = "raw"
+                input[3] = file("$baseDir/bin/filter_reads.py")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+}

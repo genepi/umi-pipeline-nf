@@ -1,0 +1,274 @@
+{
+    "Should detect the same UMIs - long adapter": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode02",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode03",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,ef06dacd82cc76a3e1797fafed348d97"
+                    ],
+                    [
+                        "barcode04",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,75c1c38a134cf1270f5e94d3ea938006"
+                    ],
+                    [
+                        "barcode05",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,fe23b244bdfdfe5f62e2488c6acff007"
+                    ]
+                ],
+                "1": [
+                    "detected_umis.tsv:md5,161e200dbde97e34e7da055d056657aa",
+                    "detected_umis.tsv:md5,2b386684c129683c635ac652db6d2556",
+                    "detected_umis.tsv:md5,6ae672c26b6291146538b98bf5934b1c",
+                    "detected_umis.tsv:md5,f89bacfd0e0a55501491b2028be227be"
+                ],
+                "umi_extract_fastq": [
+                    [
+                        "barcode02",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode03",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,ef06dacd82cc76a3e1797fafed348d97"
+                    ],
+                    [
+                        "barcode04",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,75c1c38a134cf1270f5e94d3ea938006"
+                    ],
+                    [
+                        "barcode05",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,fe23b244bdfdfe5f62e2488c6acff007"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-15T11:23:04.603166"
+    },
+    "Should detect the same UMIs - short adapter": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode02",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode03",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,ef06dacd82cc76a3e1797fafed348d97"
+                    ],
+                    [
+                        "barcode04",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,75c1c38a134cf1270f5e94d3ea938006"
+                    ],
+                    [
+                        "barcode05",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,fe23b244bdfdfe5f62e2488c6acff007"
+                    ]
+                ],
+                "1": [
+                    "detected_umis.tsv:md5,161e200dbde97e34e7da055d056657aa",
+                    "detected_umis.tsv:md5,2b386684c129683c635ac652db6d2556",
+                    "detected_umis.tsv:md5,6ae672c26b6291146538b98bf5934b1c",
+                    "detected_umis.tsv:md5,f89bacfd0e0a55501491b2028be227be"
+                ],
+                "umi_extract_fastq": [
+                    [
+                        "barcode02",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode03",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,ef06dacd82cc76a3e1797fafed348d97"
+                    ],
+                    [
+                        "barcode04",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,75c1c38a134cf1270f5e94d3ea938006"
+                    ],
+                    [
+                        "barcode05",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,fe23b244bdfdfe5f62e2488c6acff007"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-15T11:22:55.202922"
+    },
+    "Should output empty file": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode02",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "detected_umis.tsv:md5,2b386684c129683c635ac652db6d2556"
+                ],
+                "umi_extract_fastq": [
+                    [
+                        "barcode02",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-15T11:04:34.910419"
+    },
+    "Should not find any UMI": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode02",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode03",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode04",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode05",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "detected_umis.tsv:md5,2b386684c129683c635ac652db6d2556",
+                    "detected_umis.tsv:md5,5650ab47913a1d6477a17dfeaf260b05",
+                    "detected_umis.tsv:md5,ab06a41491a32603fe3e3d59ee08dc91",
+                    "detected_umis.tsv:md5,f042ee6afda643dbdced2360bcccce0d"
+                ],
+                "umi_extract_fastq": [
+                    [
+                        "barcode02",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode03",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode04",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode05",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-15T11:12:47.382392"
+    },
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode02",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode03",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,ef06dacd82cc76a3e1797fafed348d97"
+                    ],
+                    [
+                        "barcode04",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,75c1c38a134cf1270f5e94d3ea938006"
+                    ],
+                    [
+                        "barcode05",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,fe23b244bdfdfe5f62e2488c6acff007"
+                    ]
+                ],
+                "1": [
+                    "detected_umis.tsv:md5,161e200dbde97e34e7da055d056657aa",
+                    "detected_umis.tsv:md5,2b386684c129683c635ac652db6d2556",
+                    "detected_umis.tsv:md5,6ae672c26b6291146538b98bf5934b1c",
+                    "detected_umis.tsv:md5,f89bacfd0e0a55501491b2028be227be"
+                ],
+                "umi_extract_fastq": [
+                    [
+                        "barcode02",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode03",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,ef06dacd82cc76a3e1797fafed348d97"
+                    ],
+                    [
+                        "barcode04",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,75c1c38a134cf1270f5e94d3ea938006"
+                    ],
+                    [
+                        "barcode05",
+                        "lpa2645_filtered",
+                        "detected_umis.fastq:md5,fe23b244bdfdfe5f62e2488c6acff007"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-15T11:04:26.224713"
+    }
+}

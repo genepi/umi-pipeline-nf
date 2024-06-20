@@ -18,8 +18,4 @@ RUN conda update -y conda && \
     conda clean --all
 
 WORKDIR "/opt"
-RUN wget https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc15/mutserve.zip && \
-    unzip mutserve.zip
-ENV PATH="/opt/mutserve:${PATH}"
-
-
+RUN wget https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc13.lpa/mutserve_LPA_adapted.jar
