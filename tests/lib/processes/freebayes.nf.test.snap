@@ -3,38 +3,38 @@
         "content": [
             {
                 "0": [
-                    "final.vcf:md5,bf6dfb83c6e0762789976816b72af4e6",
-                    "final.vcf:md5,c15c281e18b741734eb928f7112a02a4",
-                    "final.vcf:md5,c9eb084d495bd1facf2a9049cb439c86"
+                    "final.vcf:md5,076ec150e130dd090f605e2118bd6bc1",
+                    "final.vcf:md5,af49c1b8586ffc70b93798b59ca9a336",
+                    "final.vcf:md5,c58124f72006a34ca175b2dad280ea4a"
                 ],
                 "variants": [
-                    "final.vcf:md5,bf6dfb83c6e0762789976816b72af4e6",
-                    "final.vcf:md5,c15c281e18b741734eb928f7112a02a4",
-                    "final.vcf:md5,c9eb084d495bd1facf2a9049cb439c86"
+                    "final.vcf:md5,076ec150e130dd090f605e2118bd6bc1",
+                    "final.vcf:md5,af49c1b8586ffc70b93798b59ca9a336",
+                    "final.vcf:md5,c58124f72006a34ca175b2dad280ea4a"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.05.0"
         },
-        "timestamp": "2024-06-18T12:20:32.632422"
+        "timestamp": "2024-06-20T09:55:07.96638"
     },
     "Should run without failures": {
         "content": [
             {
                 "0": [
-                    "final.vcf:md5,c9eb084d495bd1facf2a9049cb439c86"
+                    "final.vcf:md5,076ec150e130dd090f605e2118bd6bc1"
                 ],
                 "variants": [
-                    "final.vcf:md5,c9eb084d495bd1facf2a9049cb439c86"
+                    "final.vcf:md5,076ec150e130dd090f605e2118bd6bc1"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.05.0"
         },
-        "timestamp": "2024-06-18T12:20:22.431414"
+        "timestamp": "2024-06-20T09:54:51.891187"
     }
 }

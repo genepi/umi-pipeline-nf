@@ -3,38 +3,38 @@
         "content": [
             {
                 "0": [
-                    "final.vcf:md5,13437d43022bd6b7a171daed88c010c4",
-                    "final.vcf:md5,1b57a477112f541443d246db37138216",
-                    "final.vcf:md5,810ba2f38eb3bda15699654945daa21a"
+                    "final.vcf:md5,8761e5c55f8e722dd33472968f33ecd6",
+                    "final.vcf:md5,b48b1996596787daa8a83dc973120006",
+                    "final.vcf:md5,de4ad8ac00fddc259406af289d16961b"
                 ],
                 "variants": [
-                    "final.vcf:md5,13437d43022bd6b7a171daed88c010c4",
-                    "final.vcf:md5,1b57a477112f541443d246db37138216",
-                    "final.vcf:md5,810ba2f38eb3bda15699654945daa21a"
+                    "final.vcf:md5,8761e5c55f8e722dd33472968f33ecd6",
+                    "final.vcf:md5,b48b1996596787daa8a83dc973120006",
+                    "final.vcf:md5,de4ad8ac00fddc259406af289d16961b"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.05.0"
         },
-        "timestamp": "2024-06-18T12:20:15.213263"
+        "timestamp": "2024-06-20T09:55:30.290847"
     },
     "Should run without failures": {
         "content": [
             {
                 "0": [
-                    "final.vcf:md5,13437d43022bd6b7a171daed88c010c4"
+                    "final.vcf:md5,b48b1996596787daa8a83dc973120006"
                 ],
                 "variants": [
-                    "final.vcf:md5,13437d43022bd6b7a171daed88c010c4"
+                    "final.vcf:md5,b48b1996596787daa8a83dc973120006"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.05.0"
         },
-        "timestamp": "2024-06-18T12:20:05.981639"
+        "timestamp": "2024-06-20T09:55:18.706674"
     }
 }
