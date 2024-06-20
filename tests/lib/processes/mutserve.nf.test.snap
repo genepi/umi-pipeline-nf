@@ -12,10 +12,20 @@
                     "final_raw.txt:md5,a647c13b88e318322308fa70526a8d96",
                     "final_raw.txt:md5,f8da170e2122c7caffa8fb3efb311434"
                 ],
+                "2": [
+                    "final_parsed.txt:md5,6acf8a7a7f2d4481996671da99ab520d",
+                    "final_parsed.txt:md5,f199bb8726d869d680004d35713cbdd4",
+                    "final_parsed.txt:md5,ff76e27a92d752db87135a57951f3cc4"
+                ],
                 "variants": [
                     "final.txt:md5,1e5554e27b3b8a0687374df975a6c9cb",
                     "final.txt:md5,871ecfddc44cb8b3aee5a3c482fa2900",
                     "final.txt:md5,bdcd9fa23bcd1e226b07988460f9b162"
+                ],
+                "variants_parsed": [
+                    "final_parsed.txt:md5,6acf8a7a7f2d4481996671da99ab520d",
+                    "final_parsed.txt:md5,f199bb8726d869d680004d35713cbdd4",
+                    "final_parsed.txt:md5,ff76e27a92d752db87135a57951f3cc4"
                 ],
                 "variants_raw": [
                     "final_raw.txt:md5,94352f26d9095f38eb44ff730db75dbc",
@@ -25,10 +35,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.05.0"
         },
-        "timestamp": "2024-03-11T12:49:45.12999"
+        "timestamp": "2024-06-20T13:06:51.2669"
     },
     "Should run without failures": {
         "content": [
@@ -39,8 +49,14 @@
                 "1": [
                     "final_raw.txt:md5,94352f26d9095f38eb44ff730db75dbc"
                 ],
+                "2": [
+                    "final_parsed.txt:md5,f199bb8726d869d680004d35713cbdd4"
+                ],
                 "variants": [
                     "final.txt:md5,1e5554e27b3b8a0687374df975a6c9cb"
+                ],
+                "variants_parsed": [
+                    "final_parsed.txt:md5,f199bb8726d869d680004d35713cbdd4"
                 ],
                 "variants_raw": [
                     "final_raw.txt:md5,94352f26d9095f38eb44ff730db75dbc"
@@ -48,9 +64,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.05.0"
         },
-        "timestamp": "2024-03-11T12:49:34.341905"
+        "timestamp": "2024-06-20T13:06:38.306114"
     }
 }
