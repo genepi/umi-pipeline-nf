@@ -13,7 +13,7 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.from("$baseDir/tests/input/merge_fastq/").collect(sort: true)
+                input[0] = Channel.from("$baseDir/tests/input/merge_fastq/")
                 """
             }
         }
@@ -35,7 +35,7 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.from("$baseDir/tests/input/merge_fastq/").collect(sort: true)
+                input[0] = Channel.from("$baseDir/tests/input/merge_fastq/").view()
                 """
             }
         }
