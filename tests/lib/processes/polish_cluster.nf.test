@@ -16,7 +16,7 @@ nextflow_process {
                         ["barcode06", "raw", "$baseDir/tests/input/cluster/barcode06/detected_umis.fastq"],
                         ["barcode07", "raw", "$baseDir/tests/input/cluster/barcode07/detected_umis.fastq"]
                     )
-                    input[1] = Channel.of("raw", "raw", "raw", "raw", "raw")
+                    input[1] = "raw"
                     """
                 }
             }
@@ -28,7 +28,7 @@ nextflow_process {
                 process {
                     """
                     input[0] = CLUSTER.out.cluster_fastas
-                    input[1] = Channel.of("raw", "raw", "raw", "raw", "raw")
+                    input[1] = "raw"
                     input[2] = file("$baseDir/bin/parse_clusters.py")
                     """
                 }
