@@ -35,6 +35,8 @@ Channel.fromPath("${params.input}/*", type: 'dir')
     .filter( ~/.*barcode(([0-9][0-9]))/ )
     .set { detected_umis_ch }
 
+detected_umis_ch.view()
+
 ////////////////////
 // BEGIN PIPELINE //
 ////////////////////
