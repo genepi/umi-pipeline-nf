@@ -1,14 +1,13 @@
 consensus_fasta="consensus.fasta"
 vsearch_dir="vsearch_clusters"
-
+detected_umis_file_name="dected_umis.fastq"
 process CLUSTER {
-    
+    publishDir "${params.output}/${sample}/clustering/${type}", pattern: "cluster*", mode: 'copy'
+        
     input:
-        tuple val( sample ), val( target ), path( detected_umis_fastq )
-        val ( type )
+        path sample
     output:
-        tuple val( "${sample}" ), val( "${target}" ), path( "${consensus_fasta}" ), optional: true, emit:consensus_fasta
-        tuple val( "${sample}" ), val( "${target}" ), path( "cluster*" ), optional: true, emit:cluster_fastas
+        tuple val( "${sample.baseName}" ), path( "cluster*" ), optional: true, emit:cluster_fastas
         
     script:
         def id = "${type}" == "raw" ? params.vsearch_sequence_identity : 0.99
@@ -20,7 +19,7 @@ process CLUSTER {
         --minseqlength ${params.min_length} \
         --maxseqlength ${params.max_length} \
         --threads ${params.threads} \
-        --cluster_fast ${detected_umis_fastq} \
+        --cluster_fast ${sample}/${detected_umis_file_name} \
         --clusterout_sort \
         --gapopen 0E/5I \
         --gapext 0E/2I \

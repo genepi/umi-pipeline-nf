@@ -3,7 +3,7 @@ process REFORMAT_FILTER_CLUSTER {
     publishDir "${params.output}/${sample}/stats/${type}", pattern: "*tsv", mode: 'copy'
 
     input:
-        tuple val( sample ), val( target ), path( cluster )
+        tuple val( sample ), path( cluster )
         val( type )
         path umi_parse_clusters_python
 
