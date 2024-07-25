@@ -8,9 +8,9 @@ process REFORMAT_FILTER_CLUSTER {
         path umi_parse_clusters_python
 
     output:
-        tuple val( "${sample}" ), val( "${target}" ), path( "smolecule*"), optional: true, emit: smolecule_cluster_fastqs
-        tuple val( sample ), val ( target ), path( "*.tsv" ), optional: true
-        tuple val( "${sample}" ), val( "${target}" ), path( "cluster*"), optional: true
+        tuple val( "${sample}" ), path( "smolecule*"), optional: true, emit: smolecule_cluster_fastqs
+        tuple val( "${sample}" ), path( "*.tsv" ), optional: true
+        tuple val( "${sample}" ), path( "cluster*"), optional: true
 
     script:
         def balance_strands = params.balance_strands ? "--balance_strands" : ""
