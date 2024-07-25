@@ -16,7 +16,7 @@ if(params.help){
               --version                       Display the current pipeline version and exit
               --debug                         Run the pipeline in debug mode    
 
-         Options: GENERAL - Required	
+         Options: GENERAL - Required    
               --input [path/to/input/dir]     [REQUIRED] Input directory containing (zipped) FASTQ files
               --output [STR]                  [REQUIRED] A string that can be given to name the output directory
               --reference [path/to/ref.fa]    [REQUIRED] Path to the reference genome in fasta format
@@ -25,36 +25,41 @@ if(params.help){
               --threads                       Number of maximum threads to use [default: availableProcessors -1]
           
          Options: READ FILTERING
-              --min_read_length               flag to enable subsampling [default: 0]
-              --min_qscore                    Seed to produce pseudorandom numbers [default: 0]
+              --min_read_length               Minimum read length [default: 0]
+              --min_qscore                    Minimum quality score [default: 0]
 
          Options: SUBSAMPLING
-              --subsampling                   flag to enable subsampling [default: false]
+              --subsampling                   Flag to enable subsampling [default: false]
               --subsampling_seed              Seed to produce pseudorandom numbers [default: 11]
               --subsampling_readnumber        Number of reads after subsampling [default: 100000]
 
          Options: VARIANT CALLING
-              --call_variants                 flag to enable variant calling [default: false]
-              --variant_caller [STR]          [REQUIRED if call_variants is set] Variant caller [lofreq | mutserve | freebayes ]
+              --call_variants                 Flag to enable variant calling [default: false]
+              --variant_caller [STR]          [REQUIRED if call_variants is set] Variant caller [lofreq | mutserve | freebayes]
 
-           Options: ADVANCED
+         Options: ADVANCED
               --min_reads_per_barcode         Minimal number of fastq reads for each barcode [default: 1000]
-              --umi_errors                    Max differences between extracted UMIs of the read and UMI pattern [default: 3]
+              --umi_errors                    Max differences between extracted UMIs of the read and UMI pattern [default: 2]
+              --max_dist_umi                  Maximum distance allowed for UMI grouping [default: 2]
+              --vsearch_sequence_identity     Minimum sequence identity for vsearch [default: 0.80]
               --min_reads_per_cluster         Min number of raw reads required for a consensus read [default: 20]
               --max_reads_per_cluster         Max number of raw reads used for a consensus read [default: 60]
+              --min_consensus_quality         Minimum consensus read quality [default: 40]
+              --masking_strategy              Masking strategy for low-quality regions [default: softmask]
               --filter_strategy_clusters      Filtering strategy for clusters with more than max_reads_per_cluster reads [random | quality] [default: quality]
               --output_format                 Output format until the cluster filtering step [fasta | fastq] [default: fastq]
               --write_reports                 Write stats of cluster and cluster filtering [default: true]
-              --min_overlap                   Min overlap with target region [default: 0.90]
+              --min_overlap                   Min overlap with target region [default: 0.95]
+              --include_secondary_reads       Include secondary reads in the analysis [default: false]
               --balance_strands               Balance forward and reverse raw reads in clusters [default: true]
               --medaka_model                  Medaka model used to compute consensus reads [default: "r1041_e82_400bps_hac_g615"]
               --fwd_umi                       Forward UMI (Ftail...UMI...primer) [default: "TTTVVVVTTVVVVTTVVVVTTVVVVTTT"]
               --rev_umi                       Reverse UMI (Rtail...UMI...primer) [default: "AAABBBBAABBBBAABBBBAABBBBAAA"]
+              --adapter_length                Adapter length [default: 100]
               --min_length                    Minimum combined UMI length [default: 40]
               --max_length                    Maximum combined UMI length [default: 60]
-              --minimap2_param                 Set the parameters for minimap2 [default: "-ax map-ont -k 13"]
-             --include_secondary_reads       Include secondary reads in the analysis [default: false]
-
+              --minimap2_param                Set the parameters for minimap2 [default: "-ax map-ont -k 13 --MD"]
+              --include_secondary_reads       Include secondary reads in the analysis [default: false]
 
          Options: ADDITIONAL
               --help                          Display this help information and exit
