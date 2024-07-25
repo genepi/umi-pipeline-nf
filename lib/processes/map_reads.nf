@@ -1,5 +1,4 @@
 process MAP_READS {
-    publishDir "${params.output}/${sample}/align/${type}", mode: 'copy'
 
     input:
         tuple val( sample ), val( target ), path( consensus_fastq )
