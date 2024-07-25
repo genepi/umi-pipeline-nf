@@ -35,8 +35,6 @@ Channel.fromPath("${params.input}/*", type: 'dir')
     .filter( ~/.*barcode(([0-9][0-9]))/ )
     .set { detected_umis_ch }
 
-detected_umis_ch.view()
-
 ////////////////////
 // BEGIN PIPELINE //
 ////////////////////
@@ -56,7 +54,7 @@ include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 workflow UMI_PIPELINE {
 
     main:
-        CLUSTER( detected_umis_ch)
+        CLUSTER( detected_umis_ch, raw )
         REFORMAT_FILTER_CLUSTER( CLUSTER.out.cluster_fastas, raw, umi_parse_clusters )
 }
 

@@ -1,11 +1,11 @@
 consensus_fasta="consensus.fasta"
-vsearch_dir="vsearch_clusters"
-detected_umis_file_name="dected_umis.fastq"
+detected_umis_file_name="detected_umis.fastq"
 process CLUSTER {
     publishDir "${params.output}/${sample.baseName}/clustering/${type}", pattern: "cluster*", mode: 'copy'
         
     input:
         path sample
+        val ( type )
     output:
         tuple val( "${sample.baseName}" ), path( "cluster*" ), optional: true, emit:cluster_fastas
         
