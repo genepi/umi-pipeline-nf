@@ -9,7 +9,7 @@ if(params.help){
 
 
          Usage: 
-              nextflow run AmstlerStephan/umi-pipeline-nf [OPTIONS]...
+              nextflow run genepi/umi-pipeline-nf [OPTIONS]...
 
          Options: BASIC PARAMETERS
               --help                          Display this help information and exit
@@ -67,8 +67,8 @@ if(params.help){
               --debug                         Run the pipeline in debug mode    
 
          Example: 
-              nextflow run AmstlerStephan/umi-pipeline-nf -r main -profile test,docker
-              nextflow run AmstlerStephan/umi-pipeline-nf -r main -c <custom.config> -profile docker 
+              nextflow run genepi/umi-pipeline-nf -r main -profile test,docker
+              nextflow run genepi/umi-pipeline-nf -r main -c <custom.config> -profile docker 
 
     """
     ["bash", "${baseDir}/bin/clean.sh", "${workflow.sessionId}"].execute()
