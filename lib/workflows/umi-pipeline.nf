@@ -55,7 +55,14 @@ workflow UMI_PIPELINE {
 
     main:
         CLUSTER( detected_umis_ch, raw )
-        REFORMAT_FILTER_CLUSTER( CLUSTER.out.cluster_fastas, raw, umi_parse_clusters )
+
+        CLUSTER.out.cluster_fastas
+        .transpose( by: 1 )
+        .filter{ sample, fasta -> fasta.countFasta() >= params.min_reads_per_cluster }
+        .groupTuple()
+        .set{ filtered_clusters }
+
+        REFORMAT_FILTER_CLUSTER( filtered_clusters, raw, umi_parse_clusters )
 }
 
 //////////////////
