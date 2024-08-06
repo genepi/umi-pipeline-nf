@@ -83,7 +83,7 @@ workflow UMI_PIPELINE {
         SPLIT_READS( MAP_READS.out.bam_consensus, COPY_BED.out.bed, raw, umi_filter_reads )
         DETECT_UMI_FASTQ( SPLIT_READS.out.split_reads_fastx, raw, umi_extract )
 */
-        CLUSTER( DETECT_UMI_FASTQ.out.umi_extract_fastq, raw )
+        CLUSTER( detected_umis_ch, raw )
 
         CLUSTER.out.cluster_fastas
         .transpose( by: 1 )
