@@ -89,12 +89,13 @@ workflow UMI_PIPELINE {
         CLUSTER.out.cluster_fastas
         .transpose( by: 2 )
         .filter{ sample, target, fasta -> fasta.countFasta() >= params.min_reads_per_cluster }
+        .groupTuple()
         .set{ filtered_clusters }
 
         REFORMAT_FILTER_CLUSTER( filtered_clusters, raw, umi_parse_clusters )
         
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
-        //.transpose( by: 2 )
+        .transpose( by: 2 )
         .set{ smolecule_cluster_fastqs }
 
         POLISH_CLUSTER( smolecule_cluster_fastqs, consensus )
