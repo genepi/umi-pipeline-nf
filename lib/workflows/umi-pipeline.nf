@@ -80,23 +80,21 @@ workflow UMI_PIPELINE {
         DETECT_UMI_FASTQ( SPLIT_READS.out.split_reads_fastx, raw, umi_extract )
         CLUSTER( DETECT_UMI_FASTQ.out.umi_extract_fastq, raw )
 
-        REFORMAT_FILTER_CLUSTER( CLUSTER.out.cluster_fastas, raw, umi_parse_clusters )
+        CLUSTER.out.cluster_fastas
+        .transpose( by: 1 )
+        .filter{ sample, target, fasta -> fasta.countFasta() >= params.min_reads_per_cluster }
+        .groupTuple()
+        .set{ filtered_clusters }
+
+        REFORMAT_FILTER_CLUSTER( filtered_clusters, raw, umi_parse_clusters )
         
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
-        .filter{ sample, type, fastqs -> fastqs.class == ArrayList}
-        .set{ smolecule_cluster_fastqs_list }
-
-        smolecule_cluster_fastqs_list
-        .map{ sample, type, fastqs -> n_parsed_cluster.put("$sample", fastqs.size)}
-        
-        smolecule_cluster_fastqs_list
         .transpose( by: 2 )
         .set{ smolecule_cluster_fastqs }
 
         POLISH_CLUSTER( smolecule_cluster_fastqs, consensus )
         
         POLISH_CLUSTER.out.consensus_fastq
-        .map{ sample, type, fastq -> tuple( groupKey(sample, n_parsed_cluster.get("$sample")), type, fastq) }
         .groupTuple( )
         .set{ merge_consensus }
 
