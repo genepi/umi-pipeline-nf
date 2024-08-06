@@ -39,6 +39,7 @@ Channel.fromPath("${params.input}/*", type: 'dir')
 Channel.fromPath("${params.input}/*", type: 'dir')
     .filter( ~/.*barcode(([0-9][0-9]))/ )
     .set { detected_umis_ch }
+
 ////////////////////
 // BEGIN PIPELINE //
 ////////////////////
@@ -86,7 +87,7 @@ workflow UMI_PIPELINE {
         CLUSTER( detected_umis_ch, raw )
 
         CLUSTER.out.cluster_fastas
-        .transpose( by: 1 )
+        .transpose( by: 2 )
         .filter{ sample, target, fasta -> fasta.countFasta() >= params.min_reads_per_cluster }
         .groupTuple()
         .set{ filtered_clusters }
