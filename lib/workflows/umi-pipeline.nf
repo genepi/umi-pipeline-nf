@@ -31,10 +31,14 @@ n_parsed_cluster            = [:]
 // STAGE CHANNELS
 // to remove also barcode01 use :~/.*barcode((0[2-9])|([1-9][0-9]))/ 
 // Remove barcode01 and uncalssified from the input fastq folder
+/*
 Channel.fromPath("${params.input}/*", type: 'dir')
     .filter( ~/.*barcode(([0-9][0-9]))/ )
     .set { fastq_files_ch }
-
+*/
+Channel.fromPath("${params.input}/*", type: 'dir')
+    .filter( ~/.*barcode(([0-9][0-9]))/ )
+    .set { detected_umis_ch }
 ////////////////////
 // BEGIN PIPELINE //
 ////////////////////
@@ -62,7 +66,7 @@ workflow UMI_PIPELINE {
     main:
         COPY_BED( bed )
 
-        if( params.subsampling ){
+/*        if( params.subsampling ){
             MERGE_FASTQ( fastq_files_ch )
             SUBSAMPLING( MERGE_FASTQ.out.merged_fastq )
             .set { merged_fastq }
@@ -78,6 +82,7 @@ workflow UMI_PIPELINE {
         MAP_READS( merged_filtered_fastq, raw, reference )
         SPLIT_READS( MAP_READS.out.bam_consensus, COPY_BED.out.bed, raw, umi_filter_reads )
         DETECT_UMI_FASTQ( SPLIT_READS.out.split_reads_fastx, raw, umi_extract )
+*/
         CLUSTER( DETECT_UMI_FASTQ.out.umi_extract_fastq, raw )
 
         CLUSTER.out.cluster_fastas
