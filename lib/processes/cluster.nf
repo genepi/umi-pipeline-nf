@@ -12,7 +12,6 @@ process CLUSTER {
         tuple val( "${sample.baseName}" ), val( "lpa5104" ), path( "cluster*" ), emit:cluster_fastas
         
     script:
-        def id = "${type}" == "raw" ? "${params.vsearch_sequence_identity}" : 0.99
     """
         vsearch \
         --clusterout_id \
@@ -30,6 +29,6 @@ process CLUSTER {
         --iddef 0 \
         --minwordmatches 0 \
         --qmask none \
-        --id $id
+        --id ${params.vsearch_sequence_identity}
     """
 }
