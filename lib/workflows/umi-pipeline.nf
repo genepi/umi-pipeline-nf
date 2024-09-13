@@ -4,22 +4,25 @@ requiredParams = [
     'input', 'reference', 'reference_fai', 'bed', 'output'
 ]
 
-if(params.use_gpu){
+if (params.use_gpu) {
     try {
-        // Execute the nvidia-smi command
+        // Execute the nvidia-smi command to check for GPU availability
         def process = "nvidia-smi".execute()
         def output = new StringBuffer()
         def error = new StringBuffer()
-        
+
         // Capture the output and error streams
         process.consumeProcessOutput(output, error)
         process.waitFor()
-        
-        println process.exitValue() == 0 && output.toString().contains("NVIDIA-SMI")
-    } catch (Exception e) {
-        println false
-    }
 
+        if (process.exitValue() != 0 || !output.toString().contains("NVIDIA-SMI")) {
+            exit 1, "No GPU was found"
+        } else {
+            println "GPU detected: " + output.toString().split("\n")[2]  // Display some GPU details
+        }
+    } catch (Exception e) {
+        exit 1, "No GPU was found"
+    }
 }
 
 for (param in requiredParams) {
