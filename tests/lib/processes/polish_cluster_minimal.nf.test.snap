@@ -6,22 +6,47 @@
                     [
                         "barcode03",
                         "raw",
-                        "smolecule0sub12_consensus.fastq:md5,458ecdaf2e49929a67c52389a01b5f7c"
+                        "smolecule0sub12_consensus.fastq:md5,f284c702025b387dcf4bc2c3aa8af37b"
                     ]
                 ],
                 "consensus_fastq": [
                     [
                         "barcode03",
                         "raw",
-                        "smolecule0sub12_consensus.fastq:md5,458ecdaf2e49929a67c52389a01b5f7c"
+                        "smolecule0sub12_consensus.fastq:md5,f284c702025b387dcf4bc2c3aa8af37b"
                     ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0-rc2",
-            "nextflow": "24.05.0"
+            "nf-test": "0.9.0",
+            "nextflow": "22.10.3"
         },
-        "timestamp": "2024-06-21T11:14:11.515754"
+        "timestamp": "2024-09-13T12:32:01.541104"
+    },
+    "Should use gpu and singularity": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode03",
+                        "raw",
+                        "smolecule0sub12_consensus.fastq:md5,f284c702025b387dcf4bc2c3aa8af37b"
+                    ]
+                ],
+                "consensus_fastq": [
+                    [
+                        "barcode03",
+                        "raw",
+                        "smolecule0sub12_consensus.fastq:md5,f284c702025b387dcf4bc2c3aa8af37b"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "22.10.3"
+        },
+        "timestamp": "2024-09-13T14:27:10.003854"
     }
 }

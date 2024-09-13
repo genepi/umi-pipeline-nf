@@ -3,38 +3,38 @@
         "content": [
             {
                 "0": [
-                    "final.vcf:md5,8761e5c55f8e722dd33472968f33ecd6",
-                    "final.vcf:md5,b48b1996596787daa8a83dc973120006",
-                    "final.vcf:md5,de4ad8ac00fddc259406af289d16961b"
+                    "final.vcf:md5,22906ceda834065e1d62878ed521f18c",
+                    "final.vcf:md5,9d0d55c36e3f6f72b65371b3ea534260",
+                    "final.vcf:md5,9da201124f97ba4ffcea42720219ce88"
                 ],
                 "variants": [
-                    "final.vcf:md5,8761e5c55f8e722dd33472968f33ecd6",
-                    "final.vcf:md5,b48b1996596787daa8a83dc973120006",
-                    "final.vcf:md5,de4ad8ac00fddc259406af289d16961b"
+                    "final.vcf:md5,22906ceda834065e1d62878ed521f18c",
+                    "final.vcf:md5,9d0d55c36e3f6f72b65371b3ea534260",
+                    "final.vcf:md5,9da201124f97ba4ffcea42720219ce88"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0-rc2",
-            "nextflow": "24.05.0"
+            "nf-test": "0.9.0",
+            "nextflow": "22.10.3"
         },
-        "timestamp": "2024-06-20T09:55:30.290847"
+        "timestamp": "2024-09-13T15:43:14.912982"
     },
     "Should run without failures": {
         "content": [
             {
                 "0": [
-                    "final.vcf:md5,b48b1996596787daa8a83dc973120006"
+                    "final.vcf:md5,9d0d55c36e3f6f72b65371b3ea534260"
                 ],
                 "variants": [
-                    "final.vcf:md5,b48b1996596787daa8a83dc973120006"
+                    "final.vcf:md5,9d0d55c36e3f6f72b65371b3ea534260"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0-rc2",
-            "nextflow": "24.05.0"
+            "nf-test": "0.9.0",
+            "nextflow": "22.10.3"
         },
-        "timestamp": "2024-06-20T09:55:18.706674"
+        "timestamp": "2024-09-13T15:43:10.490675"
     }
 }

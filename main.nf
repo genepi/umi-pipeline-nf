@@ -48,6 +48,7 @@ if(params.help){
               --min_overlap                   Min overlap with target region [default: 0.90]
               --balance_strands               Balance forward and reverse raw reads in clusters [default: true]
               --use_gpu                       Use GPU acceleration for cluster polishing with medaka [default: false]
+              --gpu_memory                    Available GPU memory in GB [default: 16]
               --medaka_model                  Medaka model used to compute consensus reads [default: "r1041_e82_400bps_hac_g615"]
               --fwd_umi                       Forward UMI (Ftail...UMI...primer) [default: "TTTVVVVTTVVVVTTVVVVTTVVVVTTT"]
               --rev_umi                       Reverse UMI (Rtail...UMI...primer) [default: "AAABBBBAABBBBAABBBBAABBBBAAA"]

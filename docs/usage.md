@@ -29,6 +29,8 @@ This document describes the parameter options used by the pipeline.
     * [`--min_overlap`](#--min_overlap-arg)
     * [`--include_secondary_reads`](#--include_secdondary_reads-arg)
     * [`--balance_strands`](#--balance_strands-arg)
+    * [`--use_gpu`](#--use_gpu-arg)
+    * [`--gpu_memory`](#--gpu_memory-arg)
     * [`--medaka_model`](#--medaka_model-arg)
     * [`--fwd_umi`](#--fwd_umi-arg)
     * [`--rev_umi`](#--rev_umi-arg)
@@ -155,6 +157,14 @@ Specify if secondary mappings should be included in the analysis. [default: fals
 
 ### `--balance_strands <ARG>`
 Specify if the number of forward and reverse reads per cluster should be equalized. [default: true]
+
+### `--use_gpu`
+Specify if GPU acceleration for Medaka should be enabled. [default: false]  
+Note: GPU acceleration is only available with the `docker` profile and has been tested with an RTX 4080 SUPER GPU (16 GB).
+
+### `--gpu_driver`
+Specify the path to the GPU driver.  
+The NVIDIA toolkit (https://developer.nvidia.com/cuda-toolkit) and NVIDIA container toolkit (https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) must be installed for GPU usage.
 
 ### `--medaka_model <ARG>`
 Specify the medaka model that is used for cluster polishing. [default: "r1041_e82_400bps_hac_g615"]  
