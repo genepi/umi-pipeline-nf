@@ -6,7 +6,7 @@ Umi-pipeline-nf
 
 **Umi-pipeline-nf** creates highly accurate single-molecule consensus sequences for unique molecular identifier (UMI)-tagged amplicons from nanopore sequencing data.  
 The pipeline can be run for the whole fastq_pass folder of your nanopore run and, per default, outputs the aligned consensus sequences of each UMI cluster in bam file. The optional variant calling creates a vcf file for all variants that are found in the consensus sequences.
-Umi-pipeline-nf orignates from a snakemake-based analysis pipeline ([pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon); originally developed by [Karst et al, Nat Biotechnol 18:165–169, 2021](https://www.nature.com/articles/s41592-020-01041-y)). We migrated the pipeline to [Nextflow](https://www.nextflow.io) and included several optimizations and [additional functionalities](#main-adaptations).  
+Umi-pipeline-nf orignates from a snakemake-based analysis pipeline ([pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon); originally developed by [Karst et al, Nat Methods 18:165–169, 2021](https://www.nature.com/articles/s41592-020-01041-y)). We migrated the pipeline to [Nextflow](https://www.nextflow.io) and included several optimizations and [additional functionalities](#main-adaptations).  
 
 ![Workflow](docs/images/umi-pipeline-nf_metro-map.svg)
 
@@ -55,9 +55,9 @@ nextflow run genepi/umi-pipeline-nf -r v0.2.1 -c <custom.config> -profile custom
 
 ## Citation 
 
-If you use the pipeline please cite [our Paper](https://www.biorxiv.org/content/10.1101/2024.03.01.582741v1):
+If you use the pipeline please cite [our Paper](https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-024-01391-8):
 
-Amstler S, Streiter G, Pfurtscheller C, Forer L, Di Maio S, Weissensteiner H, Paulweber B, Schoenherr S, Kronenberg F, Coassin S. Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex Lipoprotein(a) KIV-2 VNTR. bioRxiv. 2024. doi: 10.1101/2024.03.01.582741.
+Amstler, S., Streiter, G., Pfurtscheller, C. et al. Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex lipoprotein(a) KIV-2 VNTR. Genome Med 16, 117 (2024). https://doi.org/10.1186/s13073-024-01391-8
 
 
 ### Credits
