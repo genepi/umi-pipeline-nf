@@ -106,7 +106,12 @@ log.info ""
 
 
 include { UMI_PIPELINE } from './lib/workflows/umi-pipeline.nf'
+include { UMI_PIPELINE_LIVE } from './lib/workflows/umi-pipeline-live.nf'
 
 workflow {
-    UMI_PIPELINE()
+     if ( params.live ){
+          UMI_PIPELINE_LIVE()
+     }else {
+          UMI_PIPELINE()
+     }
 }

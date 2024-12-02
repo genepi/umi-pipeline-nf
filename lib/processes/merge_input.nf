@@ -12,6 +12,6 @@ process MERGE_FASTQ {
         catfishq \
             --min-length ${params.min_read_length} \
             --min-qscore ${params.min_qscore} \
-            ${sample}/* > ${merged_fastq}
+            ${sample} > ${merged_fastq}
     """
 }
