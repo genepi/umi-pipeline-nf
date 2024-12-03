@@ -62,14 +62,15 @@ workflow UMI_PIPELINE_LIVE {
         .view()
 */
 
+        COPY_BED( bed )
+
         channel
         .watchPath( "${params.input}/barcode*/*.fastq" )
+        .map{ fastq -> tuple(fastq.parent.name, fastq)}
         .set { fastq_files_ch }
 
         fastq_files_ch.view()
         
-        COPY_BED( bed )
-
         MERGE_FASTQ( fastq_files_ch )
         .set { merged_fastq }
 

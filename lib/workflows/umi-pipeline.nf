@@ -27,14 +27,6 @@ consensus                   = "consensus"
 final_consensus             = "final"
 n_parsed_cluster            = [:]
 
-
-// STAGE CHANNELS
-// to remove also barcode01 use :~/.*barcode((0[2-9])|([1-9][0-9]))/ 
-// Remove barcode01 and uncalssified from the input fastq folder
-Channel.fromPath("${params.input}/*", type: 'dir')
-    .filter( ~/.*barcode(([0-9][0-9]))/ )
-    .set { fastq_files_ch }
-
 ////////////////////
 // BEGIN PIPELINE //
 ////////////////////
@@ -61,6 +53,16 @@ workflow UMI_PIPELINE {
 
     main:
         COPY_BED( bed )
+
+        println "Here"
+        
+        channel    
+            .fromPath("${params.input}/*", type: 'dir')
+            .filter( ~/.*barcode(([0-9][0-9]))/ )
+            .map{barcode_path -> tuple(barcode_path.name, barcode_path)}
+            .set { fastq_files_ch }
+        
+        fastq_files_ch.view()
 
         if( params.subsampling ){
             MERGE_FASTQ( fastq_files_ch )

@@ -2,16 +2,16 @@ merged_fastq="merged.fastq"
 process MERGE_FASTQ {
     
     input:
-        path sample
+        tuple val ( sample ), path ( fastq_path )
     
     output:
-        tuple val( "${sample.baseName}" ), val( "target" ), path( "${merged_fastq}"), emit: merged_fastq
+        tuple val( "${sample}" ), val( "target" ), path( "${merged_fastq}"), emit: merged_fastq
     
     script:
     """
         catfishq \
             --min-length ${params.min_read_length} \
             --min-qscore ${params.min_qscore} \
-            ${sample} > ${merged_fastq}
+            ${fastq_path} > ${merged_fastq}
     """
 }
