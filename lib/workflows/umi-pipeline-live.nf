@@ -38,7 +38,8 @@ include {MERGE_CONSENSUS_FASTQ} from '../processes/merge_consensus_fastq.nf'
 include {MAP_READS; MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS} from '../processes/map_reads.nf'
 include {SPLIT_READS} from  '../processes/split_reads.nf'
 include {DETECT_UMI_FASTQ; DETECT_UMI_FASTQ as DETECT_UMI_CONSENSUS_FASTQ} from '../processes/detect_umi_fastq.nf'
-include {CLUSTER; CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
+include {CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
+include {CLUSTER_LIVE} from '../processes/cluster_live.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
 include {FILTER_CONSENSUS_FASTQ} from '../processes/filter_consensus_fastq.nf'
@@ -84,11 +85,13 @@ workflow UMI_PIPELINE_LIVE {
         DETECT_UMI_FASTQ( splt_reads_filtered, raw, umi_extract )
 
         channel
-        .watchPath( "${params.output}/*/${params.output_format}_umi/**" )
-        .subscribe{ fastq -> println "Fastq file:_$fastq" }
+            .watchPath( "${params.output}/*/${params.output_format}_umi/raw/*fastq" )
+            .map{ fastq -> tuple(fastq.parent.parent.parent.name, "target", fastq.parent) }
+            .set{ cluster_ch }
         
+        cluster_ch.view()
       
-        //CLUSTER( cluster_ch, raw )
+        CLUSTER_LIVE( cluster_ch, raw )
 
 /*        REFORMAT_FILTER_CLUSTER( CLUSTER.out.cluster_fastas, raw, umi_parse_clusters )
         

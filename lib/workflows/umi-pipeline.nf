@@ -54,15 +54,11 @@ workflow UMI_PIPELINE {
     main:
         COPY_BED( bed )
 
-        println "Here"
-        
         channel    
             .fromPath("${params.input}/*", type: 'dir')
             .filter( ~/.*barcode(([0-9][0-9]))/ )
             .map{barcode_path -> tuple(barcode_path.name, barcode_path)}
             .set { fastq_files_ch }
-        
-        fastq_files_ch.view()
 
         if( params.subsampling ){
             MERGE_FASTQ( fastq_files_ch )

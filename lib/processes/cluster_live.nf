@@ -1,12 +1,12 @@
 def consensus_fasta="consensus.fasta"
 def vsearch_dir="vsearch_clusters"
 
-process CLUSTER {
+process CLUSTER_LIVE {
     publishDir "${params.output}/${sample}/clustering/${type}", pattern: "${consensus_fasta}", mode: 'copy'
     publishDir "${params.output}/${sample}/clustering/${type}", pattern: "cluster*", mode: 'copy'
     
     input:
-        tuple val( sample ), val( target ), path( detected_umis_fastq )
+        tuple val( sample ), val( target ), path( detected_umis_fastq_dir )
         val ( type )
     output:
         tuple val( "${sample}" ), val( "${target}" ), path( "${consensus_fasta}" ), optional: true, emit:consensus_fasta
@@ -22,7 +22,7 @@ process CLUSTER {
         --minseqlength ${params.min_length} \
         --maxseqlength ${params.max_length} \
         --threads ${params.threads} \
-        --cluster_fast ${detected_umis_fastq} \
+        --cluster_fast ${detected_umis_fastq_dir}/* \
         --clusterout_sort \
         --gapopen 0E/5I \
         --gapext 0E/2I \
