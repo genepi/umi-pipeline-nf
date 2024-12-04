@@ -22,7 +22,7 @@ process CLUSTER_LIVE {
         --minseqlength ${params.min_length} \
         --maxseqlength ${params.max_length} \
         --threads ${params.threads} \
-        --cluster_fast ${detected_umis_fastq_dir}/* \
+        --cluster_fast ${detected_umis_fastq_dir} \
         --clusterout_sort \
         --gapopen 0E/5I \
         --gapext 0E/2I \

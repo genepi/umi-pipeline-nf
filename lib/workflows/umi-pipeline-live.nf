@@ -85,8 +85,9 @@ workflow UMI_PIPELINE_LIVE {
         DETECT_UMI_FASTQ( splt_reads_filtered, raw, umi_extract )
 
         channel
-            .watchPath( "${params.output}/*/${params.output_format}_umi/raw/*fastq" )
-            .map{ fastq -> tuple(fastq.parent.parent.parent.name, "target", fastq.parent) }
+            //.watchPath( "${params.output}/*/${params.output_format}_umi/raw/*fastq" )
+            .watchPath( "${params.output}/*/${params.output_format}_umi/raw/" )
+            .map{ fastq -> tuple(fastq.parent.parent.parent.name, "target", fastq) }
             .set{ cluster_ch }
         
         cluster_ch.view()
