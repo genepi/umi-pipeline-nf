@@ -10,7 +10,7 @@ process SPLIT_READS {
     
     output:
         path "*.tsv"
-        tuple val ( "${sample}" ), val( "target" ), path ( "*filtered.${params.output_format}" ), emit: split_reads_fastx
+        tuple val ( "${sample}" ), val( "target" ), path ( "${bam.baseName}.${params.output_format}" ), emit: split_reads_fastx
         path "*${params.output_format}"
     
     script:
@@ -21,6 +21,7 @@ process SPLIT_READS {
           --min_overlap ${params.min_overlap} \
           --output_format ${params.output_format} \
           --adapter_length ${params.adapter_length} \
+          --output_filename ${bam.baseName} \
           $include_secondary_reads \
           $write_report \
           -o . ${bed} \

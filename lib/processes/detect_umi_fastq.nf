@@ -20,6 +20,7 @@ process DETECT_UMI_FASTQ {
         --max-error ${params.umi_errors} \
         --adapter_length ${params.adapter_length} \
         --output_format ${params.output_format} \
+        --output_filename ${fastq.baseName}_umis \
         $write_report \
         -o . ${fastq}
     """
