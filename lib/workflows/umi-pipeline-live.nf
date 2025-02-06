@@ -56,24 +56,29 @@ workflow UMI_PIPELINE_LIVE {
 
         println("We are live!")
 
-/*
-        channel
-        .fromPath("${params.input}/*", type: 'dir')
-        .filter( ~/.*barcode(([0-9][0-9]))/ )
-        .view()
-*/
-
         COPY_BED( bed )
 
-        channel
-        .watchPath( "${params.input}/barcode*/*.fastq" )
-        .map{ fastq -> tuple(fastq.parent.name, fastq)}
-        .splitFastq( by: params.chunk_size , file: true)
-        .set { fastq_files_ch }
+        Channel
+        .fromPath("${params.input}/barcode*/*.fastq")
+        .set{ existing_files_ch }
 
-        fastq_files_ch.view()
+        Channel
+        .watchPath( "${params.input}/barcode*/*.fastq" )
+        .set { watched_files_ch }
+
+        existing_files_ch
+        .concat( watched_files_ch )
+        .map{ 
+            fastq -> 
+            def barcode = fastq.parent.name
+            tuple(barcode, fastq)
+            }
+        .splitFastq( by: params.chunk_size , file: true)
+        .set{ ch_input_files }
+
+        ch_input_files.view()
         
-        MERGE_FASTQ( fastq_files_ch )
+        MERGE_FASTQ( ch_input_files )
         .set { merged_fastq }
 
         MAP_READS( merged_fastq, raw, reference )
@@ -85,17 +90,23 @@ workflow UMI_PIPELINE_LIVE {
 
         DETECT_UMI_FASTQ( splt_reads_filtered, raw, umi_extract )
 
-        channel
+        // TODO: adapt the path of the fastq files that clustering is done for all of them
+        Channel
             //.watchPath( "${params.output}/*/${params.output_format}_umi/raw/*fastq" )
-            .watchPath( "${params.output}/*/${params.output_format}_umi/raw/" )
-            .map{ fastq -> tuple(fastq.parent.parent.parent.name, "target", fastq) }
+            .watchPath( "${params.output}/*/${params.output_format}_umi/raw/", 'create,modify' )
+            .map{ path -> tuple(path.parent.parent.parent.name, "target", "${path.parent}") }
             .set{ cluster_ch }
         
         cluster_ch.view()
       
         CLUSTER_LIVE( cluster_ch, raw )
 
-        REFORMAT_FILTER_CLUSTER( CLUSTER_LIVE.out.cluster_fastas, raw, umi_parse_clusters )
+        channel
+            .watchPath( "${params.output}" )
+            .until{ path -> path.name.startsWith("continue") }
+            .view()
+            
+        // REFORMAT_FILTER_CLUSTER( CLUSTER_LIVE.out.cluster_fastas, raw, umi_parse_clusters )
 /*        
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
         .filter{ sample, type, fastqs -> fastqs.class == ArrayList}

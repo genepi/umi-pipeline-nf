@@ -191,7 +191,7 @@ def filter_reads(args):
     output = args.OUT
     out_format = args.OUT_FORMAT
     tsv = args.TSV
-    output_filename = args.OUT_FILENAME
+    output_filename = "{}_filtered".format(args.OUT_FILENAME)
     stats_out_filename = "umi_filter_reads_stats"
 
     n_non_reads = 0

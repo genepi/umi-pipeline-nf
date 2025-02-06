@@ -15,6 +15,8 @@ process CLUSTER_LIVE {
     script:
         def id = "${type}" == "raw" ? 0.90 : 0.99
     """
+        echo ${detected_umis_fastq_dir}
+        
         vsearch \
         --clusterout_id \
         --clusters cluster \
@@ -22,6 +24,7 @@ process CLUSTER_LIVE {
         --minseqlength ${params.min_length} \
         --maxseqlength ${params.max_length} \
         --threads ${params.threads} \
+        --mintsize ${params.min_reads_per_cluster} \
         --cluster_fast ${detected_umis_fastq_dir} \
         --clusterout_sort \
         --gapopen 0E/5I \

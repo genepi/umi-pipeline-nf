@@ -1,5 +1,4 @@
 process MERGE_FASTQ {
-    
     input:
         tuple val ( sample ), path ( fastq_path )
     
@@ -7,7 +6,7 @@ process MERGE_FASTQ {
         tuple val( "${sample}" ), val( "target" ), path( "*fastq" ), emit: merged_fastq
     
     script:
-    def fastq_name = params.live ? "filtered_$fastq_path.Name" : "merged.fastq"
+    def fastq_name = "filtered_$fastq_path.Name"
     """
         catfishq \
             --min-length ${params.min_read_length} \
