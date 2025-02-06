@@ -68,6 +68,7 @@ workflow UMI_PIPELINE_LIVE {
         channel
         .watchPath( "${params.input}/barcode*/*.fastq" )
         .map{ fastq -> tuple(fastq.parent.name, fastq)}
+        .splitFastq( by: params.chunk_size , file: true)
         .set { fastq_files_ch }
 
         fastq_files_ch.view()
@@ -94,8 +95,8 @@ workflow UMI_PIPELINE_LIVE {
       
         CLUSTER_LIVE( cluster_ch, raw )
 
-/*        REFORMAT_FILTER_CLUSTER( CLUSTER.out.cluster_fastas, raw, umi_parse_clusters )
-        
+        REFORMAT_FILTER_CLUSTER( CLUSTER_LIVE.out.cluster_fastas, raw, umi_parse_clusters )
+/*        
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
         .filter{ sample, type, fastqs -> fastqs.class == ArrayList}
         .set{ smolecule_cluster_fastqs_list }
