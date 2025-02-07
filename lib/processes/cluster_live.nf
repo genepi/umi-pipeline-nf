@@ -6,7 +6,7 @@ process CLUSTER_LIVE {
     publishDir "${params.output}/${sample}/clustering/${type}", pattern: "cluster*", mode: 'copy'
     
     input:
-        tuple val( sample ), val( target ), path( detected_umis_fastq_dir )
+        tuple val( sample ), val( target ), path( detected_umis_fastqs )
         val ( type )
     output:
         tuple val( "${sample}" ), val( "${target}" ), path( "${consensus_fasta}" ), optional: true, emit:consensus_fasta
@@ -15,8 +15,7 @@ process CLUSTER_LIVE {
     script:
         def id = "${type}" == "raw" ? 0.90 : 0.99
     """
-        echo ${detected_umis_fastq_dir}
-        
+        cat ${detected_umis_fastqs} |
         vsearch \
         --clusterout_id \
         --clusters cluster \
@@ -24,8 +23,7 @@ process CLUSTER_LIVE {
         --minseqlength ${params.min_length} \
         --maxseqlength ${params.max_length} \
         --threads ${params.threads} \
-        --mintsize ${params.min_reads_per_cluster} \
-        --cluster_fast ${detected_umis_fastq_dir} \
+        --cluster_fast - \
         --clusterout_sort \
         --gapopen 0E/5I \
         --gapext 0E/2I \
@@ -36,4 +34,5 @@ process CLUSTER_LIVE {
         --qmask none \
         --id $id
     """
+        //--mintsize ${params.min_reads_per_cluster} \
 }

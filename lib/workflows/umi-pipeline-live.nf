@@ -63,7 +63,7 @@ workflow UMI_PIPELINE_LIVE {
         .set{ existing_files_ch }
 
         Channel
-        .watchPath( "${params.input}/barcode*/*.fastq" )
+        .watchPath("${params.input}/barcode*/*.fastq")
         .set { watched_files_ch }
 
         existing_files_ch
@@ -90,23 +90,34 @@ workflow UMI_PIPELINE_LIVE {
 
         DETECT_UMI_FASTQ( splt_reads_filtered, raw, umi_extract )
 
-        // TODO: adapt the path of the fastq files that clustering is done for all of them
         Channel
-            //.watchPath( "${params.output}/*/${params.output_format}_umi/raw/*fastq" )
-            .watchPath( "${params.output}/*/${params.output_format}_umi/raw/", 'create,modify' )
-            .map{ path -> tuple(path.parent.parent.parent.name, "target", "${path.parent}") }
-            .set{ cluster_ch }
+            .watchPath("${params.output}/*/${params.output_format}_umi/raw/*.fastq", 'create, modify')
+            .map { path -> 
+                def barcode = path.parent.parent.parent.name
+                def files = path.parent.listFiles().findAll { it.name.endsWith('.fastq') }
+                tuple(barcode, "target", files)
+            }
+            .set { cluster_ch }
         
-        cluster_ch.view()
-      
         CLUSTER_LIVE( cluster_ch, raw )
+        
+        // TODO: Either manage grouuping or reorganize output of the reformat cluster script
+        CLUSTER_LIVE.out.cluster_fastas
+        .transpose(by: 2)
+        .filter{ _sample, _target, fasta -> fasta.countFasta() > params.min_reads_per_cluster }
+        .buffer( size: 100, remainder: true )
+        .groupTuple()
+        .set{ cluster_fastas }
 
-        channel
-            .watchPath( "${params.output}" )
-            .until{ path -> path.name.startsWith("continue") }
-            .view()
-            
-        // REFORMAT_FILTER_CLUSTER( CLUSTER_LIVE.out.cluster_fastas, raw, umi_parse_clusters )
+        cluster_fastas.view()
+
+        cluster_fastas
+        .groupTuple(by: [0,1])
+        .set{ cluster_fastas_grouped }
+
+        cluster_fastas_grouped.view()
+
+        REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters )
 /*        
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
         .filter{ sample, type, fastqs -> fastqs.class == ArrayList}
