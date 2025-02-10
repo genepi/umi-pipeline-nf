@@ -1,6 +1,12 @@
+#!/usr/bin/env python
 """
 This is a modified version of the code present in:
 https://github.com/nanoporetech/pipeline-umi-amplicon/blob/master/lib/umi_amplicon_tools/parse_clusters.py
+
+In this version, we check that reads within each input cluster are “similar” by
+clustering them based on their pairwise edit distances. Two reads are connected
+if their edit distance is <= max_edit_dist. Connected components (using networkx)
+are then used as subclusters.
 """
 
 import argparse
@@ -13,6 +19,8 @@ import threading as t
 
 import pysam
 import edlib
+import networkx as nx
+from itertools import combinations
 
 
 def parse_args(argv):
@@ -83,7 +91,7 @@ def parse_args(argv):
         dest="MAX_EDIT_DIST",
         type=int,
         default=2,
-        help="Max distance of UMIs per cluster. Used to split cluster into subclusters",
+        help="Max edit distance allowed between reads in a subcluster",
     )
     
     parser.add_argument(
@@ -95,7 +103,7 @@ def parse_args(argv):
     )
 
     parser.add_argument(
-        "--clusters", dest="CLUSTERS", nargs= "+", required=True, type=str, help="cluster fastxs"
+        "--clusters", dest="CLUSTERS", nargs="+", required=True, type=str, help="cluster fastx files"
     )
 
     parser.add_argument(
@@ -114,26 +122,36 @@ def parse_args(argv):
 def get_cluster_id(cluster):
     return cluster.split("cluster")[-1]
 
+
 def get_read_seq(read):
     return read.name.split(";seq=")[1].split(";")[0]
+
 
 def get_read_qual(read):
     return read.name.split(";qual=")[1]
 
+
 def get_read_strand(read):
     return read.name.split(";strand=")[1].split(";")[0]
 
+
 def get_read_name(read):
     return read.name.split(";")[0]
+
 
 def get_read_mean_qual(read):
     qual = get_read_qual(read)
     return get_mean_qual(qual)
 
+
 def get_mean_qual(qual):
     return sum(map(lambda char: ord(char), qual)) / len(qual)
 
+
 def get_reads(cluster):
+    """
+    Reads the fastx file for a given cluster and returns a list of reads.
+    """
     residual_reads = []
     n_residual_reads = 0
     with pysam.FastxFile(cluster) as reads:
@@ -142,27 +160,34 @@ def get_reads(cluster):
             n_residual_reads += 1
     return residual_reads, n_residual_reads
 
-def get_split_cluster(reads, max_edit_dist):
-    subcluster = []
-    distant_reads = []
-    parent = reads[0].sequence
-    
-    for read in reads:
-        # calculate edit distance between parent and all other reads in the cluster
-        result = edlib.align(
-            parent,
-            read.sequence,
-            mode="HW",
-            k=max_edit_dist
-        )
-        if result["editDistance"] == -1:
-            distant_reads.append(read)
-        else:
-            subcluster.append(read)
-    return subcluster, distant_reads                    
+
+def cluster_reads(reads, max_edit_dist):
+    """
+    Groups reads into subclusters using a graph approach.
+    Each read is a node and an edge is added if the edit distance between two reads
+    is <= max_edit_dist. Returns a list of subclusters (each subcluster is a list of reads).
+    """
+    G = nx.Graph()
+    # add all reads as nodes
+    for i, read in enumerate(reads):
+        G.add_node(i)
+    # add an edge for every pair that is within the edit distance threshold
+    for i, j in combinations(range(len(reads)), 2):
+        result = edlib.align(reads[i].sequence, reads[j].sequence, mode="HW", k=max_edit_dist)
+        if result["editDistance"] != -1:
+            G.add_edge(i, j)
+    # Each connected component represents a subcluster
+    subclusters = []
+    for component in nx.connected_components(G):
+        subcluster = [reads[i] for i in component]
+        subclusters.append(subcluster)
+    return subclusters
 
 
 def get_split_reads(reads):
+    """
+    Splits reads into forward and reverse based on the strand.
+    """
     reads_fwd = []
     reads_rev = []
     
@@ -174,8 +199,13 @@ def get_split_reads(reads):
             reads_rev.append(read)
     return reads_fwd, reads_rev
 
+
 def get_sorted_reads(reads):
+    """
+    Sort reads based on the average quality (highest quality first).
+    """
     return sorted(reads, key=get_read_mean_qual, reverse=True)
+
 
 def get_filter_parameters(n_fwd, n_rev, min_reads, max_reads, balance_strands):
     if balance_strands:
@@ -197,6 +227,10 @@ def get_filter_parameters(n_fwd, n_rev, min_reads, max_reads, balance_strands):
 
 
 def get_filtered_reads(reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_reads, max_reads, balance_strands):
+    """
+    Depending on filtering parameters, returns (possibly trimmed) forward and reverse read lists,
+    a flag whether to write the cluster, and counts of skipped reads.
+    """
     skipped_fwd = 0
     skipped_rev = 0
     write_cluster = True
@@ -218,7 +252,11 @@ def get_filtered_reads(reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_read
 
     return reads_fwd, reads_rev, write_cluster, skipped_fwd, skipped_rev
 
+
 def write_smolecule(cluster_id, reads, smolecule_file, format):
+    """
+    Write the combined (filtered) reads for a subcluster as either FASTA or FASTQ.
+    """
     with open(smolecule_file, "w") as out_f:
         for n, read in enumerate(reads):
             seq = get_read_seq(read)
@@ -241,12 +279,17 @@ def write_fasta_read(read_name, read_seq, out_f):
     print(">{}".format(read_name), file=out_f)
     print("{}".format(read_seq), file=out_f)
 
-def write_subcluster(subcluster, subcluster_name):
-    with open(subcluster_name, "w") as out_f:
+
+def write_subcluster(subcluster, subcluster_filename):
+    """
+    Writes the reads in a subcluster to a file (in FASTA format).
+    """
+    with open(subcluster_filename, "w") as out_f:
         for read in subcluster:
             print(">{}".format(read.name), file=out_f)
             print("{}".format(read.sequence), file=out_f)
             
+
 def write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found, n_fwd, n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev):
     with open(stats_out_filename, "a") as out_f:
         print(cluster_id,
@@ -259,58 +302,69 @@ def write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found,
               reads_skipped_fwd,
               reads_skipped_rev,
               sep="\t",
-              file=out_f,
-              )
+              file=out_f)
 
-def parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename):  
+
+def parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename):
+    """
+    For each input cluster file, read the sequences, break them into subclusters such that
+    sequences in each subcluster are similar (i.e. within max_edit_dist of at least one other read),
+    and then perform filtering and write the results.
+    """
     residual_reads, n_residual_reads = get_reads(cluster)
-    n_subcluster = 0
-    cluster_id = get_cluster_id(cluster)  
+    cluster_id = get_cluster_id(cluster)
     
-    while n_residual_reads >= min_reads:
-        reads_found = 0
-        reads_found = 0
-        reads_written_fwd = 0
-        reads_written_rev = 0
-        cluster_written = 0
-
-        cluster_id_subcluster = "{}sub{}".format(cluster_id, n_subcluster)
-        smolecule_file = os.path.join(
-            output_folder, "smolecule{}.{}".format(cluster_id_subcluster, format)) 
+    # Cluster reads into subclusters based on pairwise edit distance
+    subclusters = cluster_reads(residual_reads, max_edit_dist)
+    
+    for n_subcluster, subcluster in enumerate(subclusters):
+        # Write the subcluster reads (for reference/debugging)
+        subcluster_file = os.path.join(output_folder, "{}_subcluster_{}".format(cluster_id, n_subcluster))
+        write_subcluster(subcluster, subcluster_file)
         
-        subcluster, residual_reads = get_split_cluster(residual_reads, max_edit_dist)
-        n_residual_reads = len(residual_reads)
-        write_subcluster(
-            subcluster,
-            os.path.join(output_folder, "{}_{}".format(cluster, n_subcluster))
-            )
-        n_subcluster += 1
-    
+        reads_found = len(subcluster)
         reads_fwd, reads_rev = get_split_reads(subcluster)
         n_fwd = len(reads_fwd)
         n_rev = len(reads_rev)
-        reads_found = n_fwd + n_rev
 
         if filter == "quality":
             reads_fwd = get_sorted_reads(reads_fwd)
             reads_rev = get_sorted_reads(reads_rev)
 
         reads_fwd, reads_rev, write_cluster, reads_skipped_fwd, reads_skipped_rev = get_filtered_reads(
-            reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_reads, max_reads, balance_strands)
+            reads_fwd, reads_rev, reads_found, n_fwd, n_rev, min_reads, max_reads, balance_strands
+        )
+
+        cluster_written = 0
+        reads_written_fwd = 0
+        reads_written_rev = 0
+
+        cluster_id_subcluster = "{}_sub{}".format(cluster_id, n_subcluster)
+        smolecule_file = os.path.join(
+            output_folder, "smolecule{}.{}".format(cluster_id_subcluster, format)
+        )
 
         if write_cluster:
             cluster_written = 1
             reads_written_fwd = len(reads_fwd)
             reads_written_rev = len(reads_rev)
-            
             reads = reads_fwd + reads_rev
             write_smolecule(cluster_id_subcluster, reads, smolecule_file, format)
-        else:
-            cluster_written = 0
 
-        if tsv:  
-            write_tsv_line(stats_out_filename, cluster_id_subcluster, cluster_written, reads_found, n_fwd,
-            n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev)
+        if tsv:
+            write_tsv_line(
+                stats_out_filename,
+                cluster_id_subcluster,
+                cluster_written,
+                reads_found,
+                n_fwd,
+                n_rev,
+                reads_written_fwd,
+                reads_written_rev,
+                reads_skipped_fwd,
+                reads_skipped_rev,
+            )
+
 
 def parse_cluster_wrapper(args):
     min_reads = args.MIN_CLUSTER_READS
@@ -322,31 +376,49 @@ def parse_cluster_wrapper(args):
     balance_strands = args.BAL_STRANDS
     tsv = args.TSV
     max_edit_dist = args.MAX_EDIT_DIST
-    
+
     stats_out_filename = "split_cluster_stats"
-    
     if tsv:
         stats_out_filename = os.path.join(
-            output_folder, "{}.tsv".format(stats_out_filename))
-        write_tsv_line(stats_out_filename, "cluster_id", "cluster_written", "reads_found", "reads_found_fwd",
-                    "reads_found_rev", "reads_written_fwd", "reads_written_rev", "reads_skipped_fwd", "reads_skipped_rev")
+            output_folder, "{}.tsv".format(stats_out_filename)
+        )
+        # write header
+        write_tsv_line(
+            stats_out_filename,
+            "cluster_id",
+            "cluster_written",
+            "reads_found",
+            "reads_found_fwd",
+            "reads_found_rev",
+            "reads_written_fwd",
+            "reads_written_rev",
+            "reads_skipped_fwd",
+            "reads_skipped_rev",
+        )
 
     for cluster in clusters:
+        # You can run each cluster in its own thread if desired:
         # parse_cluster_thread = t.Thread(target=parse_cluster, args=(
         #     min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename
         # ))
         # parse_cluster_thread.start()
-        parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, balance_strands, tsv, max_edit_dist, stats_out_filename)
+        parse_cluster(
+            min_reads,
+            max_reads,
+            filter,
+            format,
+            cluster,
+            output_folder,
+            balance_strands,
+            tsv,
+            max_edit_dist,
+            stats_out_filename,
+        )
 
-    
+
 def main(argv=sys.argv[1:]):
     """
-    Basic command line interface to telemap.
-
-    :param argv: Command line arguments
-    :type argv: list
-    :return: None
-    :rtype: NoneType
+    Basic command line interface.
     """
     args = parse_args(argv=argv)
 

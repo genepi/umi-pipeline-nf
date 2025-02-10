@@ -102,22 +102,38 @@ workflow UMI_PIPELINE_LIVE {
         CLUSTER_LIVE( cluster_ch, raw )
         
         // TODO: Either manage grouuping or reorganize output of the reformat cluster script
-        CLUSTER_LIVE.out.cluster_fastas
+/*        CLUSTER_LIVE.out.cluster_fastas
         .transpose(by: 2)
         .filter{ _sample, _target, fasta -> fasta.countFasta() > params.min_reads_per_cluster }
         .buffer( size: 100, remainder: true )
         .groupTuple()
         .set{ cluster_fastas }
+*/
+
+        CLUSTER_LIVE.out.cluster_fastas
+            .map { barcode, target, clusters -> 
+                def filtered_clusters = clusters.findAll { fasta -> fasta.countFasta() > params.min_reads_per_cluster }
+                filtered_clusters ? [barcode, target, filtered_clusters] : null
+            }
+            .filter { it != null }
+            //.buffer(size: 100, remainder: true)
+            .set{ cluster_fastas }
+        
+        REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters )
+
+/*            
+            .flatMap { sample, target, fastas -> 
+                fastas.collect { fasta -> tuple(groupKey(tuple(sample, target), fastas.size()), fasta) }
+            }
+            .view { v -> "scattered: ${v}" }
+            .groupTuple(by: [0, 1])
+            .map { key, fastas -> tuple(key.getGroupTarget(), fastas) }
+            .view { v -> "gathered: ${v}" }
+            .set { cluster_fastas }
 
         cluster_fastas.view()
 
-        cluster_fastas
-        .groupTuple(by: [0,1])
-        .set{ cluster_fastas_grouped }
-
-        cluster_fastas_grouped.view()
-
-        REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters )
+*/
 /*        
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
         .filter{ sample, type, fastqs -> fastqs.class == ArrayList}
