@@ -42,6 +42,7 @@ include {DETECT_UMI_FASTQ; DETECT_UMI_FASTQ as DETECT_UMI_CONSENSUS_FASTQ} from 
 include {CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
 include {CLUSTER_LIVE} from '../processes/cluster_live.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
+include {GLUE_CLUSTERS} from '../processes/glue_clusters.nf'
 include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
 include {FILTER_CONSENSUS_FASTQ} from '../processes/filter_consensus_fastq.nf'
 include {REFORMAT_CONSENSUS_CLUSTER} from '../processes/reformat_consensus_cluster.nf'
@@ -121,20 +122,20 @@ workflow UMI_PIPELINE_LIVE {
         REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters )
 
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
+        .combine( continue_ch )
+        .map { sample, type, fastqs, _continue_file -> tuple(sample, type, fastqs) }
         .filter{ _sample, _type, fastqs -> fastqs.class == ArrayList}
-        .set{ smolecule_cluster_fastqs_list }
+        .set{ smolecule_cluster_fastqs_list }     
 
-        smolecule_cluster_fastqs_list
-        .map{ sample, _type, fastqs -> n_parsed_cluster.put("$sample", fastqs.size)}
-        
-        smolecule_cluster_fastqs_list
-        .transpose( by: 2 )
-        .set{ smolecule_cluster_fastqs }
+        GLUE_CLUSTERS(smolecule_cluster_fastqs_list)
+            .map { sample, target, clusters -> tuple(sample, target, clusters instanceof List ? clusters : [clusters]) }
+            .transpose(by: 2)
+            .set { glued_clusters }
 
-        POLISH_CLUSTER( smolecule_cluster_fastqs, consensus )
+        POLISH_CLUSTER( glued_clusters, consensus )
         
         POLISH_CLUSTER.out.consensus_fastq
-        .map{ sample, type, fastq -> tuple( groupKey(sample, n_parsed_cluster.get("$sample")), type, fastq) }
+        //.map{ sample, type, fastq -> tuple( groupKey(sample, n_parsed_cluster.get("$sample")), type, fastq) }
         .groupTuple( )
         .set{ merge_consensus }
 
