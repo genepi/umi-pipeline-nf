@@ -33,6 +33,7 @@ n_parsed_cluster            = [:]
 ////////////////////
 
 include {COPY_BED} from '../processes/copy_bed.nf'
+include {CONTINUE_PIPELINE} from '../processes/continue_pipeline.nf'
 include {MERGE_FASTQ} from '../processes/merge_input.nf'
 include {MERGE_CONSENSUS_FASTQ} from '../processes/merge_consensus_fastq.nf'
 include {MAP_READS; MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS} from '../processes/map_reads.nf'
@@ -59,11 +60,20 @@ workflow UMI_PIPELINE_LIVE {
         COPY_BED( bed )
 
         Channel
+            .watchPath("${params.output}/STOP")
+            .take(1)
+            .set{ continue_ch }
+
+        CONTINUE_PIPELINE( continue_ch )
+        
+
+        Channel
         .fromPath("${params.input}/barcode*/*.fastq")
         .set{ existing_files_ch }
 
         Channel
-        .watchPath("${params.input}/barcode*/*.fastq")
+        .watchPath("${params.input}/barcode*/*.fastq", 'create, modify')
+        .until { it.getFileName().toString().toLowerCase().contains("continue") } 
         .set { watched_files_ch }
 
         existing_files_ch
@@ -75,8 +85,6 @@ workflow UMI_PIPELINE_LIVE {
             }
         .splitFastq( by: params.chunk_size , file: true)
         .set{ ch_input_files }
-
-        ch_input_files.view()
         
         MERGE_FASTQ( ch_input_files )
         .set { merged_fastq }
@@ -92,6 +100,7 @@ workflow UMI_PIPELINE_LIVE {
 
         Channel
             .watchPath("${params.output}/*/${params.output_format}_umi/raw/*.fastq", 'create, modify')
+            .until { it.getFileName().toString().toLowerCase().contains("continue") }
             .map { path -> 
                 def barcode = path.parent.parent.parent.name
                 def files = path.parent.listFiles().findAll { it.name.endsWith('.fastq') }
@@ -100,15 +109,6 @@ workflow UMI_PIPELINE_LIVE {
             .set { cluster_ch }
         
         CLUSTER_LIVE( cluster_ch, raw )
-        
-        // TODO: Either manage grouuping or reorganize output of the reformat cluster script
-/*        CLUSTER_LIVE.out.cluster_fastas
-        .transpose(by: 2)
-        .filter{ _sample, _target, fasta -> fasta.countFasta() > params.min_reads_per_cluster }
-        .buffer( size: 100, remainder: true )
-        .groupTuple()
-        .set{ cluster_fastas }
-*/
 
         CLUSTER_LIVE.out.cluster_fastas
             .map { barcode, target, clusters -> 
@@ -116,31 +116,16 @@ workflow UMI_PIPELINE_LIVE {
                 filtered_clusters ? [barcode, target, filtered_clusters] : null
             }
             .filter { it != null }
-            //.buffer(size: 100, remainder: true)
             .set{ cluster_fastas }
         
         REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters )
 
-/*            
-            .flatMap { sample, target, fastas -> 
-                fastas.collect { fasta -> tuple(groupKey(tuple(sample, target), fastas.size()), fasta) }
-            }
-            .view { v -> "scattered: ${v}" }
-            .groupTuple(by: [0, 1])
-            .map { key, fastas -> tuple(key.getGroupTarget(), fastas) }
-            .view { v -> "gathered: ${v}" }
-            .set { cluster_fastas }
-
-        cluster_fastas.view()
-
-*/
-/*        
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
-        .filter{ sample, type, fastqs -> fastqs.class == ArrayList}
+        .filter{ _sample, _type, fastqs -> fastqs.class == ArrayList}
         .set{ smolecule_cluster_fastqs_list }
 
         smolecule_cluster_fastqs_list
-        .map{ sample, type, fastqs -> n_parsed_cluster.put("$sample", fastqs.size)}
+        .map{ sample, _type, fastqs -> n_parsed_cluster.put("$sample", fastqs.size)}
         
         smolecule_cluster_fastqs_list
         .transpose( by: 2 )
@@ -184,9 +169,7 @@ workflow UMI_PIPELINE_LIVE {
                 exit 1, "${params.variant_caller} is not a valid option. \nPossible variant caller are <lofreq/mutserve/freebayes>"
             
             }
-        }
-        
-*/        
+        }  
         
 }
 

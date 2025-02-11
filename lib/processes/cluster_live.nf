@@ -2,8 +2,8 @@ def consensus_fasta="consensus.fasta"
 def vsearch_dir="vsearch_clusters"
 
 process CLUSTER_LIVE {
-    publishDir "${params.output}/${sample}/clustering/${type}", pattern: "${consensus_fasta}", mode: 'copy'
-    publishDir "${params.output}/${sample}/clustering/${type}", pattern: "cluster*", mode: 'copy'
+    //publishDir "${params.output}/${sample}/clustering/${type}", pattern: "${consensus_fasta}", mode: 'copy'
+    //publishDir "${params.output}/${sample}/clustering/${type}", pattern: "cluster*", mode: 'copy'
     
     input:
         tuple val( sample ), val( target ), path( detected_umis_fastqs )
@@ -33,6 +33,5 @@ process CLUSTER_LIVE {
         --minwordmatches 0 \
         --qmask none \
         --id $id
-    """
-        //--mintsize ${params.min_reads_per_cluster} \
+    """ 
 }

@@ -1,4 +1,5 @@
 process REFORMAT_FILTER_CLUSTER {
+    beforeScript "rm -f ${params.output}/${sample}/clustering/${type}/smolecule*"
     tag "${sample}"
     publishDir "${params.output}/${sample}/clustering/${type}/smolecule", pattern: "smolecule*", mode: 'copy'
     publishDir "${params.output}/${sample}/stats/${type}", pattern: "*tsv", mode: 'copy'
