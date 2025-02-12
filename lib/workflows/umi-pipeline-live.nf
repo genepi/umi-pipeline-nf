@@ -21,12 +21,14 @@
     umi_parse_clusters          = file( "${projectDir}/bin/parse_clusters.py", checkIfExists: true)
     umi_reformat_consensus      = file( "${projectDir}/bin/reformat_consensus.py", checkIfExists: true )
     umi_cluster_report          = file( "${projectDir}/bin/cluster_report.py", checkIfExists: true )
+    umi_cluster_stats_summary   = file( "${projectDir}/bin/summary_cluster_report.py", checkIfExists: true )
 
     // subdirectory and file prefixes
     raw                         = "raw"
     consensus                   = "consensus"
     final_consensus             = "final"
     n_parsed_cluster            = [:]
+    cluster_summary_output_path = "${params.output}/cluster_stats/summary_cluster_stats.tsv"
 
 
     ////////////////////
@@ -44,6 +46,7 @@
     include {CLUSTER_LIVE} from '../processes/cluster_live.nf'
     include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
     include {CLUSTER_STATS_LIVE} from '../processes/cluster_stats_live.nf'
+    include {SUMMARY_CLUSTER_STATS} from '../processes/summary_cluster_stats.nf'
     include {GLUE_CLUSTERS} from '../processes/glue_clusters.nf'
     include {POLISH_CLUSTER} from '../processes/polish_cluster.nf'
     include {FILTER_CONSENSUS_FASTQ} from '../processes/filter_consensus_fastq.nf'
@@ -130,7 +133,8 @@
 
             // Launch the reporting process for each sample
             CLUSTER_STATS_LIVE( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, umi_cluster_report )
-            
+
+
             SUMMARY_CLUSTER_STATS( CLUSTER_STATS_LIVE.out.cluster_stats, umi_cluster_stats_summary)
 
 /*

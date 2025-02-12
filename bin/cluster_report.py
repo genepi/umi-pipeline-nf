@@ -21,9 +21,12 @@ def generate_report(data, min_reads, threshold, output_pdf, output_tsv):
     clusters_written = data[data['cluster_written'] == 1]
     clusters_skipped = data[(data['cluster_written'] == 0)]
     near_threshold = clusters_skipped[(clusters_skipped['reads_found'] >= threshold)]
-    n_bins_written = max(clusters_written["reads_found"]) - min_reads
-    n_bins_skipped = max(clusters_skipped["reads_found"])- threshold
-    
+    n_bins_written = max(clusters_written['reads_found']) + 1 - min_reads
+    max_reads_found = max(clusters_skipped['reads_found'])
+    max_reads_found = max_reads_found if max_reads_found > min_reads else min_reads
+    n_bins_skipped = max_reads_found - threshold
+
+
     fig, axes = plt.subplots(2, 1, figsize=(8, 10), sharex=False)
     
     # Plot 1: Clusters Written vs. Reads Found

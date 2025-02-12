@@ -7,7 +7,7 @@ process CLUSTER_STATS_LIVE {
     path cluster_stats_python
     
     output:
-    path "${sample}_cluster_stats.tsv", emit: cluster_stats
+    path "${sample}_cluster_stats.tsv", emit: cluster_stats 
     path "${sample}_cluster_report.pdf"
     
     script:
