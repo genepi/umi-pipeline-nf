@@ -131,7 +131,7 @@
             // Launch the reporting process for each sample
             CLUSTER_STATS_LIVE( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, umi_cluster_report )
             
-            //SUMMARY_CLUSTER_STATS( CLUSTER_STATS_LIVE.out.cluster_stats)
+            SUMMARY_CLUSTER_STATS( CLUSTER_STATS_LIVE.out.cluster_stats, umi_cluster_stats_summary)
 
 /*
 

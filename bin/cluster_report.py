@@ -20,22 +20,22 @@ def load_data(file_path):
 def generate_report(data, min_reads, threshold, output_pdf, output_tsv):
     clusters_written = data[data['cluster_written'] == 1]
     clusters_skipped = data[(data['cluster_written'] == 0)]
-    near_threshold = clusters_skipped[(clusters_skipped['reads_found'] >= (min_reads - threshold))]
+    near_threshold = clusters_skipped[(clusters_skipped['reads_found'] >= threshold)]
     n_bins_written = max(clusters_written["reads_found"]) - min_reads
-    n_bins_skipped = min_reads - threshold
+    n_bins_skipped = max(clusters_skipped["reads_found"])- threshold
     
-    fig, axes = plt.subplots(1, 2, figsize=(8, 10), sharex=False)
+    fig, axes = plt.subplots(2, 1, figsize=(8, 10), sharex=False)
     
     # Plot 1: Clusters Written vs. Reads Found
     axes[0].hist(clusters_written['reads_found'], bins = n_bins_written, color='blue', align = "left", rwidth = 0.9)
     axes[0].set_title("Clusters Written vs Reads Found")
-    axes[0].set_xlabel("Cluster Size")
+    axes[0].set_xlabel("Cluster Size [>= {}]".format(min_reads))
     axes[0].set_ylabel("Count")
     
     # Plot 2: Near-Threshold Clusters
     axes[1].hist(near_threshold['reads_found'], bins = n_bins_skipped, color='red', alpha=0.7, align = "left", rwidth = 0.9)
     axes[1].set_title("Clusters Near Threshold")
-    axes[1].set_xlabel("Cluster Size [{}-{}]".format(threshold, min_reads))
+    axes[1].set_xlabel("Cluster Size [{}-{}]".format(threshold, max(clusters_skipped["reads_found"])))
     axes[1].set_ylabel("Count")
     
     plt.tight_layout()
