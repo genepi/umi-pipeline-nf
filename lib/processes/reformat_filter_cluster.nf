@@ -1,8 +1,8 @@
 process REFORMAT_FILTER_CLUSTER {
     beforeScript "rm -f ${params.output}/${sample}/clustering/${type}/smolecule*"
     tag "${sample}"
-    publishDir "${params.output}/${sample}/clustering/${type}/smolecule", pattern: "smolecule*", mode: 'copy'
-    publishDir "${params.output}/${sample}/stats/${type}", pattern: "*tsv", mode: 'copy'
+    //publishDir "${params.output}/${sample}/clustering/${type}/smolecule", pattern: "smolecule*", mode: 'copy'
+    //publishDir "${params.output}/${sample}/stats/${type}", pattern: "*tsv", mode: 'copy'
 
     input:
         tuple val( sample ), val( target ), path( cluster )
@@ -10,7 +10,7 @@ process REFORMAT_FILTER_CLUSTER {
         path umi_parse_clusters_python
 
     output:
-        tuple val( "${sample}" ), val( "${target}" ), path( "smolecule*"), optional: true, emit: smolecule_cluster_fastqs
+        tuple val( "${sample}" ), val( "${target}" ), path( "smolecule*"), val(task.index), optional: true, emit: smolecule_cluster_fastqs
         tuple val( sample ), val ( target ), path( "*.tsv" ), optional: true, emit: smolecule_cluster_stats
         tuple val( "${sample}" ), val( "${target}" ), path( "cluster*"), optional: true
 

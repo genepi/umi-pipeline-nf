@@ -1,8 +1,9 @@
-process SUMMARY_CLUSTER_STATS {    
-    publishDir "${params.output}/cluster_stats/", mode: 'copy'
+process SUMMARY_CLUSTER_STATS {   
+    maxForks 1
+    publishDir "${params.output}/cluster_stats/", mode: 'copy'  
     
     input:
-    path cluster_stats_file
+    tuple val(sample), val(type), path(smolecule_cluster_stats)  // Input tuple from the pipeline
     path umi_cluster_stats_summary
 
     output:
@@ -15,7 +16,8 @@ process SUMMARY_CLUSTER_STATS {
     echo ${task.index}
 
     python ${umi_cluster_stats_summary} \
-        --cluster-stat ${cluster_stats_file} \
+        --cluster-stat ${smolecule_cluster_stats} \
+        --sample ${sample} \
         --current-summary $current_summary \
         --output-tsv summary_cluster_stats.tsv \
         --output-pdf summary_cluster_report.pdf 

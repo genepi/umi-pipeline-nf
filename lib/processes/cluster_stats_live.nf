@@ -3,7 +3,7 @@ process CLUSTER_STATS_LIVE {
     publishDir "${params.output}/${sample}/stats/${type}", mode: 'copy'
     
     input:
-    tuple val(sample), val(type), path(smolecule_cluster_stats)  // Input tuple from the pipeline
+    tuple val(sample), val(type), path(smolecule_cluster_stats)
     path cluster_stats_python
     
     output:

@@ -126,25 +126,24 @@
             
             REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters )
 
-            // Assuming that REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs produces tuples of (sample, type, fastqFiles)
-            REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
-                .filter { _sample, _type, fastqs -> fastqs instanceof List && fastqs.size() > 0 }  // only pass non-empty lists
-                .set { smolecule_cluster_fastqs_list }
-
             // Launch the reporting process for each sample
             CLUSTER_STATS_LIVE( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, umi_cluster_report )
+            SUMMARY_CLUSTER_STATS( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, umi_cluster_stats_summary)
 
-
-            SUMMARY_CLUSTER_STATS( CLUSTER_STATS_LIVE.out.cluster_stats, umi_cluster_stats_summary)
-
-/*
 
             REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
-            .combine( continue_ch )
-            .map { sample, type, fastqs, _continue_file -> tuple(sample, type, fastqs) }
-            .filter{ _sample, _type, fastqs -> fastqs.class == ArrayList}
-            .set{ smolecule_cluster_fastqs_list }     
+                .combine( continue_ch )
+                .map { sample, type, fastqs, task_index, _continue_file ->
+                    tuple(sample, type, fastqs, task_index)
+                }
+                .view()
+                .filter { _sample, _type, fastqs -> fastqs instanceof List }
+                .groupTuple(by: [0, 1], sort: { -it[1] })
+                .view()
+                .set { smolecule_cluster_fastqs_list }
 
+            smolecule_cluster_fastqs_list.view()
+/*
             Channel
                 .watchPath("${params.output}/CONTINUE")
                 .flatMap { 
@@ -204,8 +203,7 @@
                 
                 }
             }  
-            
-*/
+*/  
     }
 
 
