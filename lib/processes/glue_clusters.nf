@@ -6,7 +6,6 @@ process GLUE_CLUSTERS {
     tuple val(sample), val (type), path(cluster_files)
 
     output:
-    // Emit all files created in the "combined_files" folder.
     tuple val(sample), val (type), path("*${params.output_format}"), emit: glued_clusters
 
     script:

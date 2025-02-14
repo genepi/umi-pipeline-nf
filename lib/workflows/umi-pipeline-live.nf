@@ -29,6 +29,9 @@
     final_consensus             = "final"
     n_parsed_cluster            = [:]
     cluster_summary_output_path = "${params.output}/cluster_stats/summary_cluster_stats.tsv"
+    def test = new File (".nextflow/cache/${workflow.sessionId}/extracted_fastq_cache_dir")
+    test.mkdir()
+    extracted_fastq_cache_dir = file( test )
 
 
     ////////////////////
@@ -41,7 +44,8 @@
     include {MERGE_CONSENSUS_FASTQ} from '../processes/merge_consensus_fastq.nf'
     include {MAP_READS; MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS} from '../processes/map_reads.nf'
     include {SPLIT_READS} from  '../processes/split_reads.nf'
-    include {DETECT_UMI_FASTQ; DETECT_UMI_FASTQ as DETECT_UMI_CONSENSUS_FASTQ} from '../processes/detect_umi_fastq.nf'
+    include {DETECT_UMI_FASTQ} from '../processes/detect_umi_fastq.nf'
+    include {DETECT_UMI_CONSENSUS_FASTQ} from '../processes/detect_umi_consensus_fastq.nf'
     include {CLUSTER as CLUSTER_CONSENSUS} from '../processes/cluster.nf'
     include {CLUSTER_LIVE} from '../processes/cluster_live.nf'
     include {REFORMAT_FILTER_CLUSTER} from '../processes/reformat_filter_cluster.nf'
@@ -100,21 +104,13 @@
 
             SPLIT_READS.out.split_reads_fastx
             .filter{ _sample, _target, fastq -> fastq.countFastq() > 0 }
-            .set{ splt_reads_filtered }
+            .set{ split_reads_filtered }
 
-            DETECT_UMI_FASTQ( splt_reads_filtered, raw, umi_extract )
+            // DETECT_UMI_FASTQ( split_reads_filtered, raw, umi_extract )
+            DETECT_UMI_FASTQ( split_reads_filtered, extracted_fastq_cache_dir, raw, umi_extract )
+        
 
-            Channel
-                .watchPath("${params.output}/*/${params.output_format}_umi/raw/*.fastq", 'create, modify')
-                .until { it.getFileName().toString().toLowerCase().contains("continue") }
-                .map { path -> 
-                    def barcode = path.parent.parent.parent.name
-                    def files = path.parent.listFiles().findAll { it.name.endsWith('.fastq') }
-                    tuple(barcode, "target", files)
-                }
-                .set { cluster_ch }
-            
-            CLUSTER_LIVE( cluster_ch, raw )
+            CLUSTER_LIVE( DETECT_UMI_FASTQ.out.umi_extract_fastq, raw )
 
             CLUSTER_LIVE.out.cluster_fastas
                 .map { barcode, target, clusters -> 
@@ -130,21 +126,19 @@
             CLUSTER_STATS_LIVE( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, umi_cluster_report )
             SUMMARY_CLUSTER_STATS( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, umi_cluster_stats_summary)
 
-
             REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
                 .combine( continue_ch )
                 .map { sample, type, fastqs, task_index, _continue_file ->
-                    tuple(sample, type, fastqs, task_index)
+                    tuple(sample, type, fastqs, [task_index])
                 }
-                .view()
-                .filter { _sample, _type, fastqs -> fastqs instanceof List }
-                .groupTuple(by: [0, 1], sort: { -it[1] })
-                .view()
+                .filter { _sample, _type, fastqs, _task_index -> fastqs instanceof List }
+                .groupTuple(by: [0, 1], sort: { it[3] })
+                .map { sample, type, fastqs, _task_index ->
+                    tuple(sample, type, fastqs[0])
+                }
                 .set { smolecule_cluster_fastqs_list }
 
-            smolecule_cluster_fastqs_list.view()
-/*
-            Channel
+/*            Channel
                 .watchPath("${params.output}/CONTINUE")
                 .flatMap { 
                         // The CONTINUE file is present now – list all matching smolecule files
@@ -159,15 +153,22 @@
                 .groupTuple()
                 .set{ smolecule_cluster_fastqs_list }
 
-            GLUE_CLUSTERS(smolecule_cluster_fastqs_list)
-                .map { sample, target, clusters -> tuple(sample, target, clusters instanceof List ? clusters : [clusters]) }
-                .transpose(by: 2)
-                .set { glued_clusters }
+*/
 
-            POLISH_CLUSTER( glued_clusters, consensus )
+            GLUE_CLUSTERS(smolecule_cluster_fastqs_list)
+                .map{ sample, type, clusters -> tuple(sample, type, clusters instanceof List ? clusters : [clusters]) }
+                .set{ glued_clusters }
+            glued_clusters
+            .map{ sample, _type, clusters -> n_parsed_cluster.put("$sample", clusters.size)}
+            
+            glued_clusters
+                .transpose(by: 2)
+                .set { glued_clusters_transposed }
+
+            POLISH_CLUSTER( glued_clusters_transposed, consensus )
             
             POLISH_CLUSTER.out.consensus_fastq
-            //.map{ sample, type, fastq -> tuple( groupKey(sample, n_parsed_cluster.get("$sample")), type, fastq) }
+            .map{ sample, type, fastq -> tuple( groupKey(sample, n_parsed_cluster.get("$sample")), type, fastq) }
             .groupTuple( )
             .set{ merge_consensus }
 
@@ -203,7 +204,7 @@
                 
                 }
             }  
-*/  
+
     }
 
 
