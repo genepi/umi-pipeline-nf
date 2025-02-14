@@ -27,72 +27,83 @@ workflow LIVE_UMI_PROCESSING {
         3. Run live clustering and reformat/filter clusters.
         4. Launch cluster stats and summary processes to provide live feedback.
     */
-    take:
-        inputDir = params.input
 
     main:
-        // Step 1: Copy BED and wait for continue signal
-        COPY_BED(bed)
+       println("We are live!")
+
+        COPY_BED( bed )
+
         Channel
             .watchPath("${params.output}/CONTINUE")
             .take(1)
-            .set { continue_ch }
-        continue_pipeline(continue_ch)
+            .set{ continue_ch }
 
-        // Step 2: Merge FASTQs (existing & newly added files)
-        Channel.fromPath("${inputDir}/barcode*/*.fastq").set { existing_files_ch }
-        Channel.watchPath("${inputDir}/barcode*/*.fastq", events: 'create,modify')
-                .until { it.getFileName().toString().toLowerCase().contains("continue") }
-                .set { watched_files_ch }
+        CONTINUE_PIPELINE( continue_ch )
+        
+
+        Channel
+        .fromPath("${params.input}/barcode*/*.fastq")
+        .set{ existing_files_ch }
+
+        Channel
+        .watchPath("${params.input}/barcode*/*.fastq", 'create, modify')
+        .until { it.getFileName().toString().toLowerCase().contains("continue") } 
+        .set { watched_files_ch }
+
         existing_files_ch
-            .concat( watched_files_ch )
-            .map { fastq -> tuple( fastq.parent.name, fastq ) }
-            .splitFastq( by: params.chunk_size, file: true )
-            .set { ch_input_files }
-        merge_fastq(ch_input_files).set { merged_fastq }
+        .concat( watched_files_ch )
+        .map{ 
+            fastq -> 
+            def barcode = fastq.parent.name
+            tuple(barcode, fastq)
+            }
+        .splitFastq( by: params.chunk_size , file: true)
+        .set{ ch_input_files }
+        
+        MERGE_FASTQ( ch_input_files )
+        .set { merged_fastq }
 
-        // Step 3: Map reads and split them
-        map_reads( merged_fastq, raw, reference )
-            .set { map_out }
-        split_reads( map_out.out.bam_consensus, bed, raw, umi_scripts.filter_reads )
+        MAP_READS( merged_fastq, raw, reference )
+        SPLIT_READS( MAP_READS.out.bam_consensus, COPY_BED.out.bed, raw, umi_filter_reads )
 
-        split_reads.out.split_reads_fastx
-            .filter { sample, target, fastq -> fastq.countFastq() > 0 }
-            .set { split_reads_filtered }
+        SPLIT_READS.out.split_reads_fastx
+        .filter{ _sample, _target, fastq -> fastq.countFastq() > 0 }
+        .set{ split_reads_filtered }
 
-        detect_umi( split_reads_filtered, extractedCacheDir, raw, umi_scripts.extract_umis )
-            .set { umi_out }
+        // DETECT_UMI_FASTQ( split_reads_filtered, raw, umi_extract )
+        DETECT_UMI_FASTQ( split_reads_filtered, extracted_fastq_cache_dir_nf, raw, umi_extract )
+    
 
-        // Step 4: Live clustering and reformatting
-        cluster_live( umi_out.out.umi_extract_fastq, raw )
-            .set { cluster_live_out }
-        cluster_live_out.out.cluster_fastas
-            .map { barcode, target, clusters ->
-                def filtered = clusters.findAll { fasta -> fasta.countFasta() > params.min_reads_per_cluster }
-                filtered ? tuple( barcode, target, filtered ) : null
+        CLUSTER_LIVE( DETECT_UMI_FASTQ.out.umi_extract_fastq, raw )
+
+        CLUSTER_LIVE.out.cluster_fastas
+            .map { barcode, target, clusters -> 
+                def filtered_clusters = clusters.findAll { fasta -> fasta.countFasta() > params.min_reads_per_cluster }
+                filtered_clusters ? [barcode, target, filtered_clusters] : null
             }
             .filter { it != null }
-            .set { cluster_fastas }
-        reformat_cluster( cluster_fastas, raw, umi_scripts.parse_clusters )
-            .set { reformatted }
+            .set{ cluster_fastas }
+        
+        REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters )
 
-        // Step 5: Live feedback: report cluster stats & show summary
-        cluster_stats( reformatted.out.smolecule_cluster_stats, umi_scripts.cluster_report )
-        summary_stats( reformatted.out.smolecule_cluster_stats, umi_scripts.summary_cluster )
+        // Launch the reporting process for each sample
+        CLUSTER_STATS_LIVE( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, umi_cluster_report )
+        SUMMARY_CLUSTER_STATS( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, umi_cluster_stats_summary)
 
-                // Recombine with continue signal and group cluster FASTQs
-        reformattedOutput
-            .combine( continueSignal )
+        REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
+            .combine( continue_ch )
             .map { sample, type, fastqs, task_index, _continue_file ->
-                tuple( sample, type, fastqs, [task_index] )
+                tuple(sample, type, fastqs, [task_index])
             }
-            .filter { _sample, _type, fastqs, _task_index -> fastq instanceof List || fastqs instanceof List }
-            .groupTuple(by: [0,1], sort: { it[3] })
-            .map { sample, type, fastqs, _task_index -> tuple( sample, type, fastqs[0] ) }
+            .filter { _sample, _type, fastqs, _task_index -> fastqs instanceof List }
+            .groupTuple(by: [0, 1], sort: { it[3] })
+            .map { sample, type, fastqs, _task_index ->
+                tuple(sample, type, fastqs[0])
+            }
             .set { smolecule_cluster_fastqs_list }
 
     emit:
-        // Emit the reformatted cluster FASTQs and the continue channel
-        reformattedOutput = reformatted.out.smolecule_cluster_fastqs
-        continueSignal    = continue_ch
+    // Emit the reformatted cluster FASTQs and the continue channel
+    smolecule_cluster_fastqs_list
+
 }
