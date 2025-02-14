@@ -1,7 +1,7 @@
-cpus=2
 process POLISH_CLUSTER {
-    cpus "${cpus}"
     tag "${sample}"
+    publishDir "${params.output}/${sample}/polishing/${type}", mode: 'copy'
+
 
     input:
         tuple val( sample ), val( target ), path( smolecule_clusters_fastq )
@@ -13,7 +13,7 @@ process POLISH_CLUSTER {
     script:
     """
         medaka smolecule \
-          --threads $cpus \
+          --threads ${task.cpus} \
           --length 50 \
           --depth 2 \
           --model ${params.medaka_model} \

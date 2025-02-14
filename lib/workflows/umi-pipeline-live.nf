@@ -29,9 +29,11 @@
     final_consensus             = "final"
     n_parsed_cluster            = [:]
     cluster_summary_output_path = "${params.output}/cluster_stats/summary_cluster_stats.tsv"
-    def test = new File (".nextflow/cache/${workflow.sessionId}/extracted_fastq_cache_dir")
-    test.mkdir()
-    extracted_fastq_cache_dir = file( test )
+    def extracted_fastq_cache_dir = new File (".nextflow/cache/${workflow.sessionId}/extracted_fastq_cache_dir")
+    extracted_fastq_cache_dir.mkdir()
+    extracted_fastq_cache_dir_nf = file( extracted_fastq_cache_dir )
+
+
 
 
     ////////////////////
@@ -107,7 +109,7 @@
             .set{ split_reads_filtered }
 
             // DETECT_UMI_FASTQ( split_reads_filtered, raw, umi_extract )
-            DETECT_UMI_FASTQ( split_reads_filtered, extracted_fastq_cache_dir, raw, umi_extract )
+            DETECT_UMI_FASTQ( split_reads_filtered, extracted_fastq_cache_dir_nf, raw, umi_extract )
         
 
             CLUSTER_LIVE( DETECT_UMI_FASTQ.out.umi_extract_fastq, raw )
@@ -137,23 +139,6 @@
                     tuple(sample, type, fastqs[0])
                 }
                 .set { smolecule_cluster_fastqs_list }
-
-/*            Channel
-                .watchPath("${params.output}/CONTINUE")
-                .flatMap { 
-                        // The CONTINUE file is present now – list all matching smolecule files
-                        Channel.fromPath("${params.output}//clustering/raw/smolecule*")
-                }
-                .view()
-                .map{ 
-                    smolecule -> 
-                    def barcode = smolecule.parent.parent.parent.name
-                    tuple(barcode, smolecule)
-                }
-                .groupTuple()
-                .set{ smolecule_cluster_fastqs_list }
-
-*/
 
             GLUE_CLUSTERS(smolecule_cluster_fastqs_list)
                 .map{ sample, type, clusters -> tuple(sample, type, clusters instanceof List ? clusters : [clusters]) }
