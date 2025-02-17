@@ -3,7 +3,7 @@ process SUMMARY_CLUSTER_STATS {
     publishDir "${params.output}/cluster_stats/", mode: 'copy'  
     
     input:
-    tuple val(sample), val(type), path(smolecule_cluster_stats)  // Input tuple from the pipeline
+    tuple val(sample), val(type), path(smolecule_cluster_stats)
     path umi_cluster_stats_summary
 
     output:
@@ -13,8 +13,6 @@ process SUMMARY_CLUSTER_STATS {
     script:
     def current_summary = "${launchDir}/${params.output}/cluster_stats/summary_cluster_stats.tsv"
     """
-    echo ${task.index}
-
     python ${umi_cluster_stats_summary} \
         --cluster-stat ${smolecule_cluster_stats} \
         --sample ${sample} \

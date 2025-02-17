@@ -1,7 +1,7 @@
 consensus_fasta="consensus.fasta"
 vsearch_dir="vsearch_clusters"
 
-process CLUSTER {
+process CLUSTER_CONSENSUS {
     publishDir "${params.output}/${sample}/clustering/${type}", pattern: "${consensus_fasta}", mode: 'copy'
     publishDir "${params.output}/${sample}/clustering/${type}", pattern: "cluster*", mode: 'copy'
     

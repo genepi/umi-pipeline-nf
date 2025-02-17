@@ -11,7 +11,7 @@ process REFORMAT_FILTER_CLUSTER {
 
     output:
         tuple val( "${sample}" ), val( "${target}" ), path( "smolecule*"), val(task.index), optional: true, emit: smolecule_cluster_fastqs
-        tuple val( sample ), val ( target ), path( "*.tsv" ), optional: true, emit: smolecule_cluster_stats
+        tuple val( "${sample}" ), val ( "${target}" ), path( "*.tsv" ), optional: true, emit: smolecule_cluster_stats
         tuple val( "${sample}" ), val( "${target}" ), path( "cluster*"), optional: true
 
     script:

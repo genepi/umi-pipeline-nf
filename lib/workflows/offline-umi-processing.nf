@@ -1,16 +1,14 @@
-include {MERGE_FASTQ} from '../../processes/merge_input.nf'
-include {SUBSAMPLING} from '../../processes/subsampling.nf'
-include {MAP_READS} from '../../processes/map_reads.nf'
-include {SPLIT_READS} from  '../../processes/split_reads.nf'
-include {DETECT_UMI_CONSENSUS_FASTQ as DETECT_UMI_FASTQ} from '../../processes/detect_umi_consensus_fastq.nf'
-include {CLUSTER_LIVE as CLUSTER} from '../../processes/cluster_live.nf'
-//include {CLUSTER} from '../../processes/cluster.nf'
-include {REFORMAT_FILTER_CLUSTER} from '../../processes/reformat_filter_cluster.nf'
+include {MERGE_FASTQ} from '../processes/umi_processing/merge_input.nf'
+include {SUBSAMPLING} from '../processes/umi_processing/subsampling.nf'
+include {MAP_READS} from '../processes/map_reads.nf'
+include {SPLIT_READS} from  '../processes/umi_processing/split_reads.nf'
+include {DETECT_UMI_CONSENSUS_FASTQ as DETECT_UMI_FASTQ} from '../processes/umi_polishing/detect_umi_consensus_fastq.nf'
+include {CLUSTER} from '../processes/umi_processing/cluster.nf'
+include {REFORMAT_FILTER_CLUSTER} from '../processes/umi_processing/reformat_filter_cluster.nf'
 
 workflow OFFLINE_UMI_PROCESSING {
 
     take:
-        existing_fastqs
         raw
         reference
         umi_filter_reads
@@ -19,28 +17,32 @@ workflow OFFLINE_UMI_PROCESSING {
         bed
 
     main:       
-        existing_fastqs
-        .map{ 
-            fastq -> 
-            def barcode = fastq.parent.name
-            tuple(barcode, fastq)
-            }
-        .set{ existing_fastqs_annotated }
+        Channel
+            .fromPath("${params.input}/barcode*", type: 'dir')
+            .map{ 
+                fastqs -> 
+                def barcode = fastqs.name
+                tuple(barcode, fastqs)
+                }
+            .set{ existing_fastqs }
 
         if( params.subsampling ){
-            MERGE_FASTQ( existing_fastqs_annotated )
+            MERGE_FASTQ( existing_fastqs )
             SUBSAMPLING( MERGE_FASTQ.out.merged_fastq )
-            .set { merged_fastq }
+            
+            SUBSAMPLING.out.subsampled_fastq
+            .set { input_fastqs }
         } else {
-            MERGE_FASTQ( existing_fastqs_annotated )
-            .set { merged_fastq }
+            MERGE_FASTQ( existing_fastqs )
+            .set { input_fastqs }
         }
 
-        merged_fastq
+        input_fastqs
+            .filter{ _sample, _target, fastq -> fastq.countFastq() > params.min_reads_per_barcode }
             .splitFastq( by: params.chunk_size , file: true)
-            .set{ input_fastqs }
+            .set{ chunked_input_fastqs }
 
-        MAP_READS( input_fastqs, raw, reference )
+        MAP_READS( chunked_input_fastqs, raw, reference )
         SPLIT_READS( MAP_READS.out.bam_consensus, bed, raw, umi_filter_reads )
 
         SPLIT_READS.out.split_reads_fastx
@@ -64,8 +66,6 @@ workflow OFFLINE_UMI_PROCESSING {
             .set{ cluster_fastas }
 
         REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters )
-
-        REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs.view() 
 
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
         .filter{ _sample, _type, fastqs, _task_index -> fastqs instanceof List}            

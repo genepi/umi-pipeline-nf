@@ -4,7 +4,7 @@ include { LIVE_UMI_PROCESSING       } from './live-umi-processing.nf'
 include { OFFLINE_UMI_PROCESSING    } from './offline-umi-processing.nf'
 include { UMI_POLISHING             } from './umi-polishing.nf'
 include { VARIANT_CALLING           } from './variant_calling.nf'
-include { COPY_BED                  } from '../../processes/copy_bed.nf'
+include { COPY_BED                  } from '../processes/copy_bed.nf'
 
 workflow UMI_PIPELINE {
 
@@ -50,13 +50,8 @@ workflow UMI_PIPELINE {
         COPY_BED.out.bed
             .set{ bed_ch }
 
-        Channel
-            .fromPath("${params.input}/barcode*/*.fastq")
-            .set{ existing_fastqs }
-
         if ( params.live ){        
             LIVE_UMI_PROCESSING(
-                existing_fastqs,
                 raw,
                 reference,
                 umi_filter_reads,
@@ -73,7 +68,6 @@ workflow UMI_PIPELINE {
 
         } else {            
             OFFLINE_UMI_PROCESSING(
-                existing_fastqs,
                 raw,
                 reference,
                 umi_filter_reads,

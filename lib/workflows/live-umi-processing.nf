@@ -1,17 +1,14 @@
 nextflow.enable.dsl = 2
 
-include {COPY_BED} from '../../processes/copy_bed.nf'
-include {CONTINUE_PIPELINE} from '../../processes/continue_pipeline.nf'
-include {MERGE_FASTQ} from '../../processes/merge_input.nf'
-include {MERGE_CONSENSUS_FASTQ} from '../../processes/merge_consensus_fastq.nf'
-include {MAP_READS} from '../../processes/map_reads.nf'
-include {SPLIT_READS} from  '../../processes/split_reads.nf'
-include {DETECT_UMI_FASTQ} from '../../processes/detect_umi_fastq.nf'
-include {CLUSTER as CLUSTER_CONSENSUS} from '../../processes/cluster.nf'
-include {CLUSTER_LIVE} from '../../processes/cluster_live.nf'
-include {REFORMAT_FILTER_CLUSTER} from '../../processes/reformat_filter_cluster.nf'
-include {CLUSTER_STATS_LIVE} from '../../processes/cluster_stats_live.nf'
-include {SUMMARY_CLUSTER_STATS} from '../../processes/summary_cluster_stats.nf'
+include {CONTINUE_PIPELINE} from '../processes/umi_processing/continue_pipeline.nf'
+include {MERGE_FASTQ} from '../processes/umi_processing/merge_input.nf'
+include {MAP_READS} from '../processes/map_reads.nf'
+include {SPLIT_READS} from  '../processes/umi_processing/split_reads.nf'
+include {DETECT_UMI_FASTQ} from '../processes/umi_processing/detect_umi_fastq.nf'
+include {CLUSTER} from '../processes/umi_processing/cluster.nf'
+include {REFORMAT_FILTER_CLUSTER} from '../processes/umi_processing/reformat_filter_cluster.nf'
+include {CLUSTER_STATS_LIVE} from '../processes/umi_processing/cluster_stats_live.nf'
+include {SUMMARY_CLUSTER_STATS} from '../processes/umi_processing/summary_cluster_stats.nf'
 
 // ----------------------------------------------------------------------------
 // Subworkflow 1: live_feedback
@@ -43,7 +40,6 @@ workflow LIVE_UMI_PROCESSING {
     main:
        println("We are live!")
 
-
         Channel
             .watchPath("${params.output}/CONTINUE")
             .take(1)
@@ -51,6 +47,15 @@ workflow LIVE_UMI_PROCESSING {
 
         CONTINUE_PIPELINE( continue_ch )
 
+        Channel
+            .fromPath("${params.input}/barcode*/*.fastq")
+            .map{ 
+                fastq -> 
+                def barcode = fastq.parent.name
+                tuple(barcode, fastq)
+                }
+            .set{ existing_fastqs }
+        
         Channel
             .watchPath("${params.input}/barcode*/*.fastq", 'create, modify')
             .until { it.getFileName().toString().toLowerCase().contains("continue") } 
@@ -64,25 +69,22 @@ workflow LIVE_UMI_PROCESSING {
                 tuple(barcode, fastq)
                 }
             .splitFastq( by: params.chunk_size , file: true)
-            .set{ input_fastqs }
+            .set{ chunked_input_fastqs }
 
                 
-        MERGE_FASTQ( input_fastqs )
-        .set { merged_fastq }
-
-        MAP_READS( merged_fastq, raw, reference )
+        MERGE_FASTQ( chunked_input_fastqs )
+        MAP_READS( MERGE_FASTQ.out.merged_fastq, raw, reference )
         SPLIT_READS( MAP_READS.out.bam_consensus, bed, raw, umi_filter_reads )
 
         SPLIT_READS.out.split_reads_fastx
         .filter{ _sample, _target, fastq -> fastq.countFastq() > 0 }
         .set{ split_reads_filtered }
 
-        // DETECT_UMI_FASTQ( split_reads_filtered, raw, umi_extract )
         DETECT_UMI_FASTQ( split_reads_filtered, extracted_fastq_cache_dir_nf, raw, umi_extract )
 
-        CLUSTER_LIVE( DETECT_UMI_FASTQ.out.umi_extract_fastq, raw )
+        CLUSTER( DETECT_UMI_FASTQ.out.umi_extract_fastq, raw )
 
-        CLUSTER_LIVE.out.cluster_fastas
+        CLUSTER.out.cluster_fastas
             .map { barcode, target, clusters -> 
                 def filtered_clusters = clusters.findAll { fasta -> fasta.countFasta() > params.min_reads_per_cluster }
                 filtered_clusters ? [barcode, target, filtered_clusters] : null
@@ -92,7 +94,6 @@ workflow LIVE_UMI_PROCESSING {
         
         REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters )
 
-        // Launch the reporting process for each sample
         CLUSTER_STATS_LIVE( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, umi_cluster_report )
         SUMMARY_CLUSTER_STATS( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, umi_cluster_stats_summary)
 

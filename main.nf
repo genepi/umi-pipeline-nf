@@ -38,23 +38,29 @@ if(params.help){
               --variant_caller [STR]          [REQUIRED if call_variants is set] Variant caller [lofreq | mutserve | freebayes ]
 
            Options: ADVANCED
+              --chunk_size                    Number of reads per file for processing [default: 20000]
               --min_reads_per_barcode         Minimal number of fastq reads for each barcode [default: 1000]
               --umi_errors                    Max differences between extracted UMIs of the read and UMI pattern [default: 3]
+              --max_dist_umi                  Maximum allowed distance for UMI merging [default: 2]
               --min_reads_per_cluster         Min number of raw reads required for a consensus read [default: 20]
               --max_reads_per_cluster         Max number of raw reads used for a consensus read [default: 60]
-              --filter_strategy_clusters      Filtering strategy for clusters with more than max_reads_per_cluster reads [random | quality] [default: quality]
+              --clusters_per_polishing_file   Maximum number of clusters per polishing file [default: 100]
+              --min_consensus_quality         Minimum quality score for consensus reads [default: 40]
+              --masking_strategy              Strategy for masking low-quality bases [default: softmask]
+              --filter_strategy_clusters      Filtering strategy for clusters exceeding max_reads_per_cluster [random | quality] [default: quality]
               --output_format                 Output format until the cluster filtering step [fasta | fastq] [default: fastq]
               --write_reports                 Write stats of cluster and cluster filtering [default: true]
-              --min_overlap                   Min overlap with target region [default: 0.90]
+              --min_overlap                   Minimum overlap with target region [default: 0.95]
+              --include_secondary_reads       Include secondary reads in the analysis [default: false]
               --balance_strands               Balance forward and reverse raw reads in clusters [default: true]
               --medaka_model                  Medaka model used to compute consensus reads [default: "r1041_e82_400bps_hac_g615"]
-              --fwd_umi                       Forward UMI (Ftail...UMI...primer) [default: "TTTVVVVTTVVVVTTVVVVTTVVVVTTT"]
-              --rev_umi                       Reverse UMI (Rtail...UMI...primer) [default: "AAABBBBAABBBBAABBBBAABBBBAAA"]
+              --fwd_umi                       Forward UMI sequence pattern [default: "TTTVVVVTTVVVVTTVVVVTTVVVVTTT"]
+              --rev_umi                       Reverse UMI sequence pattern [default: "AAABBBBAABBBBAABBBBAABBBBAAA"]
+              --adapter_length                Adapter trimming length [default: 100]
               --min_length                    Minimum combined UMI length [default: 40]
               --max_length                    Maximum combined UMI length [default: 60]
-              --minimap2_param                 Set the parameters for minimap2 [default: "-ax map-ont -k 13"]
-             --include_secondary_reads       Include secondary reads in the analysis [default: false]
-
+              --minimap2_param                Parameters for minimap2 aligner [default: "-ax map-ont -k 13 --MD"]
+              --threads                       Number of CPU threads to use [default: availableProcessors -1]
 
          Options: ADDITIONAL
               --help                          Display this help information and exit
@@ -62,8 +68,8 @@ if(params.help){
               --debug                         Run the pipeline in debug mode    
 
          Example: 
-              nextflow run AmstlerStephan/umi-pipeline-nf -r main -profile test,docker
-              nextflow run AmstlerStephan/umi-pipeline-nf -r main -c <custom.config> -profile docker 
+              nextflow run genepi/umi-pipeline-nf -r v0.2.1 -profile test,docker
+              nextflow run genepi/umi-pipeline-nf -r v0.2.1 -c <custom.config> -profile docker 
 
     """
     ["bash", "${baseDir}/bin/clean.sh", "${workflow.sessionId}"].execute()
@@ -105,18 +111,8 @@ log.info "         RUN NAME: ${workflow.runName}"
 log.info ""
 
 
-include { UMI_PIPELINE } from './lib/workflows/subworkflows/umi-pipeline.nf'
-// include { UMI_PIPELINE } from './lib/workflows/_umi-pipeline.nf'
-// include { UMI_PIPELINE_LIVE } from './lib/workflows/umi-pipeline-live.nf'
+include { UMI_PIPELINE } from './lib/workflows/umi-pipeline.nf'
 
 workflow {
      UMI_PIPELINE()
-
-/*
-     if ( params.live ){
-          UMI_PIPELINE_LIVE()
-     }else {
-          UMI_PIPELINE()
-     }
-*/
 }
