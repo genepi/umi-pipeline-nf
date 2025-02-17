@@ -18,18 +18,18 @@ workflow OFFLINE_UMI_PROCESSING {
 
     main:       
         Channel
-            .fromPath("${params.input}/barcode*", type: 'dir')
+            .fromPath("${params.input}/barcode*/*.fastq")
             .map{ 
                 fastqs -> 
-                def barcode = fastqs.name
+                def barcode = fastqs.parent.name
                 tuple(barcode, fastqs)
                 }
+            .groupTuple( by: 0 ) 
             .set{ existing_fastqs }
 
         if( params.subsampling ){
             MERGE_FASTQ( existing_fastqs )
             SUBSAMPLING( MERGE_FASTQ.out.merged_fastq )
-            
             SUBSAMPLING.out.subsampled_fastq
             .set { input_fastqs }
         } else {
@@ -38,7 +38,6 @@ workflow OFFLINE_UMI_PROCESSING {
         }
 
         input_fastqs
-            .filter{ _sample, _target, fastq -> fastq.countFastq() > params.min_reads_per_barcode }
             .splitFastq( by: params.chunk_size , file: true)
             .set{ chunked_input_fastqs }
 
@@ -57,9 +56,10 @@ workflow OFFLINE_UMI_PROCESSING {
 
         CLUSTER( extracted_umis, raw )
 
+        // Filters the clusters to only keep cluser with more or equal than min_reads_per_cluster, but keeps the grouping per sample
         CLUSTER.out.cluster_fastas
             .map { barcode, target, clusters -> 
-                def filtered_clusters = clusters.findAll { fasta -> fasta.countFasta() > params.min_reads_per_cluster }
+                def filtered_clusters = clusters.findAll { fasta -> fasta.countFasta() >= params.min_reads_per_cluster }
                 filtered_clusters ? [barcode, target, filtered_clusters] : null
             }
             .filter { it != null }

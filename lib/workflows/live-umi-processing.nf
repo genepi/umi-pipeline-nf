@@ -49,11 +49,6 @@ workflow LIVE_UMI_PROCESSING {
 
         Channel
             .fromPath("${params.input}/barcode*/*.fastq")
-            .map{ 
-                fastq -> 
-                def barcode = fastq.parent.name
-                tuple(barcode, fastq)
-                }
             .set{ existing_fastqs }
         
         Channel
@@ -84,9 +79,10 @@ workflow LIVE_UMI_PROCESSING {
 
         CLUSTER( DETECT_UMI_FASTQ.out.umi_extract_fastq, raw )
 
+        // Filters the clusters to only keep cluser with more or equal than min_reads_per_cluster, but keeps the grouping per sample
         CLUSTER.out.cluster_fastas
             .map { barcode, target, clusters -> 
-                def filtered_clusters = clusters.findAll { fasta -> fasta.countFasta() > params.min_reads_per_cluster }
+                def filtered_clusters = clusters.findAll { fasta -> fasta.countFasta() >= params.min_reads_per_cluster }
                 filtered_clusters ? [barcode, target, filtered_clusters] : null
             }
             .filter { it != null }
