@@ -25,7 +25,6 @@ workflow LIVE_UMI_PROCESSING {
         4. Launch cluster stats and summary processes to provide live feedback.
     */
     take:
-        existing_fastqs
         raw
         reference
         umi_filter_reads
