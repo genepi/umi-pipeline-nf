@@ -9,6 +9,7 @@ process POLISH_CLUSTER {
 
     output:
         tuple val( "${sample}" ), val( "${target}" ), path( "${smolecule_clusters_fastq.baseName}_consensus.fastq" ), emit: consensus_fastq
+        path( "smolecule.log" )
 
     script:
     """

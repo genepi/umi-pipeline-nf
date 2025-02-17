@@ -8,7 +8,7 @@ process DETECT_UMI_CONSENSUS_FASTQ {
         path umi_extract_python
     
     output:
-        tuple val( "${sample}" ), val( "${fastq.baseName}" ), path ( "*${params.output_format}" ), emit: umi_extract_fastq
+        tuple val( "${sample}" ), val( "${target}" ), path ( "*${params.output_format}" ), emit: umi_extract_fastq
         path "*.tsv"
 
     script:

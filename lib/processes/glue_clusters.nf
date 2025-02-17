@@ -13,7 +13,7 @@ process GLUE_CLUSTERS {
     #!/bin/bash
     set -euo pipefail
 
-    clusters_per_file=${params.clusters_per_sample}
+    clusters_per_file=${params.clusters_per_polishing_file}
 
     # Initialize file and cluster counters.
     file_index=1

@@ -143,6 +143,7 @@ workflow UMI_PIPELINE_LIVE {
         GLUE_CLUSTERS(smolecule_cluster_fastqs_list)
             .map{ sample, type, clusters -> tuple(sample, type, clusters instanceof List ? clusters : [clusters]) }
             .set{ glued_clusters }
+        
         glued_clusters
         .map{ sample, _type, clusters -> n_parsed_cluster.put("$sample", clusters.size)}
         

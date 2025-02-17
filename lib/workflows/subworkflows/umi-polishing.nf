@@ -1,3 +1,14 @@
+include {GLUE_CLUSTERS} from '../../processes/glue_clusters.nf'
+include {POLISH_CLUSTER} from '../../processes/polish_cluster.nf'
+include {MERGE_CONSENSUS_FASTQ} from '../../processes/merge_consensus_fastq.nf'
+include {FILTER_CONSENSUS_FASTQ} from '../../processes/filter_consensus_fastq.nf'
+include {REFORMAT_CONSENSUS_CLUSTER} from '../../processes/reformat_consensus_cluster.nf'
+include {MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS} from '../../processes/map_reads.nf'
+include {SPLIT_READS} from  '../../processes/split_reads.nf'
+include {DETECT_UMI_CONSENSUS_FASTQ} from '../../processes/detect_umi_consensus_fastq.nf'
+include {CLUSTER as CLUSTER_CONSENSUS} from '../../processes/cluster.nf'
+
+
 // ----------------------------------------------------------------------------
 // Subworkflow 2: auto_finish
 // This subworkflow receives the output of the live_feedback phase and then
@@ -6,12 +17,19 @@
 // ----------------------------------------------------------------------------
 workflow UMI_POLISHING {
     take:
-        smolecule_cluster_fastqs_list
+        processed_umis
+        n_parsed_cluster
+        consensus
+        final_consensus
+        reference
+        umi_extract
+        umi_reformat_consensus
 
     main:
-         GLUE_CLUSTERS(smolecule_cluster_fastqs_list)
+         GLUE_CLUSTERS(processed_umis)
             .map{ sample, type, clusters -> tuple(sample, type, clusters instanceof List ? clusters : [clusters]) }
             .set{ glued_clusters }
+        
         glued_clusters
         .map{ sample, _type, clusters -> n_parsed_cluster.put("$sample", clusters.size)}
         
@@ -43,24 +61,10 @@ workflow UMI_POLISHING {
         REFORMAT_CONSENSUS_CLUSTER( CLUSTER_CONSENSUS.out.consensus_fasta, final_consensus, umi_reformat_consensus )
         MAP_FINAL_CONSENSUS( REFORMAT_CONSENSUS_CLUSTER.out.consensus_fastq, final_consensus, reference )
         
-        if( params.call_variants ){
-            if( params.variant_caller == "lofreq" ){
-                LOFREQ_CONSENSUS( MAP_CONSENSUS.out.bam_consensus, consensus, reference, reference_fai )
-                LOFREQ_FINAL_CONSENSUS( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
-            }else if( params.variant_caller == "mutserve"){
-                MUTSERVE_CONSENSUS( MAP_CONSENSUS.out.bam_consensus, consensus, COPY_BED.out.bed, reference, reference_fai )
-                MUTSERVE_FINAL_CONSENSUS( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, COPY_BED.out.bed, reference, reference_fai )
-            }else if( params.variant_caller == "freebayes"){
-                FREEBAYES_CONSENSUS( MAP_CONSENSUS.out.bam_consensus, consensus, reference, reference_fai )
-                FREEBAYES_FINAL_CONSENSUS( MAP_FINAL_CONSENSUS.out.bam_consensus, final_consensus, reference, reference_fai )
-            }else{
-                exit 1, "${params.variant_caller} is not a valid option. \nPossible variant caller are <lofreq/mutserve/freebayes>"
-            
-            }
-        }  
+
 
     emit: 
-        MAP_CONSENSUS.out.bam_consensus
-        MAP_FINAL_CONSENSUS.out.bam_consensus
+        consensus_bam = MAP_CONSENSUS.out.bam_consensus
+        final_consensus_bam = MAP_FINAL_CONSENSUS.out.bam_consensus
 
 }

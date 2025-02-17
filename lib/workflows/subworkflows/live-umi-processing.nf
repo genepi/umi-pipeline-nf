@@ -27,11 +27,22 @@ workflow LIVE_UMI_PROCESSING {
         3. Run live clustering and reformat/filter clusters.
         4. Launch cluster stats and summary processes to provide live feedback.
     */
+    take:
+        existing_fastqs
+        raw
+        reference
+        umi_filter_reads
+        extracted_fastq_cache_dir_nf
+        umi_extract
+        umi_parse_clusters
+        umi_cluster_report
+        umi_cluster_stats_summary
+        bed
+
 
     main:
        println("We are live!")
 
-        COPY_BED( bed )
 
         Channel
             .watchPath("${params.output}/CONTINUE")
@@ -39,32 +50,28 @@ workflow LIVE_UMI_PROCESSING {
             .set{ continue_ch }
 
         CONTINUE_PIPELINE( continue_ch )
-        
 
         Channel
-        .fromPath("${params.input}/barcode*/*.fastq")
-        .set{ existing_files_ch }
+            .watchPath("${params.input}/barcode*/*.fastq", 'create, modify')
+            .until { it.getFileName().toString().toLowerCase().contains("continue") } 
+            .set { watched_fastqs }
+            
+        existing_fastqs
+            .concat( watched_fastqs )
+            .map{ 
+                fastq -> 
+                def barcode = fastq.parent.name
+                tuple(barcode, fastq)
+                }
+            .splitFastq( by: params.chunk_size , file: true)
+            .set{ input_fastqs }
 
-        Channel
-        .watchPath("${params.input}/barcode*/*.fastq", 'create, modify')
-        .until { it.getFileName().toString().toLowerCase().contains("continue") } 
-        .set { watched_files_ch }
-
-        existing_files_ch
-        .concat( watched_files_ch )
-        .map{ 
-            fastq -> 
-            def barcode = fastq.parent.name
-            tuple(barcode, fastq)
-            }
-        .splitFastq( by: params.chunk_size , file: true)
-        .set{ ch_input_files }
-        
-        MERGE_FASTQ( ch_input_files )
+                
+        MERGE_FASTQ( input_fastqs )
         .set { merged_fastq }
 
         MAP_READS( merged_fastq, raw, reference )
-        SPLIT_READS( MAP_READS.out.bam_consensus, COPY_BED.out.bed, raw, umi_filter_reads )
+        SPLIT_READS( MAP_READS.out.bam_consensus, bed, raw, umi_filter_reads )
 
         SPLIT_READS.out.split_reads_fastx
         .filter{ _sample, _target, fastq -> fastq.countFastq() > 0 }
@@ -72,7 +79,6 @@ workflow LIVE_UMI_PROCESSING {
 
         // DETECT_UMI_FASTQ( split_reads_filtered, raw, umi_extract )
         DETECT_UMI_FASTQ( split_reads_filtered, extracted_fastq_cache_dir_nf, raw, umi_extract )
-    
 
         CLUSTER_LIVE( DETECT_UMI_FASTQ.out.umi_extract_fastq, raw )
 
@@ -100,10 +106,9 @@ workflow LIVE_UMI_PROCESSING {
             .map { sample, type, fastqs, _task_index ->
                 tuple(sample, type, fastqs[0])
             }
-            .set { smolecule_cluster_fastqs_list }
+            .set { processed_umis }
 
     emit:
-    // Emit the reformatted cluster FASTQs and the continue channel
-    smolecule_cluster_fastqs_list
+        processed_umis
 
 }

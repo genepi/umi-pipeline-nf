@@ -105,13 +105,18 @@ log.info "         RUN NAME: ${workflow.runName}"
 log.info ""
 
 
-include { UMI_PIPELINE } from './lib/workflows/umi-pipeline.nf'
-include { UMI_PIPELINE_LIVE } from './lib/workflows/umi-pipeline-live.nf'
+include { UMI_PIPELINE } from './lib/workflows/subworkflows/umi-pipeline.nf'
+// include { UMI_PIPELINE } from './lib/workflows/_umi-pipeline.nf'
+// include { UMI_PIPELINE_LIVE } from './lib/workflows/umi-pipeline-live.nf'
 
 workflow {
+     UMI_PIPELINE()
+
+/*
      if ( params.live ){
           UMI_PIPELINE_LIVE()
      }else {
           UMI_PIPELINE()
      }
+*/
 }
