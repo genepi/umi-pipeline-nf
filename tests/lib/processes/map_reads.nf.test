@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process MAP_READS"
-    script "lib/processes/map_reads.nf"
+    script "modules/local/map_reads.nf"
     process "MAP_READS"
 
     test("Maps raw reads and should run with success") {
