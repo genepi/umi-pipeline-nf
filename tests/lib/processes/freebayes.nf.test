@@ -26,7 +26,7 @@ nextflow_process {
         then {
             assert process.success
             with(process.out.variants){
-                assert path(get(0)).vcf.summary == path("$baseDir/tests/validation/freebayes/barcode03/final.vcf").vcf.summary
+                assert path(get(0).get(1)).vcf.summary == path("$baseDir/tests/validation/freebayes/${get(0).get(0)}/final.vcf").vcf.summary
             }
         }
     }

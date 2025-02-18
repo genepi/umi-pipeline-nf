@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process LOFREQ"
-    script "lib/processes/lofreq.nf"
+    script "modules/local/variant_calling/lofreq.nf"
     process "LOFREQ"
 
     test("Should run without failures") {
@@ -23,7 +23,9 @@ nextflow_process {
 
         then {
             assert process.success
-            assert snapshot(process.out).match()
+            with(process.out.variants){
+                assert path(get(0).get(1)).vcf.summary == path("$baseDir/tests/validation/lofreq/${get(0).get(0)}/final.vcf").vcf.summary
+            }
         }
     }
 
@@ -50,7 +52,11 @@ nextflow_process {
 
         then {
             assert process.success
-            assert snapshot(process.out).match()
+            with(process.out.variants){
+                assert path(get(0).get(1)).vcf.summary == path("$baseDir/tests/validation/lofreq/${get(0).get(0)}/final.vcf").vcf.summary
+                assert path(get(1).get(1)).vcf.summary == path("$baseDir/tests/validation/lofreq/${get(1).get(0)}/final.vcf").vcf.summary
+                assert path(get(2).get(1)).vcf.summary == path("$baseDir/tests/validation/lofreq/${get(2).get(0)}/final.vcf").vcf.summary
+            }
         }
 
     }
