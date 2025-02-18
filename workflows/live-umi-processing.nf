@@ -1,14 +1,14 @@
 nextflow.enable.dsl = 2
 
-include {CONTINUE_PIPELINE} from '../processes/umi_processing/continue_pipeline.nf'
-include {MERGE_FASTQ} from '../processes/umi_processing/merge_input.nf'
-include {MAP_READS} from '../processes/map_reads.nf'
-include {SPLIT_READS} from  '../processes/umi_processing/split_reads.nf'
-include {DETECT_UMI_FASTQ} from '../processes/umi_processing/detect_umi_fastq.nf'
-include {CLUSTER} from '../processes/umi_processing/cluster.nf'
-include {REFORMAT_FILTER_CLUSTER} from '../processes/umi_processing/reformat_filter_cluster.nf'
-include {CLUSTER_STATS_LIVE} from '../processes/umi_processing/cluster_stats_live.nf'
-include {SUMMARY_CLUSTER_STATS} from '../processes/umi_processing/summary_cluster_stats.nf'
+include {CONTINUE_PIPELINE} from '../modules/local/umi_processing/continue_pipeline.nf'
+include {MERGE_FASTQ} from '../modules/local/umi_processing/merge_input.nf'
+include {MAP_READS} from '../modules/local/map_reads.nf'
+include {SPLIT_READS} from  '../modules/local/umi_processing/split_reads.nf'
+include {DETECT_UMI_FASTQ} from '../modules/local/umi_processing/detect_umi_fastq.nf'
+include {CLUSTER} from '../modules/local/umi_processing/cluster.nf'
+include {REFORMAT_FILTER_CLUSTER} from '../modules/local/umi_processing/reformat_filter_cluster.nf'
+include {CLUSTER_STATS_LIVE} from '../modules/local/umi_processing/cluster_stats_live.nf'
+include {SUMMARY_CLUSTER_STATS} from '../modules/local/umi_processing/summary_cluster_stats.nf'
 
 // ----------------------------------------------------------------------------
 // Subworkflow 1: live_feedback

@@ -14,8 +14,13 @@ workflow {
           exit 0
      }
 
+     if (params.version) {
+          log.info WorkflowMain.version(workflow)
+          exit 0
+     }
+
      // Validate input parameters
-     if (params.validate_params) {
+     if (params.validate_params & !params.version) {
           validateParameters()
      }
 
@@ -25,3 +30,6 @@ workflow {
      // Run the workflow
      UMI_PIPELINE()
 }
+
+workflow.onError { log.info "Oops... Pipeline execution stopped with the following message: ${workflow.errorMessage}" }
+workflow.onComplete { WorkflowMain.onComplete(workflow, baseDir) }

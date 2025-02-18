@@ -1,6 +1,6 @@
-include {LOFREQ as LOFREQ_CONSENSUS; LOFREQ as LOFREQ_FINAL_CONSENSUS} from '../processes/variant_calling/lofreq.nf'
-include {MUTSERVE as MUTSERVE_CONSENSUS; MUTSERVE as MUTSERVE_FINAL_CONSENSUS} from '../processes/variant_calling/mutserve.nf'
-include {FREEBAYES as FREEBAYES_CONSENSUS; FREEBAYES as FREEBAYES_FINAL_CONSENSUS} from '../processes/variant_calling/freebayes.nf'
+include {LOFREQ as LOFREQ_CONSENSUS; LOFREQ as LOFREQ_FINAL_CONSENSUS} from '../modules/local/variant_calling/lofreq.nf'
+include {MUTSERVE as MUTSERVE_CONSENSUS; MUTSERVE as MUTSERVE_FINAL_CONSENSUS} from '../modules/local/variant_calling/mutserve.nf'
+include {FREEBAYES as FREEBAYES_CONSENSUS; FREEBAYES as FREEBAYES_FINAL_CONSENSUS} from '../modules/local/variant_calling/freebayes.nf'
 
 workflow VARIANT_CALLING {
     take:

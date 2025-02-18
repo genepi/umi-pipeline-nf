@@ -4,23 +4,15 @@ include { LIVE_UMI_PROCESSING       } from './live-umi-processing.nf'
 include { OFFLINE_UMI_PROCESSING    } from './offline-umi-processing.nf'
 include { UMI_POLISHING             } from './umi-polishing.nf'
 include { VARIANT_CALLING           } from './variant_calling.nf'
-include { COPY_BED                  } from '../processes/copy_bed.nf'
+include { COPY_BED                  } from '../modules/local/copy_bed.nf'
 
 workflow UMI_PIPELINE {
 
     main:
 
-        requiredParams = [
-            'input', 'reference', 'reference_fai', 'bed', 'output'
-        ]
-
-        requiredParams.each {
-            param ->
-            if (params[param] == null) {
-            exit 1, "Parameter ${param} is required."
-            }
-        }
-
+        //validate input parameters
+        WorkflowMain.validate(params)
+        
         // file paths
         bed                         = file("${params.bed}", checkIfExists: true)
         reference                   = file("${params.reference}", checkIfExists: true)

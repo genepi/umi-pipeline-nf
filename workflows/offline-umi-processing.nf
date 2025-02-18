@@ -1,10 +1,10 @@
-include {MERGE_FASTQ} from '../processes/umi_processing/merge_input.nf'
-include {SUBSAMPLING} from '../processes/umi_processing/subsampling.nf'
-include {MAP_READS} from '../processes/map_reads.nf'
-include {SPLIT_READS} from  '../processes/umi_processing/split_reads.nf'
-include {DETECT_UMI_CONSENSUS_FASTQ as DETECT_UMI_FASTQ} from '../processes/umi_polishing/detect_umi_consensus_fastq.nf'
-include {CLUSTER} from '../processes/umi_processing/cluster.nf'
-include {REFORMAT_FILTER_CLUSTER} from '../processes/umi_processing/reformat_filter_cluster.nf'
+include {MERGE_FASTQ} from '../modules/local/umi_processing/merge_input.nf'
+include {SUBSAMPLING} from '../modules/local/umi_processing/subsampling.nf'
+include {MAP_READS} from '../modules/local/map_reads.nf'
+include {SPLIT_READS} from  '../modules/local/umi_processing/split_reads.nf'
+include {DETECT_UMI_CONSENSUS_FASTQ as DETECT_UMI_FASTQ} from '../modules/local/umi_polishing/detect_umi_consensus_fastq.nf'
+include {CLUSTER} from '../modules/local/umi_processing/cluster.nf'
+include {REFORMAT_FILTER_CLUSTER} from '../modules/local/umi_processing/reformat_filter_cluster.nf'
 
 workflow OFFLINE_UMI_PROCESSING {
 

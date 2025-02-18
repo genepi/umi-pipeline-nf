@@ -1,11 +1,11 @@
-include {GLUE_CLUSTERS} from '../processes/umi_polishing/glue_clusters.nf'
-include {POLISH_CLUSTER} from '../processes/umi_polishing/polish_cluster.nf'
-include {MERGE_CONSENSUS_FASTQ} from '../processes/umi_polishing/merge_consensus_fastq.nf'
-include {FILTER_CONSENSUS_FASTQ} from '../processes/umi_polishing/filter_consensus_fastq.nf'
-include {REFORMAT_CONSENSUS_CLUSTER} from '../processes/umi_polishing/reformat_consensus_cluster.nf'
-include {MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS} from '../processes/map_reads.nf'
-include {DETECT_UMI_CONSENSUS_FASTQ} from '../processes/umi_polishing/detect_umi_consensus_fastq.nf'
-include {CLUSTER_CONSENSUS} from '../processes/umi_polishing/cluster_consensus.nf'
+include {GLUE_CLUSTERS} from '../modules/local/umi_polishing/glue_clusters.nf'
+include {POLISH_CLUSTER} from '../modules/local/umi_polishing/polish_cluster.nf'
+include {MERGE_CONSENSUS_FASTQ} from '../modules/local/umi_polishing/merge_consensus_fastq.nf'
+include {FILTER_CONSENSUS_FASTQ} from '../modules/local/umi_polishing/filter_consensus_fastq.nf'
+include {REFORMAT_CONSENSUS_CLUSTER} from '../modules/local/umi_polishing/reformat_consensus_cluster.nf'
+include {MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS} from '../modules/local/map_reads.nf'
+include {DETECT_UMI_CONSENSUS_FASTQ} from '../modules/local/umi_polishing/detect_umi_consensus_fastq.nf'
+include {CLUSTER_CONSENSUS} from '../modules/local/umi_polishing/cluster_consensus.nf'
 
 
 // ----------------------------------------------------------------------------

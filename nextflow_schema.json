@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://raw.githubusercontent.com/your-repo/nextflow_schema.json",
+  "title": "UMI Pipeline Nextflow Schema",
+  "description": "A Nextflow pipeline to process UMI-tagged nanopore sequencing reads.",
+  "type": "object",
+  "definitions": {
+    "basic_parameters": {
+      "title": "Basic Parameters",
+      "type": "object",
+      "description": "Basic pipeline options.",
+      "properties": {
+        "help": { "type": "boolean", "default": false, "description": "Display help information and exit." },
+        "validate_params": { "type": "boolean", "default": false, "description": "Validate pipeline parameters before execution." },
+      }
+    },
+    "general_options": {
+      "title": "General - Required",
+      "type": "object",
+      "description": "Required parameters to define input and reference data.",
+      "properties": {
+        "input": { "type": "string", "default": null, "description": "Path to the input directory containing FASTQ files." },
+        "output": { "type": "string", "default": null, "description": "Name of the output directory where results will be stored." },
+        "reference": { "type": "string", "default": null, "description": "Path to the reference genome in FASTA format." },
+        "reference_fai": { "type": "string", "default": null, "description": "Path to the reference genome index file." },
+        "bed": { "type": "string", "default": null, "description": "Path to the BED file specifying target regions." }
+      }
+    },
+    "live": {
+      "title": "Live Processing",
+      "type": "object",
+      "description": "Enable live processing mode.",
+      "properties": {
+        "live": { "type": "boolean", "default": false, "description": "Enable live processing of data." }
+      }
+    },
+    "read_filtering": {
+      "title": "Read Filtering",
+      "type": "object",
+      "description": "Filtering options for sequencing reads.",
+      "properties": {
+        "min_read_length": { "type": "integer", "default": 0, "description": "Minimum read length to retain a read." },
+        "min_qscore": { "type": "integer", "default": 0, "description": "Minimum quality score required for a read." }
+      }
+    },
+    "subsampling": {
+      "title": "Subsampling",
+      "type": "object",
+      "description": "Parameters for subsampling reads.",
+      "properties": {
+        "subsampling": { "type": "boolean", "default": false, "description": "Enable read subsampling." },
+        "subsampling_seed": { "type": "integer", "default": 11, "description": "Seed value for reproducibility in subsampling." },
+        "subsampling_readnumber": { "type": "integer", "default": 100000, "description": "Number of reads to retain after subsampling." }
+      }
+    },
+    "variant_calling": {
+      "title": "Variant Calling",
+      "type": "object",
+      "description": "Parameters for variant calling.",
+      "properties": {
+        "call_variants": { "type": "boolean", "default": false, "description": "Enable variant calling." },
+        "variant_caller": { "type": "string", "default": null, "description": "Variant caller to use (e.g., lofreq, mutserve, freebayes)." }
+      }
+    },
+    "advanced": {
+      "title": "Advanced Options",
+      "type": "object",
+      "description": "Advanced settings for pipeline execution.",
+      "properties": {
+        "chunk_size": { "type": "integer", "default": 50000, "description": "Number of reads per file for processing." },
+        "min_reads_per_barcode": { "type": "integer", "default": 1000, "description": "Minimum number of reads per barcode." },
+        "umi_errors": { "type": "integer", "default": 2, "description": "Maximum allowed differences in extracted UMIs." },
+        "max_dist_umi": { "type": "integer", "default": 2, "description": "Maximum distance allowed for UMI merging." },
+        "min_reads_per_cluster": { "type": "integer", "default": 20, "description": "Minimum number of reads required for consensus cluster formation." },
+        "max_reads_per_cluster": { "type": "integer", "default": 60, "description": "Maximum number of reads used for consensus cluster formation." },
+        "clusters_per_polishing_file": { "type": "integer", "default": 100, "description": "Maximum number of clusters per polishing file." },
+        "min_consensus_quality": { "type": "integer", "default": 40, "description": "Minimum quality score for consensus reads." },
+        "masking_strategy": { "type": "string", "default": "softmask", "description": "Strategy for masking low-quality bases." },
+        "filter_strategy_clusters": { "type": "string", "default": "quality", "description": "Filtering strategy for clusters exceeding max_reads_per_cluster." },
+        "output_format": { "type": "string", "default": "fastq", "description": "Output format for cluster filtering step." },
+        "write_reports": { "type": "boolean", "default": true, "description": "Generate reports on cluster statistics." },
+        "min_overlap": { "type": "number", "default": 0.95, "description": "Minimum overlap required with target region." },
+        "include_secondary_reads": { "type": "boolean", "default": false, "description": "Include secondary reads in analysis." },
+        "balance_strands": { "type": "boolean", "default": true, "description": "Balance forward and reverse raw reads in clusters." },
+        "medaka_model": { "type": "string", "default": "r1041_e82_400bps_hac_g615", "description": "Medaka model used for consensus read computation." },
+        "fwd_umi": { "type": "string", "default": "TTTVVVVTTVVVVTTVVVVTTVVVVTTT", "description": "Forward UMI sequence pattern." },
+        "rev_umi": { "type": "string", "default": "AAABBBBAABBBBAABBBBAABBBBAAA", "description": "Reverse UMI sequence pattern." },
+        "adapter_length": { "type": "integer", "default": 100, "description": "Length of adapter trimming." },
+        "min_length": { "type": "integer", "default": 40, "description": "Minimum combined UMI length." },
+        "max_length": { "type": "integer", "default": 60, "description": "Maximum combined UMI length." },
+        "minimap2_param": { "type": "string", "default": "-ax map-ont -k 13 --MD", "description": "Parameters for minimap2 aligner." },
+        "threads": { "type": "integer", "default": "(Runtime.runtime.availableProcessors() - 1)", "description": "Number of CPU threads to use." }
+      }
+    }
+  }
+}
