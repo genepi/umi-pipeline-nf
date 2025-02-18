@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process CLUSTER"
-    script "lib/processes/cluster.nf"
+    script "modules/local/umi_processing/cluster.nf"
     process "CLUSTER"
 
     test("Should run without failures") {
@@ -10,12 +10,12 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of(
-                    ["barcode02", "raw", "$baseDir/tests/input/cluster/barcode02/detected_umis.fastq"],
-                    ["barcode03", "raw", "$baseDir/tests/input/cluster/barcode03/detected_umis.fastq"],
-                    ["barcode04", "raw", "$baseDir/tests/input/cluster/barcode04/detected_umis.fastq"],
-                    ["barcode05", "raw", "$baseDir/tests/input/cluster/barcode05/detected_umis.fastq"],
-                    ["barcode06", "raw", "$baseDir/tests/input/cluster/barcode06/detected_umis.fastq"],
-                    ["barcode07", "raw", "$baseDir/tests/input/cluster/barcode07/detected_umis.fastq"]
+                    ["barcode02", "LPA2645", "$baseDir/tests/input/cluster/barcode02/detected_umis.fastq"],
+                    ["barcode03", "LPA2645", "$baseDir/tests/input/cluster/barcode03/detected_umis.fastq"],
+                    ["barcode04", "LPA2645", "$baseDir/tests/input/cluster/barcode04/detected_umis.fastq"],
+                    ["barcode05", "LPA2645", "$baseDir/tests/input/cluster/barcode05/detected_umis.fastq"],
+                    ["barcode06", "LPA2645", "$baseDir/tests/input/cluster/barcode06/detected_umis.fastq"],
+                    ["barcode07", "LPA2645", "$baseDir/tests/input/cluster/barcode07/detected_umis.fastq"]
                 )
                 input[1] ="raw"
                 """

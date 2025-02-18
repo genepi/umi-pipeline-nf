@@ -5,39 +5,39 @@
                 "0": [
                     [
                         "barcode02",
-                        "raw",
+                        "LPA2645",
                         "consensus.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ],
                     [
                         "barcode03",
-                        "raw",
+                        "LPA2645",
                         "consensus.fasta:md5,f5a74b69f8b7abf39df08abe2e2dcff3"
                     ],
                     [
                         "barcode04",
-                        "raw",
+                        "LPA2645",
                         "consensus.fasta:md5,fe9d4a9c2dd4f828223e678244e92daa"
                     ],
                     [
                         "barcode05",
-                        "raw",
+                        "LPA2645",
                         "consensus.fasta:md5,3a12b22ef0a847e788f5f5b06b3cdf2e"
                     ],
                     [
                         "barcode06",
-                        "raw",
+                        "LPA2645",
                         "consensus.fasta:md5,5e8c13d698ebdd9249f108a1c4c9fa89"
                     ],
                     [
                         "barcode07",
-                        "raw",
+                        "LPA2645",
                         "consensus.fasta:md5,bb7178c56f81dac078a5b7e4454bccda"
                     ]
                 ],
                 "1": [
                     [
                         "barcode03",
-                        "raw",
+                        "LPA2645",
                         [
                             "cluster0:md5,42f6543f76bc455c6fdf672506bec901",
                             "cluster1:md5,2ee339cd08b7e5427f95be618fc07224",
@@ -49,7 +49,7 @@
                     ],
                     [
                         "barcode04",
-                        "raw",
+                        "LPA2645",
                         [
                             "cluster0:md5,43434b02020cd2e41e33d92a10835f97",
                             "cluster1:md5,ddd4dd5d0918df43c48776d7082e9734",
@@ -61,7 +61,7 @@
                     ],
                     [
                         "barcode05",
-                        "raw",
+                        "LPA2645",
                         [
                             "cluster0:md5,42f6543f76bc455c6fdf672506bec901",
                             "cluster1:md5,43434b02020cd2e41e33d92a10835f97",
@@ -79,7 +79,7 @@
                     ],
                     [
                         "barcode06",
-                        "raw",
+                        "LPA2645",
                         [
                             "cluster0:md5,d971a37ec4f6d885ed8f2335945a26c1",
                             "cluster1:md5,a28e976bda0435d3f29c3e5e93523216",
@@ -3779,7 +3779,7 @@
                     ],
                     [
                         "barcode07",
-                        "raw",
+                        "LPA2645",
                         [
                             "cluster0:md5,382d0089dc643a994a56948683b5d01c",
                             "cluster1:md5,4b6af4d575fd3c90b37da9dae438cdbf",
@@ -4558,7 +4558,7 @@
                 "cluster_fastas": [
                     [
                         "barcode03",
-                        "raw",
+                        "LPA2645",
                         [
                             "cluster0:md5,42f6543f76bc455c6fdf672506bec901",
                             "cluster1:md5,2ee339cd08b7e5427f95be618fc07224",
@@ -4570,7 +4570,7 @@
                     ],
                     [
                         "barcode04",
-                        "raw",
+                        "LPA2645",
                         [
                             "cluster0:md5,43434b02020cd2e41e33d92a10835f97",
                             "cluster1:md5,ddd4dd5d0918df43c48776d7082e9734",
@@ -4582,7 +4582,7 @@
                     ],
                     [
                         "barcode05",
-                        "raw",
+                        "LPA2645",
                         [
                             "cluster0:md5,42f6543f76bc455c6fdf672506bec901",
                             "cluster1:md5,43434b02020cd2e41e33d92a10835f97",
@@ -4600,7 +4600,7 @@
                     ],
                     [
                         "barcode06",
-                        "raw",
+                        "LPA2645",
                         [
                             "cluster0:md5,d971a37ec4f6d885ed8f2335945a26c1",
                             "cluster1:md5,a28e976bda0435d3f29c3e5e93523216",
@@ -8300,7 +8300,7 @@
                     ],
                     [
                         "barcode07",
-                        "raw",
+                        "LPA2645",
                         [
                             "cluster0:md5,382d0089dc643a994a56948683b5d01c",
                             "cluster1:md5,4b6af4d575fd3c90b37da9dae438cdbf",
@@ -9079,41 +9079,41 @@
                 "consensus_fasta": [
                     [
                         "barcode02",
-                        "raw",
+                        "LPA2645",
                         "consensus.fasta:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ],
                     [
                         "barcode03",
-                        "raw",
+                        "LPA2645",
                         "consensus.fasta:md5,f5a74b69f8b7abf39df08abe2e2dcff3"
                     ],
                     [
                         "barcode04",
-                        "raw",
+                        "LPA2645",
                         "consensus.fasta:md5,fe9d4a9c2dd4f828223e678244e92daa"
                     ],
                     [
                         "barcode05",
-                        "raw",
+                        "LPA2645",
                         "consensus.fasta:md5,3a12b22ef0a847e788f5f5b06b3cdf2e"
                     ],
                     [
                         "barcode06",
-                        "raw",
+                        "LPA2645",
                         "consensus.fasta:md5,5e8c13d698ebdd9249f108a1c4c9fa89"
                     ],
                     [
                         "barcode07",
-                        "raw",
+                        "LPA2645",
                         "consensus.fasta:md5,bb7178c56f81dac078a5b7e4454bccda"
                     ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-03-15T12:00:01.323725"
+        "timestamp": "2025-02-18T11:46:36.573058"
     }
 }
