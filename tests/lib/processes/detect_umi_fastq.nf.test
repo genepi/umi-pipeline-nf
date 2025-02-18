@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process DETECT_UMI_FASTQ"
-    script "lib/processes/detect_umi_fastq.nf"
+    script "modules/local/umi_processing/detect_umi_fastq.nf"
     process "DETECT_UMI_FASTQ"
 
     test("Should run without failures") {
@@ -15,8 +15,9 @@ nextflow_process {
                     ["barcode04", "raw", "$baseDir/tests/input/detect_umi/barcode04/lpa2645_filtered.fastq"],
                     ["barcode05", "raw", "$baseDir/tests/input/detect_umi/barcode05/lpa2645_filtered.fastq"],
                 )
-                input[1] = "raw"
-                input[2] = file("$baseDir/bin/extract_umis.py")
+                input[1] = file( "$baseDir/.nf-test/tests/")
+                input[2] = "raw"
+                input[3] = file("$baseDir/bin/extract_umis.py")
                 """
             }
         }
@@ -41,8 +42,9 @@ nextflow_process {
                     ["barcode04", "raw", "$baseDir/tests/input/detect_umi/barcode04/lpa2645_filtered.fastq"],
                     ["barcode05", "raw", "$baseDir/tests/input/detect_umi/barcode05/lpa2645_filtered.fastq"],
                 )
-                input[1] = "raw"
-                input[2] = file("$baseDir/bin/extract_umis.py")
+                input[1] = file( "$baseDir/.nf-test/tests/")
+                input[2] = "raw"
+                input[3] = file("$baseDir/bin/extract_umis.py")
                 """
             }
         }
@@ -74,8 +76,9 @@ nextflow_process {
                     ["barcode04", "raw", "$baseDir/tests/input/detect_umi/barcode04/lpa2645_filtered.fastq"],
                     ["barcode05", "raw", "$baseDir/tests/input/detect_umi/barcode05/lpa2645_filtered.fastq"],
                 )
-                input[1] = Channel.of("raw", "raw", "raw", "raw")
-                input[2] = file("$baseDir/bin/extract_umis.py")
+                input[1] = file( "$baseDir/.nf-test/tests/")
+                input[2] = "raw"
+                input[3] = file("$baseDir/bin/extract_umis.py")
                 """
             }
         }
@@ -105,8 +108,9 @@ nextflow_process {
                 input[0] = Channel.of(
                     ["barcode02", "raw", "$baseDir/tests/input/detect_umi/barcode02/lpa2645_filtered.fastq"],
                 )
-                input[1] = Channel.of("raw")
-                input[2] = file("$baseDir/bin/extract_umis.py")
+                input[1] = file( "$baseDir/.nf-test/tests/")
+                input[2] = "raw"
+                input[3] = file("$baseDir/bin/extract_umis.py")
                 """
             }
         }
@@ -135,8 +139,9 @@ nextflow_process {
                     ["barcode04", "raw", "$baseDir/tests/input/detect_umi/barcode04/lpa2645_filtered.fastq"],
                     ["barcode05", "raw", "$baseDir/tests/input/detect_umi/barcode05/lpa2645_filtered.fastq"],
                 )
-                input[1] = Channel.of("raw", "raw", "raw", "raw")
-                input[2] = file("$baseDir/bin/extract_umis.py")
+                input[1] = file( "$baseDir/.nf-test/tests/")
+                input[2] = "raw"
+                input[3] = file("$baseDir/bin/extract_umis.py")
                 """
             }
         }
