@@ -8,7 +8,7 @@ process FREEBAYES {
       path reference_fai
 
     output:
-      path "${type}.vcf", emit: variants
+      tuple val( "${sample}" ), path ( "${type}.vcf" ), emit: variants
 
     script:
     """
