@@ -10,20 +10,7 @@ include {REFORMAT_FILTER_CLUSTER} from '../modules/local/umi_processing/reformat
 include {CLUSTER_STATS_LIVE} from '../modules/local/umi_processing/cluster_stats_live.nf'
 include {SUMMARY_CLUSTER_STATS} from '../modules/local/umi_processing/summary_cluster_stats.nf'
 
-// ----------------------------------------------------------------------------
-// Subworkflow 1: live_feedback
-// This subworkflow processes inputs, provides live user feedback via the
-// clustering and summary_cluster_stats processes, and then emits outputs for
-// further processing.
-// ----------------------------------------------------------------------------
 workflow LIVE_UMI_PROCESSING {
-    /*
-        Steps:
-        1. Copy BED file & wait for a "continue" signal.
-        2. Merge input FASTQs, map reads, split reads, and extract UMIs.
-        3. Run live clustering and reformat/filter clusters.
-        4. Launch cluster stats and summary processes to provide live feedback.
-    */
     take:
         raw
         reference

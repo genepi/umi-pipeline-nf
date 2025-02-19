@@ -7,13 +7,6 @@ include {MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS} from '../
 include {DETECT_UMI_CONSENSUS_FASTQ} from '../modules/local/umi_polishing/detect_umi_consensus_fastq.nf'
 include {CLUSTER_CONSENSUS} from '../modules/local/umi_polishing/cluster_consensus.nf'
 
-
-// ----------------------------------------------------------------------------
-// Subworkflow 2: auto_finish
-// This subworkflow receives the output of the live_feedback phase and then
-// automatically glues clusters, polishes consensus, maps consensus, and calls
-// variants.
-// ----------------------------------------------------------------------------
 workflow UMI_POLISHING {
     take:
         processed_umis
