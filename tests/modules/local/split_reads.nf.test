@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process SPLIT_READS"
-    script "lib/processes/split_reads.nf"
+    script "modules/local/umi_processing/split_reads.nf"
     process "SPLIT_READS"
 
     test("Should output several fastq files") {

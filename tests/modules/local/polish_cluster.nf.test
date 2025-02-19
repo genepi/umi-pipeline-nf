@@ -6,7 +6,7 @@ nextflow_process {
 
         setup{
             run("GLUE_CLUSTERS"){
-                script "$baseDir/modules/local/umi_polishing/glue_clusters.nf"
+                script "modules/local/umi_polishing/glue_clusters.nf"
                 params{
                     min_reads_per_cluster = 10
                 }

@@ -3,98 +3,98 @@
         "content": [
             {
                 "0": [
-                    "umi_filter_reads_stats.tsv:md5,447c5c33991475f7ac12a282f6259178",
-                    "umi_filter_reads_stats.tsv:md5,fe26ebdae3a92861100fd0c9d9e77a01"
+                    [
+                        "concatamer.fastq:md5,1c57b745684e8ce5176f262b6f34386e",
+                        "merged_filtered.fastq:md5,6f7584391d586022225f3ffd7e4cab0c",
+                        "short.fastq:md5,0e4b8ef67b1dcea12ed5461ebc1579f7",
+                        "supplementary.fastq:md5,1378deac4a64bca963445955b8f7a179",
+                        "umi_filter_reads_stats.tsv:md5,fe26ebdae3a92861100fd0c9d9e77a01",
+                        "unmapped.fastq:md5,c26ced4efa2ea76effec29eae836f719"
+                    ],
+                    [
+                        "concatamer.fastq:md5,5c95639aa0ee14615cc6c5907d2d7cfe",
+                        "merged_filtered.fastq:md5,1e7f3fc141b941603df33f8787e1a16f",
+                        "short.fastq:md5,b7ca476d4abf1f34a237c65d3e53f69e",
+                        "supplementary.fastq:md5,7822e1fc064853d8dc5c99a7bb80a45e",
+                        "umi_filter_reads_stats.tsv:md5,447c5c33991475f7ac12a282f6259178",
+                        "unmapped.fastq:md5,d9ab531bfdef8344cea0b035ed78be02"
+                    ]
                 ],
                 "1": [
                     [
                         "barcode02",
                         "target",
-                        "lpa2645_filtered.fastq:md5,6f7584391d586022225f3ffd7e4cab0c"
+                        "merged_filtered.fastq:md5,6f7584391d586022225f3ffd7e4cab0c"
                     ],
                     [
                         "barcode03",
                         "target",
-                        "lpa2645_filtered.fastq:md5,1e7f3fc141b941603df33f8787e1a16f"
-                    ]
-                ],
-                "2": [
-                    [
-                        "lpa2645_concatamer.fastq:md5,1c57b745684e8ce5176f262b6f34386e",
-                        "lpa2645_filtered.fastq:md5,6f7584391d586022225f3ffd7e4cab0c",
-                        "lpa2645_short.fastq:md5,0e4b8ef67b1dcea12ed5461ebc1579f7",
-                        "lpa2645_supplementary.fastq:md5,1378deac4a64bca963445955b8f7a179",
-                        "lpa2645_unmapped.fastq:md5,c26ced4efa2ea76effec29eae836f719"
-                    ],
-                    [
-                        "lpa2645_concatamer.fastq:md5,5c95639aa0ee14615cc6c5907d2d7cfe",
-                        "lpa2645_filtered.fastq:md5,1e7f3fc141b941603df33f8787e1a16f",
-                        "lpa2645_short.fastq:md5,b7ca476d4abf1f34a237c65d3e53f69e",
-                        "lpa2645_supplementary.fastq:md5,7822e1fc064853d8dc5c99a7bb80a45e",
-                        "lpa2645_unmapped.fastq:md5,d9ab531bfdef8344cea0b035ed78be02"
+                        "merged_filtered.fastq:md5,1e7f3fc141b941603df33f8787e1a16f"
                     ]
                 ],
                 "split_reads_fastx": [
                     [
                         "barcode02",
                         "target",
-                        "lpa2645_filtered.fastq:md5,6f7584391d586022225f3ffd7e4cab0c"
+                        "merged_filtered.fastq:md5,6f7584391d586022225f3ffd7e4cab0c"
                     ],
                     [
                         "barcode03",
                         "target",
-                        "lpa2645_filtered.fastq:md5,1e7f3fc141b941603df33f8787e1a16f"
+                        "merged_filtered.fastq:md5,1e7f3fc141b941603df33f8787e1a16f"
                     ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-03-15T10:25:28.834728"
+        "timestamp": "2025-02-19T15:29:39.388142"
     },
     "Should output only one fastq file": {
         "content": [
             {
                 "0": [
-                    "umi_filter_reads_stats.tsv:md5,06a2c27b87830124c0b7bb40d97fd597",
-                    "umi_filter_reads_stats.tsv:md5,7493ac503d0c5037afc099bb7e0bcd2d"
+                    [
+                        "merged_filtered.fastq:md5,02d75f1eb9af1c2d249e7174c305f068",
+                        "umi_filter_reads_stats.tsv:md5,06a2c27b87830124c0b7bb40d97fd597"
+                    ],
+                    [
+                        "merged_filtered.fastq:md5,5a3d0d0b5e8a4c9585f648a0ce62227b",
+                        "umi_filter_reads_stats.tsv:md5,7493ac503d0c5037afc099bb7e0bcd2d"
+                    ]
                 ],
                 "1": [
                     [
                         "barcode04",
                         "target",
-                        "lpa2645_filtered.fastq:md5,5a3d0d0b5e8a4c9585f648a0ce62227b"
+                        "merged_filtered.fastq:md5,5a3d0d0b5e8a4c9585f648a0ce62227b"
                     ],
                     [
                         "barcode05",
                         "target",
-                        "lpa2645_filtered.fastq:md5,02d75f1eb9af1c2d249e7174c305f068"
+                        "merged_filtered.fastq:md5,02d75f1eb9af1c2d249e7174c305f068"
                     ]
-                ],
-                "2": [
-                    "lpa2645_filtered.fastq:md5,02d75f1eb9af1c2d249e7174c305f068",
-                    "lpa2645_filtered.fastq:md5,5a3d0d0b5e8a4c9585f648a0ce62227b"
                 ],
                 "split_reads_fastx": [
                     [
                         "barcode04",
                         "target",
-                        "lpa2645_filtered.fastq:md5,5a3d0d0b5e8a4c9585f648a0ce62227b"
+                        "merged_filtered.fastq:md5,5a3d0d0b5e8a4c9585f648a0ce62227b"
                     ],
                     [
                         "barcode05",
                         "target",
-                        "lpa2645_filtered.fastq:md5,02d75f1eb9af1c2d249e7174c305f068"
+                        "merged_filtered.fastq:md5,02d75f1eb9af1c2d249e7174c305f068"
                     ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-03-15T10:25:38.939191"
+        "timestamp": "2025-02-19T15:29:47.759579"
     }
 }

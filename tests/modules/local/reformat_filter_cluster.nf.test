@@ -6,7 +6,7 @@ nextflow_process {
 
     setup{
         run("CLUSTER"){
-            script "$baseDir/modules/local/umi_processing/cluster.nf"
+            script "modules/local/umi_processing/cluster.nf"
             process {
                 """
                 input[0] = Channel.of(
@@ -43,12 +43,17 @@ nextflow_process {
 
         then {
             assert process.success
-            assert snapshot(process.out).match()
+            assert snapshot(process.out.smolecule_cluster_stats).match()
+            with( process.out.smolecule_cluster_fastqs) {
+                assert size() == 3
+                assert get(0).get(2).size() == 6
+                assert get(1).get(2).size() == 6
+                assert get(2).get(2).size() == 12
+            }
         }
 
     }
 
-/*
     test("Should output 24 smolecule files") {
 
         when {
@@ -86,8 +91,8 @@ nextflow_process {
                         "$baseDir/tests/input/reformat_filter_cluster/barcode05/cluster10",
                         "$baseDir/tests/input/reformat_filter_cluster/barcode05/cluster11"]],
                     )
-                input[1] = Channel.of("raw", "raw", "raw")
-                input[2] = Channel.of(file("$baseDir/bin/parse_clusters.py"), file("$baseDir/bin/parse_clusters.py"), file("$baseDir/bin/parse_clusters.py"))
+                input[1] = "raw"
+                input[2] = file("$baseDir/bin/parse_clusters.py")
                 """
             }
         }
@@ -109,7 +114,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of(["barcode06", "raw", "$baseDir/tests/input/reformat_filter_cluster/barcode06/cluster0"])
                 input[1] = Channel.of("raw")
-                input[2] = file( "$baseDir/bin/parse_clusters.py", checkIfExists: true)
+                input[2] = file( "$baseDir/bin/parse_clusters.py")
                 """
             }
         }
@@ -131,7 +136,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of(["barcode06", "raw", "$baseDir/tests/input/reformat_filter_cluster/barcode06/cluster0"])
                 input[1] = Channel.of("raw")
-                input[2] = file( "$baseDir/bin/parse_clusters.py", checkIfExists: true)
+                input[2] = file( "$baseDir/bin/parse_clusters.py")
                 """
             }
         }
@@ -164,5 +169,5 @@ nextflow_process {
         }
 
     }
-*/
+
 }
