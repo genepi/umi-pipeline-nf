@@ -33,6 +33,7 @@ workflow LIVE_UMI_PROCESSING {
         umi_parse_clusters
         umi_cluster_report
         umi_cluster_stats_summary
+        cluster_summary_cache_dir_nf
         bed
 
 
@@ -90,7 +91,7 @@ workflow LIVE_UMI_PROCESSING {
         REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters )
 
         CLUSTER_STATS_LIVE( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, umi_cluster_report )
-        SUMMARY_CLUSTER_STATS( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, umi_cluster_stats_summary)
+        SUMMARY_CLUSTER_STATS( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, cluster_summary_cache_dir_nf, umi_cluster_stats_summary)
 
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
             .combine( continue_ch )

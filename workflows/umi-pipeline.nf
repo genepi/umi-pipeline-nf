@@ -35,6 +35,9 @@ workflow UMI_PIPELINE {
         def extracted_fastq_cache_dir = new File (".nextflow/cache/${workflow.sessionId}/extracted_fastq_cache_dir")
         extracted_fastq_cache_dir.mkdir()
         extracted_fastq_cache_dir_nf = file( extracted_fastq_cache_dir )
+        def cluster_summary_cache_dir = new File (".nextflow/cache/${workflow.sessionId}/cluster_summary_cache_dir")
+        cluster_summary_cache_dir.mkdir()
+        cluster_summary_cache_dir_nf = file( cluster_summary_cache_dir )
 
 
         COPY_BED( bed )
@@ -52,6 +55,7 @@ workflow UMI_PIPELINE {
                 umi_parse_clusters,
                 umi_cluster_report,
                 umi_cluster_stats_summary,
+                cluster_summary_cache_dir_nf,
                 bed_ch
                 )
             
