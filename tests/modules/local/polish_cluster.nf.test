@@ -44,7 +44,7 @@ nextflow_process {
 
         then {
             assert process.success
-            assert snapshot(process.out.get(0)).match()
+            assert snapshot(process.out.consensus_fastq).match()
         }
 
     }
@@ -82,8 +82,8 @@ nextflow_process {
         }
 
         then {
-            assert process.success
-            assert snapshot(process.out).match()
+            assert process.success 
+            assert snapshot(process.out.consensus_fastq).match()
         }
 
     }

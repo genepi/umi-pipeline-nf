@@ -53,74 +53,38 @@
     },
     "Should run without failures": {
         "content": [
-            {
-                "0": [
-                    [
-                        "barcode03",
-                        "LPA2645",
-                        "barcode03_combined_clusters_1_consensus.fastq:md5,1e679a28156c5dde61438a93527a603c"
-                    ],
-                    [
-                        "barcode03",
-                        "LPA2645",
-                        "barcode03_combined_clusters_1_consensus.fastq:md5,3d0413b0a65a319ff18f99abea419936"
-                    ],
-                    [
-                        "barcode03",
-                        "LPA2645",
-                        "barcode03_combined_clusters_1_consensus.fastq:md5,45c378b6ea41b68c1e3fbbca806db1d3"
-                    ],
-                    [
-                        "barcode03",
-                        "LPA2645",
-                        "barcode03_combined_clusters_1_consensus.fastq:md5,ef1f8d62e65952b7918a4fac0f44873e"
-                    ],
-                    [
-                        "barcode03",
-                        "LPA2645",
-                        "barcode03_combined_clusters_1_consensus.fastq:md5,feef582d38b07e3d712abaa561fd0c54"
-                    ]
+            [
+                [
+                    "barcode03",
+                    "LPA2645",
+                    "barcode03_combined_clusters_1_consensus.fastq:md5,1e679a28156c5dde61438a93527a603c"
                 ],
-                "1": [
-                    "barcode03_combined_clusters_1_smolecule.log:md5,20cce933659b8dc996125d54b3b38f6c",
-                    "barcode03_combined_clusters_1_smolecule.log:md5,2e2e495e31d29912bb20a65b2dffd16d",
-                    "barcode03_combined_clusters_1_smolecule.log:md5,7169d6e4e7124a9b405b20704ce2454f",
-                    "barcode03_combined_clusters_1_smolecule.log:md5,e3058aae610f2af53021437e70d39a64",
-                    "barcode03_combined_clusters_1_smolecule.log:md5,f314db9f98ea11c7bb015a465149a2fe"
+                [
+                    "barcode03",
+                    "LPA2645",
+                    "barcode03_combined_clusters_1_consensus.fastq:md5,3d0413b0a65a319ff18f99abea419936"
                 ],
-                "consensus_fastq": [
-                    [
-                        "barcode03",
-                        "LPA2645",
-                        "barcode03_combined_clusters_1_consensus.fastq:md5,1e679a28156c5dde61438a93527a603c"
-                    ],
-                    [
-                        "barcode03",
-                        "LPA2645",
-                        "barcode03_combined_clusters_1_consensus.fastq:md5,3d0413b0a65a319ff18f99abea419936"
-                    ],
-                    [
-                        "barcode03",
-                        "LPA2645",
-                        "barcode03_combined_clusters_1_consensus.fastq:md5,45c378b6ea41b68c1e3fbbca806db1d3"
-                    ],
-                    [
-                        "barcode03",
-                        "LPA2645",
-                        "barcode03_combined_clusters_1_consensus.fastq:md5,ef1f8d62e65952b7918a4fac0f44873e"
-                    ],
-                    [
-                        "barcode03",
-                        "LPA2645",
-                        "barcode03_combined_clusters_1_consensus.fastq:md5,feef582d38b07e3d712abaa561fd0c54"
-                    ]
+                [
+                    "barcode03",
+                    "LPA2645",
+                    "barcode03_combined_clusters_1_consensus.fastq:md5,45c378b6ea41b68c1e3fbbca806db1d3"
+                ],
+                [
+                    "barcode03",
+                    "LPA2645",
+                    "barcode03_combined_clusters_1_consensus.fastq:md5,ef1f8d62e65952b7918a4fac0f44873e"
+                ],
+                [
+                    "barcode03",
+                    "LPA2645",
+                    "barcode03_combined_clusters_1_consensus.fastq:md5,feef582d38b07e3d712abaa561fd0c54"
                 ]
-            }
+            ]
         ],
         "meta": {
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-02-19T11:59:17.681958"
+        "timestamp": "2025-02-19T19:03:54.467047"
     }
 }
