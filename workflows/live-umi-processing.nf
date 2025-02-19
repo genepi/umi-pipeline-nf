@@ -104,6 +104,7 @@ workflow LIVE_UMI_PROCESSING {
             }
             .set { processed_umis }
 
+
     emit:
         processed_umis
 

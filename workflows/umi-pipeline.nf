@@ -21,7 +21,7 @@ workflow UMI_PIPELINE {
         // python scripts
         umi_filter_reads            = file( "${projectDir}/bin/filter_reads.py", checkIfExists: true)
         umi_extract                 = file( "${projectDir}/bin/extract_umis.py", checkIfExists: true)
-        umi_parse_clusters          = file( "${projectDir}/bin/parse_clusters_old.py", checkIfExists: true)
+        umi_parse_clusters          = file( "${projectDir}/bin/parse_clusters.py", checkIfExists: true)
         umi_reformat_consensus      = file( "${projectDir}/bin/reformat_consensus.py", checkIfExists: true )
         umi_cluster_report          = file( "${projectDir}/bin/cluster_report.py", checkIfExists: true )
         umi_cluster_stats_summary   = file( "${projectDir}/bin/summary_cluster_report.py", checkIfExists: true )
