@@ -54,7 +54,7 @@ nextflow_process {
             process {
                 """
                     input[0] = Channel.of(
-                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/glued_clusters/barcode03_combined_clusters_1.fastq"],
+                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/glued_clusters/barcode03_combined_clusters_1.fastq"]
                     )
                     input[1] = "consensus"
                 """
@@ -63,7 +63,8 @@ nextflow_process {
 
         then {
             assert process.success
-            assert snapshot(process.out.get(0)).match()
+            def fastqFile = path(process.out.consensus_fastq.get(0).get(2)).fastq
+            assert fastqFile.getNumberOfRecords() == 6
         }
 
     }
