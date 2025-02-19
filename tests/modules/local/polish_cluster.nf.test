@@ -1,47 +1,81 @@
 nextflow_process {
 
     name "Test Process POLISH_CLUSTER"
-    script "lib/processes/polish_cluster.nf"
+    script "modules/local/umi_polishing/polish_cluster.nf"
     process "POLISH_CLUSTER"
 
         setup{
-            run("CLUSTER"){
-                script "$baseDir/lib/processes/cluster.nf"
-                process {
-                    """
-                    input[0] = Channel.of(
-                        ["barcode03", "raw", "$baseDir/tests/input/cluster/barcode03/detected_umis.fastq"],
-                        ["barcode04", "raw", "$baseDir/tests/input/cluster/barcode04/detected_umis.fastq"],
-                        ["barcode05", "raw", "$baseDir/tests/input/cluster/barcode05/detected_umis.fastq"],
-                        ["barcode06", "raw", "$baseDir/tests/input/cluster/barcode06/detected_umis.fastq"],
-                        ["barcode07", "raw", "$baseDir/tests/input/cluster/barcode07/detected_umis.fastq"]
-                    )
-                    input[1] = Channel.of("raw", "raw", "raw", "raw", "raw")
-                    """
-                }
-            }
-            run("REFORMAT_FILTER_CLUSTER"){
-                script "$baseDir/lib/processes/reformat_filter_cluster.nf"
+            run("GLUE_CLUSTERS"){
+                script "$baseDir/modules/local/umi_polishing/glue_clusters.nf"
                 params{
                     min_reads_per_cluster = 10
                 }
                 process {
                     """
-                    input[0] = CLUSTER.out.cluster_fastas
-                    input[1] = Channel.of("raw", "raw", "raw", "raw", "raw")
-                    input[2] = file("$baseDir/bin/parse_clusters.py")
+                    input[0] = Channel.of(
+                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule0_sub0.fastq"],
+                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule1_sub0.fastq"],
+                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule2_sub0.fastq"],
+                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule3_sub0.fastq"],
+                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule4_sub0.fastq"]
+                    )
+                    input[1] = "raw"
                     """
                 }
             }
+
         }
 
+    test("Should run without failures - one sample per file") {
+        when {
+            process {
+                """
+                    input[0] = Channel.of(
+                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule0_sub0.fastq"],
+                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule1_sub0.fastq"],
+                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule2_sub0.fastq"],
+                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule3_sub0.fastq"],
+                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule4_sub0.fastq"]
+                    )
+                    input[1] = "consensus"
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out.get(0)).match()
+        }
+
+    }
+
+    test("Should run without failures - multiple samples per file") {
+        when {
+            process {
+                """
+                    input[0] = Channel.of(
+                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/glued_clusters/barcode03_combined_clusters_1.fastq"],
+                    )
+                    input[1] = "consensus"
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out.get(0)).match()
+        }
+
+    }
 
     test("Should run without failures") {
         when {
             process {
                 """
-                input[0] = REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs.transpose()
-                input[1] = "Consensus"
+                input[0] = GLUE_CLUSTERS.out.glued_clusters
+                            .map{ sample, type, clusters -> tuple(sample, type, clusters instanceof List ? clusters : [clusters]) }
+                            .transpose(by: 2)
+                input[1] = "consensus"
                 """
             }
         }
