@@ -25,7 +25,7 @@ workflow UMI_POLISHING {
         umi_reformat_consensus
 
     main:
-         GLUE_CLUSTERS(processed_umis)
+         GLUE_CLUSTERS(processed_umis, consensus)
             .map{ sample, type, clusters -> tuple(sample, type, clusters instanceof List ? clusters : [clusters]) }
             .set{ glued_clusters }
         

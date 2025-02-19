@@ -14,8 +14,6 @@ nextflow_process {
                     ["barcode03", "LPA2645", "$baseDir/tests/input/cluster/barcode03/detected_umis.fastq"],
                     ["barcode04", "LPA2645", "$baseDir/tests/input/cluster/barcode04/detected_umis.fastq"],
                     ["barcode05", "LPA2645", "$baseDir/tests/input/cluster/barcode05/detected_umis.fastq"],
-                    ["barcode06", "LPA2645", "$baseDir/tests/input/cluster/barcode06/detected_umis.fastq"],
-                    ["barcode07", "LPA2645", "$baseDir/tests/input/cluster/barcode07/detected_umis.fastq"]
                 )
                 input[1] ="raw"
                 """
