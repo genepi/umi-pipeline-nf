@@ -74,7 +74,7 @@ workflow OFFLINE_UMI_PROCESSING {
 
         REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters )
 
-        CLUSTER_STATS( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, umi_cluster_report )
+        CLUSTER_STATS( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, raw, umi_cluster_report )
         SUMMARY_CLUSTER_STATS( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, cluster_summary_cache_dir_nf, umi_cluster_stats_summary)
 
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
