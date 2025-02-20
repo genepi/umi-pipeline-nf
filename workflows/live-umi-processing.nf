@@ -59,7 +59,7 @@ workflow LIVE_UMI_PROCESSING {
         SPLIT_READS( MAP_READS.out.bam_consensus, bed, raw, umi_filter_reads )
 
         SPLIT_READS.out.split_reads_fastx
-        .filter{ _sample, _target, fastq -> fastq.countFastq() > 0 }
+        .filter{ _sample, _target, fastq -> fastq.countFastq() > params.min_reads_per_barcode }
         .set{ split_reads_filtered }
 
         DETECT_UMI_FASTQ( split_reads_filtered, extracted_fastq_cache_dir_nf, raw, umi_extract )

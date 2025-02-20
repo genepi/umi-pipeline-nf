@@ -5,36 +5,71 @@ Umi-pipeline-nf
 ======================
 
 **Umi-pipeline-nf** creates highly accurate single-molecule consensus sequences for unique molecular identifier (UMI)-tagged amplicons from nanopore sequencing data.  
-The pipeline can be run for the whole fastq_pass folder of your nanopore run and, per default, outputs the aligned consensus sequences of each UMI cluster in bam file. The optional variant calling creates a vcf file for all variants that are found in the consensus sequences.
-Umi-pipeline-nf orignates from a snakemake-based analysis pipeline ([pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon); originally developed by [Karst et al, Nat Biotechnol 18:165–169, 2021](https://www.nature.com/articles/s41592-020-01041-y)). We migrated the pipeline to [Nextflow](https://www.nextflow.io) and included several optimizations and [additional functionalities](#main-adaptations).  
+The pipeline processes FastQ files (typically from the `fastq_pass` folder of your nanopore run) and outputs high-quality aligned consensus sequences in BAM format for each UMI cluster. The optional variant calling creates a vcf file for all variants that are found in the consensus sequences.  
+The newest version of the pipeline supports live analysis of the clusters during sequencing and seemless polishing of the clusters as soon as enough clusters are found.
+
+Umi-pipeline-nf originated from a Snakemake-based analysis pipeline ([pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon); originally developed by [Karst et al, Nat Biotechnol 18:165–169, 2021](https://www.nature.com/articles/s41592-020-01041-y)). We have migrated the pipeline to [Nextflow](https://www.nextflow.io) and incorporated several optimizations and additional functionalities.
 
 ![Workflow](docs/images/umi-pipeline-nf_metro-map.svg)
 
 ## Workflow
 
-1. Input Fastq-files are merged and filtered.
-2. Reads are aligned against a reference genome and filtered to keep only full-length on-target reads.
-3. The flanking UMI sequences of all reads are extracted.
-4. The extracted UMIs are used to cluster the reads.
-5. Per cluster, highly accurate consensus sequences are created.
-6. The consensus sequences are aligned against the reference sequenced.
-7. An optional variant calling step can be performed.
-8. UMI-extraction, clustering, consensus sequence creation, and mapping are repeated.
-9. An optional variant calling step can be performed.
+The pipeline is organized into four main subworkflows, each with its own processing steps and outputs:
 
-> See the [output documentation](docs/output.md) for a detailed overview of the pipeline and its output files.
+1. **LIVE UMI PROCESSING**  
+   - **Purpose:** Real-time processing of raw FastQ files.
+   - **Steps:**  
+     - Merge and filter raw FastQ files.
+     - Align reads to the reference genome.
+     - Extract UMI sequences.
+     - Cluster UMI-tagged reads.
+   - **Outputs:**  
+     - Processed UMI clusters are passed on to later stages.
+     - Raw alignment files (e.g., in `<output>/<barcodeXX>/align/raw/`).
+     - Filtered FastQ files and clustering statistics.
+
+    **To stop the pipeline when it's in live mode, create a CONTINUE file in the output directory:**  
+    `touch <output>/CONTINUE`
+
+2. **OFFLINE UMI PROCESSING**  
+   - **Purpose:** Batch processing with an optional subsampling step.
+   - **Steps:**  
+     - Merge and filter FastQ files.
+     - Optionally subsample the merged reads.
+     - Perform alignment, UMI extraction, and clustering similar to LIVE processing.
+   - **Outputs:**  
+     - Processed UMI clusters.
+     - Alignment and subsampling reports (e.g., in `<output>/<barcodeXX>/subsampling/` and `<output>/<barcodeXX>/stats/`).
+
+3. **UMI POLISHING**  
+   - **Purpose:** Refine UMI clusters to generate high-quality consensus sequences.
+   - **Steps:**  
+     - Polish clusters using medaka.
+     - Realign consensus sequences to the reference genome.
+     - Re-extract and re-cluster UMIs from consensus reads.
+     - Parse final consensus clusters.
+   - **Outputs:**  
+     - Consensus BAM and FastQ files (e.g., in `<output>/<barcodeXX>/align/consensus/` and `<output>/<barcodeXX>/fastq/consensus/`).
+     - Polishing logs and detailed cluster statistics.
+
+4. **VARIANT CALLING**  
+   - **Purpose:** Identify genetic variants from the consensus data.
+   - **Steps:**  
+     - Perform variant calling using one of the supported callers: [freebayes](https://github.com/freebayes/freebayes), [lofreq](http://csb5.github.io/lofreq/), or [mutserve](https://mitoverse.readthedocs.io/mutserve/mutserve/).
+   - **Outputs:**  
+     - VCF files with variant calls (e.g., in `<output>/<barcodeXX>/<freebayes/mutserve/lofreq>/`).
+
+> See the [output documentation](docs/output.md) for a detailed overview of the pipeline outputs and directory structure.
 
 ## Main Adaptations
 
-* It comes with a docker/singularity container making **installation simple, easy to use on clusters** and **results highly reproducible**.
-* The pipeline is **optimized for parallelization**.
-* **Additional UMI cluster splitting** step to remove admixed UMI clusters.
-* Read filtering strategy per UMI cluster was adapted to **preserve the highest quality reads**.
-* **Three commonly used variant callers** ([freebayes](https://github.com/freebayes/freebayes), [lofreq](http://csb5.github.io/lofreq/) or [mutserve](https://mitoverse.readthedocs.io/mutserve/mutserve/)) are supported by the pipeline.
-* The raw reads can be optionally **subsampled**.
-* The raw reads can be **filtered by read length and quality**.
- 
-> See the [usage documentation](docs/usage.md) for all of the available parameters of the pipeline.
+* Comes with Docker/Singularity containers, making installation simple, cluster-friendly, and ensuring highly reproducible results.
+* Optimized for parallel processing with Nextflow.
+* Supports both **live** and **offline** processing modes.
+* Introduces an **additional UMI cluster splitting** step to remove admixed clusters.
+* Implements improved read filtering strategies to **preserve the highest quality reads**.
+* Supports three variant callers: **freebayes**, **lofreq**, and **mutserve**.
+* Optionally allows **subsampling** of raw reads and **filtering by read length and quality**.
 
 ## Quick Start
 
@@ -55,14 +90,14 @@ nextflow run genepi/umi-pipeline-nf -r v0.2.1 -c <custom.config> -profile custom
 
 ## Citation 
 
-If you use the pipeline please cite [our Paper](https://www.biorxiv.org/content/10.1101/2024.03.01.582741v1):
+If you use the pipeline please cite [our Paper](https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-024-01391-8):
 
-Amstler S, Streiter G, Pfurtscheller C, Forer L, Di Maio S, Weissensteiner H, Paulweber B, Schoenherr S, Kronenberg F, Coassin S. Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex Lipoprotein(a) KIV-2 VNTR. bioRxiv. 2024. doi: 10.1101/2024.03.01.582741.
+Amstler S, Streiter G, Pfurtscheller C, Forer L, Di Maio S, Weissensteiner H, Paulweber B, Schoenherr S, Kronenberg F, Coassin S. Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex lipoprotein(a) KIV-2 VNTR. Genome Med 16, 117 (2024). https://doi.org/10.1186/s13073-024-01391-8
 
 
 ### Credits
 
-The pipeline was written by ([@StephanAmstler](https://github.com/AmstlerStephan)).  
+The pipeline was written by [@StephanAmstler](https://github.com/AmstlerStephan).  
 Nextflow template pipeline: [EcSeq](https://github.com/ecSeq).  
 Snakemake-based ONT pipeline for UMI nanopore sequencing analysis: [nanoporetech/pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon).  
 UMI-corrected nanopore sequencing analysis first shown by: [SorenKarst/longread_umi](https://github.com/SorenKarst/longread_umi).
