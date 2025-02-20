@@ -211,7 +211,7 @@ def filter_reads(args):
         logging.info("Region: {}".format(region["name"]))
 
         for read in bam.fetch(
-            until_eof=True
+            contig=region["chr"], start=region["start"], stop=region["end"], until_eof=True
         ):
 
             if (read.query_sequence is None):
@@ -278,55 +278,55 @@ def write_tsv(n_total, n_unmapped, n_secondary, n_supplementary, n_ontarget, n_c
             short_perc = 100 * n_short // n_ontarget
             long_perc = 100 * n_long // n_ontarget
 
-    with open(stats_out_filename, "a") as out_f:
-        print(
-            "format",
-            "region",
-            "reads_found",
-            "reads_unmapped",
-            "reads_secondary",
-            "reads_supplementary",
-            "reads_on_target",
-            "reads_concatamer",
-            "reads_short",
-            "reads_long",
-            "reads_filtered",
-            "include_secondary",
-            sep="\t",
-            file=out_f
-        )
-        print(
-            "count",
-            region["name"],
-            n_total,
-            n_unmapped,
-            n_secondary,
-            n_supplementary,
-            n_ontarget,
-            n_concatamer,
-            n_short,
-            n_long,
-            n_reads_region,
-            incl_sec,
-            sep="\t",
-            file=out_f
-        )
-        print(
-            "%",
-            region["name"],
-            "100",
-            unmapped_perc,
-            secondary_perc,
-            supplementary_perc,
-            ontarget_perc,
-            concatermer_perc,
-            short_perc,
-            long_perc,
-            filtered_perc,
-            incl_sec,
-            sep="\t",
-            file=out_f
-        )
+        with open(stats_out_filename, "a") as out_f:
+            print(
+                "format",
+                "region",
+                "reads_found",
+                "reads_unmapped",
+                "reads_secondary",
+                "reads_supplementary",
+                "reads_on_target",
+                "reads_concatamer",
+                "reads_short",
+                "reads_long",
+                "reads_filtered",
+                "include_secondary",
+                sep="\t",
+                file=out_f
+            )
+            print(
+                "count",
+                region["name"],
+                n_total,
+                n_unmapped,
+                n_secondary,
+                n_supplementary,
+                n_ontarget,
+                n_concatamer,
+                n_short,
+                n_long,
+                n_reads_region,
+                incl_sec,
+                sep="\t",
+                file=out_f
+            )
+            print(
+                "%",
+                region["name"],
+                "100",
+                unmapped_perc,
+                secondary_perc,
+                supplementary_perc,
+                ontarget_perc,
+                concatermer_perc,
+                short_perc,
+                long_perc,
+                filtered_perc,
+                incl_sec,
+                sep="\t",
+                file=out_f
+            )
 
 
 def main(argv=sys.argv[1:]):
