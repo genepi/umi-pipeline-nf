@@ -3,7 +3,8 @@ process CLUSTER_STATS_LIVE {
     publishDir "${params.output}/${sample}/stats/${type}", mode: 'copy'
     
     input:
-    tuple val(sample), val(type), path(smolecule_cluster_stats)
+    tuple val( sample ), val( target ), path( smolecule_cluster_stats )
+    val ( type )
     path cluster_stats_python
     
     output:

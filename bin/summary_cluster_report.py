@@ -50,10 +50,10 @@ def plot_cluster_histogram(summary, output_pdf):
     summary.plot.barh(y = 'n_cluster', x = 'sample')
     plt.xlabel('Number of cluster')
     plt.ylabel('Sample')
-    plt.title('Horizontal Histogram of Cluster Written for Each Sample')
+    plt.title('Number of Found Clusters for Each Sample')
     plt.legend(title='Sample')
     plt.tight_layout()
-    plt.savefig(output_pdf)  # Save the plot to a PDF
+    plt.savefig(output_pdf)
     plt.close()
 
 

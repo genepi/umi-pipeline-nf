@@ -69,6 +69,9 @@ workflow UMI_PIPELINE {
                 umi_filter_reads,
                 umi_extract,
                 umi_parse_clusters,
+                umi_cluster_report,
+                umi_cluster_stats_summary,
+                cluster_summary_cache_dir_nf,
                 bed_ch
             )
 

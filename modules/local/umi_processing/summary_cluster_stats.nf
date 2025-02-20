@@ -3,7 +3,7 @@ process SUMMARY_CLUSTER_STATS {
     publishDir "${params.output}/cluster_stats/", mode: 'copy'  
 
     input:
-    tuple val(sample), val(type), path(smolecule_cluster_stats)
+    tuple val( sample ), val( target ), path( smolecule_cluster_stats )
     path cache_dir
     path umi_cluster_stats_summary
 

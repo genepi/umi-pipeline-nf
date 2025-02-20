@@ -5,6 +5,9 @@ include {SPLIT_READS} from  '../modules/local/umi_processing/split_reads.nf'
 include {DETECT_UMI_CONSENSUS_FASTQ as DETECT_UMI_FASTQ} from '../modules/local/umi_polishing/detect_umi_consensus_fastq.nf'
 include {CLUSTER} from '../modules/local/umi_processing/cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../modules/local/umi_processing/reformat_filter_cluster.nf'
+include {CLUSTER_STATS_LIVE as CLUSTER_STATS} from '../modules/local/umi_processing/cluster_stats_live.nf'
+include {SUMMARY_CLUSTER_STATS} from '../modules/local/umi_processing/summary_cluster_stats.nf'
+
 
 workflow OFFLINE_UMI_PROCESSING {
 
@@ -14,6 +17,10 @@ workflow OFFLINE_UMI_PROCESSING {
         umi_filter_reads
         umi_extract
         umi_parse_clusters
+        umi_cluster_report
+        umi_cluster_stats_summary
+        cluster_summary_cache_dir_nf
+
         bed
 
     main:       
@@ -66,6 +73,9 @@ workflow OFFLINE_UMI_PROCESSING {
             .set{ cluster_fastas }
 
         REFORMAT_FILTER_CLUSTER( cluster_fastas, raw, umi_parse_clusters )
+
+        CLUSTER_STATS( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, umi_cluster_report )
+        SUMMARY_CLUSTER_STATS( REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, cluster_summary_cache_dir_nf, umi_cluster_stats_summary)
 
         REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
         .filter{ _sample, _type, fastqs, _task_index -> fastqs instanceof List}            
