@@ -31,4 +31,8 @@ workflow {
 }
 
 workflow.onError { log.info "Oops... Pipeline execution stopped with the following message: ${workflow.errorMessage}" }
-workflow.onComplete { WorkflowMain.onComplete(workflow, baseDir) }
+workflow.onComplete {
+     println "Pipeline completed at: $workflow.complete"
+     println "Execution status: ${ workflow.success ? 'OK' : 'failed' }" 
+     WorkflowMain.onComplete(workflow, baseDir, params, log) 
+}

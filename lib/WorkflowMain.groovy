@@ -31,11 +31,14 @@ class WorkflowMain {
             "            version ${workflow.manifest.version}       \n";
     }
 
-    public static void onComplete(workflow, baseDir) {
-        println "Pipeline completed at: $workflow.complete"
-        println "Execution status: ${ workflow.success ? 'OK' : 'failed' }"
-
+    public static String onComplete(workflow, baseDir, params, log) {
         // run a small clean-up script to remove "work" directory after successful completion 
-        if (workflow.success) {["bash", "${baseDir}/bin/clean.sh", "${workflow.sessionId}"].execute() }
+        if (workflow.success) {
+            if (params.live){
+                def stop = new File("${params.input}/barcode_continue/")
+                stop.deleteDir()
+            }
+            ["bash", "${baseDir}/bin/clean.sh", "${workflow.sessionId}"].execute() 
+        }
     }
 }
