@@ -20,7 +20,11 @@ nextflow_process {
                         "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_1.fastq.gz", 
                         "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_2.fastq.gz"],
                     ]
-                )
+                ).map{sample, files -> 
+                    sort: { files } 
+                    tuple(sample, files)
+                }
+                .view()
                 """
             }
         }
