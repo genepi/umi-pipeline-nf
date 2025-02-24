@@ -63,13 +63,16 @@ The pipeline is organized into four main subworkflows, each with its own process
 
 ## Main Adaptations
 
-* Comes with Docker/Singularity containers, making installation simple, cluster-friendly, and ensuring highly reproducible results.
-* Optimized for parallel processing with Nextflow.
-* Supports both **live** and **offline** processing modes.
-* Introduces an **additional UMI cluster splitting** step to remove admixed clusters.
-* Implements improved read filtering strategies to **preserve the highest quality reads**.
-* Supports three variant callers: **freebayes**, **lofreq**, and **mutserve**.
-* Optionally allows **subsampling** of raw reads and **filtering by read length and quality**.
+* It comes with a docker/singularity container making **installation simple, easy to use on clusters** and **results highly reproducible**.
+* The pipeline is **optimized for parallelization**.
+* **Additional UMI cluster splitting** step to remove admixed UMI clusters.
+* Read filtering strategy per UMI cluster was adapted to **preserve the highest quality reads**.
+* **Three commonly used variant callers** ([freebayes](https://github.com/freebayes/freebayes), [lofreq](http://csb5.github.io/lofreq/) or [mutserve](https://mitoverse.readthedocs.io/mutserve/mutserve/)) are supported by the pipeline.
+* The raw reads can be optionally **subsampled**.
+* The raw reads can be **filtered by read length and quality**.
+* **GPU acceleration for cluster polishing by Medaka** is available when using the `docker` profile. The GPU driver, [nvidia-toolkit](https://developer.nvidia.com/cuda-toolkit), and [nvidia-container-toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) must be installed. Tested with an RTX 4080 SUPER GPU (16 GB). Note: GPU acceleration is not compatible with cluster profiles.
+ 
+> See the [usage documentation](docs/usage.md) for all of the available parameters of the pipeline.
 
 ## Quick Start
 
