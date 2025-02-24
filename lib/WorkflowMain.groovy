@@ -31,7 +31,7 @@ class WorkflowMain {
             "            version ${workflow.manifest.version}       \n";
     }
 
-    public static String onComplete(workflow, baseDir, params, log) {
+    public static String onComplete(workflow, baseDir, params) {
         // run a small clean-up script to remove "work" directory after successful completion 
         if (workflow.success) {
             if (params.live){
