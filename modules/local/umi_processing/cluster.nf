@@ -13,7 +13,7 @@ process CLUSTER {
         tuple val( "${sample}" ), val( "${target}" ), path( "cluster*" ), optional: true, emit:cluster_fastas
         
     script:
-        def id = "${type}" == "raw" ? 0.90 : 0.99
+        def id = "${type}" == "raw" ? params.vsearch_sequence_identity : 0.99
     """
         cat ${detected_umis_fastqs} |
         vsearch \
