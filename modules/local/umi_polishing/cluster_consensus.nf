@@ -2,8 +2,8 @@ consensus_fasta="consensus.fasta"
 vsearch_dir="vsearch_clusters"
 
 process CLUSTER_CONSENSUS {
-    publishDir "${params.output}/${sample}/clustering/${type}", pattern: "${consensus_fasta}", mode: 'copy'
-    publishDir "${params.output}/${sample}/clustering/${type}", pattern: "cluster*", mode: 'copy'
+    publishDir "${params.output}/${sample}/${target}/clustering/${type}", pattern: "${consensus_fasta}", mode: 'copy'
+    publishDir "${params.output}/${sample}/${target}/clustering/${type}", pattern: "cluster*", mode: 'copy'
     
     input:
         tuple val( sample ), val( target ), path( detected_umis_fastq )

@@ -3,7 +3,7 @@ process MERGE_FASTQ {
         tuple val ( sample ), path ( fastq_path )
     
     output:
-        tuple val( "${sample}" ), val( "target" ), path( "*fastq" ), emit: merged_fastq
+        tuple val( "${sample}" ), path( "*fastq" ), emit: merged_fastq
     
     script:
     def fastq_name = params.live ? "filtered_${fastq_path.baseName.replaceAll(/(\.fastq|\.fq)(\.gz)?$/, "")}.fastq" : "${sample}_merged.fastq"

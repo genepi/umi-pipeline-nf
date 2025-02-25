@@ -1,6 +1,6 @@
 merged_fastq="merged_consensus.fastq"
 process MERGE_CONSENSUS_FASTQ {
-    publishDir "${params.output}/${sample}/fastq/${type}", mode: 'copy'
+    publishDir "${params.output}/${sample}/${target}/fastq/${type}", mode: 'copy'
     
     input:
         tuple val( sample ), val( target ), path( consensus_fastqs )

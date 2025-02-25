@@ -4,7 +4,7 @@ include { LIVE_UMI_PROCESSING       } from './live-umi-processing.nf'
 include { OFFLINE_UMI_PROCESSING    } from './offline-umi-processing.nf'
 include { UMI_POLISHING             } from './umi-polishing.nf'
 include { VARIANT_CALLING           } from './variant_calling.nf'
-include { COPY_BED                  } from '../modules/local/copy_bed.nf'
+include { PARSE_BED                 } from '../modules/local/parse_bed.nf'
 
 workflow UMI_PIPELINE {
 
@@ -16,7 +16,7 @@ workflow UMI_PIPELINE {
         // file paths
         bed                         = file("${params.bed}", checkIfExists: true)
         reference                   = file("${params.reference}", checkIfExists: true)
-        reference_fai               = file( "${params.reference_fai}", checkIfExists: true)
+        reference_fai               = file("${params.reference_fai}", checkIfExists: true)
 
         // python scripts
         umi_filter_reads            = file( "${projectDir}/bin/filter_reads.py", checkIfExists: true)
@@ -40,10 +40,21 @@ workflow UMI_PIPELINE {
         cluster_summary_cache_dir_nf = file( cluster_summary_cache_dir )
 
 
-        COPY_BED( bed )
+        // Use Nextflow to split input bed file
+        Channel.fromPath( bed )
+        .splitText()
+        .map { line ->
+            def fields = line.tokenize('\t')
+            def target = fields[3].trim()  // Trim to remove trailing \n or spaces
+            return tuple(target, line)
+        }
+        .set{ bed_channel }
+        PARSE_BED( bed_channel )
 
-        COPY_BED.out.bed
+        PARSE_BED.out.bed_channel
             .set{ bed_ch }
+
+        bed_ch.view()
 
         if ( params.live ){        
             LIVE_UMI_PROCESSING(

@@ -21,6 +21,7 @@ process SUMMARY_CLUSTER_STATS {
         python ${umi_cluster_stats_summary} \
             --cluster-stat ${smolecule_cluster_stats} \
             --sample ${sample} \
+            --target ${target} \
             --task-index ${task.index} \
             --current-summary $current_summary \
             --output-tsv summary_cluster_stats.tsv \

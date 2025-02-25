@@ -1,5 +1,5 @@
 process DETECT_UMI_FASTQ {
-    publishDir "${params.output}/${sample}/stats/${type}", pattern: "*.tsv", mode: 'copy'
+    publishDir "${params.output}/${sample}/${target}/stats/${type}", pattern: "*.tsv", mode: 'copy'
     
     input:
         tuple val(sample), val(target), path(fastq)

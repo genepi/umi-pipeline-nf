@@ -1,13 +1,13 @@
 process GLUE_CLUSTERS {
     tag "${sample}"
-    publishDir "${params.output}/${sample}/clustering/${type}/glued", pattern: "${sample}_glued_clusters_*.${params.output_format}", mode: 'copy'
+    publishDir "${params.output}/${sample}/${target}/clustering/${type}/glued", pattern: "${sample}_glued_clusters_*.${params.output_format}", mode: 'copy'
 
     input:
     tuple val( sample ), val ( target ), path( cluster_files )
     val (type )
 
     output:
-    tuple val( sample ), val ( target ), path( "*${params.output_format}" ), emit: glued_clusters
+    tuple val( sample ), val ( "${target}" ), path( "*${params.output_format}" ), emit: glued_clusters
 
     script:
     """

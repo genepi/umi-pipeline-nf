@@ -1,16 +1,15 @@
 process SPLIT_READS {
-    publishDir "${params.output}/${sample}/stats/${type}/${bam.baseName}", mode: 'copy', pattern: "*.tsv"
-    publishDir "${params.output}/${sample}/${params.output_format}_filtered/${type}/${bam.baseName}", mode: 'copy', pattern: "*${params.output_format}"
+    publishDir "${params.output}/${sample}/${target}/stats/${type}/${bam.baseName}", mode: 'copy', pattern: "*.tsv"
+    publishDir "${params.output}/${sample}/${target}/${params.output_format}_filtered/${type}/${bam.baseName}", mode: 'copy', pattern: "*${params.output_format}"
 
     input:
-        tuple val( sample ), val( target ), path ( bam ) , path ( bam_bai )
-        path bed
+        tuple val( sample ), path ( bam ) , path ( bam_bai ), val( target ), path( bed )
         val( type )
         path python_filter_reads
     
     output:
-        path "*"
-        tuple val ( "${sample}" ), val( "target" ), path ( "*filtered.${params.output_format}" ), emit: split_reads_fastx
+        path "*", optional: true
+        tuple val ( "${sample}" ), val( "${target}" ), path ( "*filtered.${params.output_format}" ), optional: true, emit: split_reads_fastx
     
     script:
         def include_secondary_reads = params.include_secondary_reads ? "--include_secondary_reads" : ""

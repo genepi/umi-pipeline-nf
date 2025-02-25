@@ -3,7 +3,7 @@ include {POLISH_CLUSTER} from '../modules/local/umi_polishing/polish_cluster.nf'
 include {MERGE_CONSENSUS_FASTQ} from '../modules/local/umi_polishing/merge_consensus_fastq.nf'
 include {FILTER_CONSENSUS_FASTQ} from '../modules/local/umi_polishing/filter_consensus_fastq.nf'
 include {REFORMAT_CONSENSUS_CLUSTER} from '../modules/local/umi_polishing/reformat_consensus_cluster.nf'
-include {MAP_READS as MAP_CONSENSUS; MAP_READS as MAP_FINAL_CONSENSUS} from '../modules/local/map_reads.nf'
+include {MAP_CONSENSUS; MAP_CONSENSUS as MAP_FINAL_CONSENSUS} from '../modules/local/umi_polishing/map_consensus.nf'
 include {DETECT_UMI_CONSENSUS_FASTQ} from '../modules/local/umi_polishing/detect_umi_consensus_fastq.nf'
 include {CLUSTER_CONSENSUS} from '../modules/local/umi_polishing/cluster_consensus.nf'
 
@@ -19,11 +19,11 @@ workflow UMI_POLISHING {
 
     main:
          GLUE_CLUSTERS(processed_umis, consensus)
-            .map{ sample, type, clusters -> tuple(sample, type, clusters instanceof List ? clusters : [clusters]) }
+            .map{ sample, target, clusters -> tuple(sample, target, clusters instanceof List ? clusters : [clusters]) }
             .set{ glued_clusters }
         
         glued_clusters
-        .map{ sample, _type, clusters -> n_parsed_cluster.put("$sample", clusters.size)}
+        .map{ sample, _target, clusters -> n_parsed_cluster.put("$sample", clusters.size)}
         
         glued_clusters
             .transpose(by: 2)
@@ -32,8 +32,8 @@ workflow UMI_POLISHING {
         POLISH_CLUSTER( glued_clusters_transposed, consensus )
         
         POLISH_CLUSTER.out.consensus_fastq
-        .map{ sample, type, fastq -> tuple( groupKey(sample, n_parsed_cluster.get("$sample")), type, fastq) }
-        .groupTuple( )
+        .map{ sample, target, fastq -> tuple( groupKey(sample, n_parsed_cluster.get("$sample")), target, fastq) }
+        .groupTuple( by: [0,1] )
         .set{ merge_consensus }
 
         

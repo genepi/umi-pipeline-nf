@@ -1,11 +1,11 @@
 include {MERGE_FASTQ} from '../modules/local/umi_processing/merge_input.nf'
 include {SUBSAMPLING} from '../modules/local/umi_processing/subsampling.nf'
-include {MAP_READS} from '../modules/local/map_reads.nf'
+include {MAP_READS} from '../modules/local/umi_processing/map_reads.nf'
 include {SPLIT_READS} from  '../modules/local/umi_processing/split_reads.nf'
 include {DETECT_UMI_CONSENSUS_FASTQ as DETECT_UMI_FASTQ} from '../modules/local/umi_polishing/detect_umi_consensus_fastq.nf'
 include {CLUSTER} from '../modules/local/umi_processing/cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../modules/local/umi_processing/reformat_filter_cluster.nf'
-include {CLUSTER_STATS_LIVE as CLUSTER_STATS} from '../modules/local/umi_processing/cluster_stats_live.nf'
+include {CLUSTER_STATS} from '../modules/local/umi_processing/cluster_stats.nf'
 include {SUMMARY_CLUSTER_STATS} from '../modules/local/umi_processing/summary_cluster_stats.nf'
 
 
@@ -36,7 +36,7 @@ workflow OFFLINE_UMI_PROCESSING {
 
         if( params.subsampling ){
             MERGE_FASTQ( existing_fastqs )
-            SUBSAMPLING( MERGE_FASTQ.out.merged_fastq )
+            SUBSAMPLING( MERGE_FASTQ.out.merged_fastq, raw )
             SUBSAMPLING.out.subsampled_fastq
             .set { input_fastqs }
         } else {
@@ -49,7 +49,12 @@ workflow OFFLINE_UMI_PROCESSING {
             .set{ chunked_input_fastqs }
 
         MAP_READS( chunked_input_fastqs, raw, reference )
-        SPLIT_READS( MAP_READS.out.bam_consensus, bed, raw, umi_filter_reads )
+        
+        MAP_READS.out.bam_consensus
+        .combine(bed)
+        .set{ bam_consensus_bed_sets }
+
+        SPLIT_READS( bam_consensus_bed_sets, raw, umi_filter_reads )
 
         SPLIT_READS.out.split_reads_fastx
         .filter{ _sample, _target, fastq -> fastq.countFastq() > params.min_reads_per_barcode }

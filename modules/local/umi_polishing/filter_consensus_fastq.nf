@@ -1,6 +1,6 @@
 def filtered_fastq="masked_consensus.fastq"
 process FILTER_CONSENSUS_FASTQ {
-    publishDir "${params.output}/${sample}/fastq/${type}", mode: 'copy'
+    publishDir "${params.output}/${sample}/${target}/fastq/${type}", mode: 'copy'
     
     input:
         tuple val( sample ), val( target ), path( merged_consensus_fastq )

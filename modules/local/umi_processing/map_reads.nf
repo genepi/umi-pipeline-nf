@@ -1,12 +1,12 @@
 process MAP_READS {
-    publishDir "${params.output}/${sample}/align/${type}", mode: 'copy'
+    publishDir "${params.output}/${sample}/${type}/align/", mode: 'copy'
 
     input:
-        tuple val( sample ), val( target ), path( consensus_fastq )
+        tuple val( sample ), path( consensus_fastq )
         val( type )
         path reference
     output:
-        tuple val( "${sample}"), val( "${target}" ), path ( "*.bam" ), path ( "*.bam.bai" ), emit: bam_consensus
+        tuple val( "${sample}"), path ( "*.bam" ), path ( "*.bam.bai" ), emit: bam_consensus
 
     script:
     """

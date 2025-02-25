@@ -1,6 +1,6 @@
-process CLUSTER_STATS_LIVE {
+process CLUSTER_STATS {
     tag "$sample"
-    publishDir "${params.output}/${sample}/stats/${type}", mode: 'copy'
+    publishDir "${params.output}/${sample}/${target}/stats/${type}", mode: 'copy'
     
     input:
     tuple val( sample ), val( target ), path( smolecule_cluster_stats )
