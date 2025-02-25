@@ -69,31 +69,6 @@
         },
         "timestamp": "2025-02-18T17:40:57.970231"
     },
-    "Should run without failures": {
-        "content": [
-            {
-                "0": [
-                    [
-                        "merge_fastq",
-                        "target",
-                        "merged.fastq:md5,1a65a32bc2d389105716ebebf13a3d40"
-                    ]
-                ],
-                "merged_fastq": [
-                    [
-                        "merge_fastq",
-                        "target",
-                        "merged.fastq:md5,1a65a32bc2d389105716ebebf13a3d40"
-                    ]
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.0-rc2",
-            "nextflow": "24.05.0"
-        },
-        "timestamp": "2024-06-20T16:09:39.595045"
-    },
     "Should run without failures: offline": {
         "content": [
             {
