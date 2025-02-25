@@ -15,6 +15,7 @@ process POLISH_CLUSTER {
     """
         medaka smolecule \
           --threads ${task.cpus} \
+          --batch_size ${params.clusters_per_polishing_file} \
           --length 50 \
           --depth 2 \
           --model ${params.medaka_model} \
