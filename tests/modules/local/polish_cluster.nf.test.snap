@@ -5,27 +5,27 @@
                 [
                     "barcode03",
                     "LPA2645",
-                    "smolecule0_sub0_consensus.fastq:md5,1e679a28156c5dde61438a93527a603c"
+                    "smolecule0_sub0_consensus.fastq:md5,05d23abf09147158cb1d261bf4209159"
                 ],
                 [
                     "barcode03",
                     "LPA2645",
-                    "smolecule1_sub0_consensus.fastq:md5,3d0413b0a65a319ff18f99abea419936"
+                    "smolecule1_sub0_consensus.fastq:md5,d95a5fe1d2529df04263deb1614202f4"
                 ],
                 [
                     "barcode03",
                     "LPA2645",
-                    "smolecule2_sub0_consensus.fastq:md5,ef1f8d62e65952b7918a4fac0f44873e"
+                    "smolecule2_sub0_consensus.fastq:md5,4d9155a8399e3e87a64b87173e690b4c"
                 ],
                 [
                     "barcode03",
                     "LPA2645",
-                    "smolecule3_sub0_consensus.fastq:md5,45c378b6ea41b68c1e3fbbca806db1d3"
+                    "smolecule3_sub0_consensus.fastq:md5,6842e7be493536e9418099e53def0893"
                 ],
                 [
                     "barcode03",
                     "LPA2645",
-                    "smolecule4_sub0_consensus.fastq:md5,feef582d38b07e3d712abaa561fd0c54"
+                    "smolecule4_sub0_consensus.fastq:md5,db4f55ba72777a4b9a044304b27847c3"
                 ]
             ]
         ],
@@ -33,23 +33,7 @@
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-02-19T11:58:44.875638"
-    },
-    "Should run without failures - multiple samples per file": {
-        "content": [
-            [
-                [
-                    "barcode03",
-                    "LPA2645",
-                    "barcode03_combined_clusters_1_consensus.fastq:md5,bb6c68801220b0e6c50026a5c826bee6"
-                ]
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.0-rc2",
-            "nextflow": "24.10.0"
-        },
-        "timestamp": "2025-02-19T11:59:03.581829"
+        "timestamp": "2025-02-25T16:43:23.360712"
     },
     "Should run without failures": {
         "content": [
@@ -57,27 +41,27 @@
                 [
                     "barcode03",
                     "LPA2645",
-                    "barcode03_combined_clusters_1_consensus.fastq:md5,1e679a28156c5dde61438a93527a603c"
+                    "barcode03_combined_clusters_1_consensus.fastq:md5,05d23abf09147158cb1d261bf4209159"
                 ],
                 [
                     "barcode03",
                     "LPA2645",
-                    "barcode03_combined_clusters_1_consensus.fastq:md5,3d0413b0a65a319ff18f99abea419936"
+                    "barcode03_combined_clusters_1_consensus.fastq:md5,4d9155a8399e3e87a64b87173e690b4c"
                 ],
                 [
                     "barcode03",
                     "LPA2645",
-                    "barcode03_combined_clusters_1_consensus.fastq:md5,45c378b6ea41b68c1e3fbbca806db1d3"
+                    "barcode03_combined_clusters_1_consensus.fastq:md5,6842e7be493536e9418099e53def0893"
                 ],
                 [
                     "barcode03",
                     "LPA2645",
-                    "barcode03_combined_clusters_1_consensus.fastq:md5,ef1f8d62e65952b7918a4fac0f44873e"
+                    "barcode03_combined_clusters_1_consensus.fastq:md5,d95a5fe1d2529df04263deb1614202f4"
                 ],
                 [
                     "barcode03",
                     "LPA2645",
-                    "barcode03_combined_clusters_1_consensus.fastq:md5,feef582d38b07e3d712abaa561fd0c54"
+                    "barcode03_combined_clusters_1_consensus.fastq:md5,db4f55ba72777a4b9a044304b27847c3"
                 ]
             ]
         ],
@@ -85,6 +69,6 @@
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-02-19T19:03:54.467047"
+        "timestamp": "2025-02-25T16:44:26.200944"
     }
 }
