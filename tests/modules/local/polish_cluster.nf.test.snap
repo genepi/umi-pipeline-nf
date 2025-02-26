@@ -1,0 +1,74 @@
+{
+    "Should run without failures - one sample per file": {
+        "content": [
+            [
+                [
+                    "barcode03",
+                    "lpa2645",
+                    "smolecule0_sub0_consensus.fastq:md5,1e679a28156c5dde61438a93527a603c"
+                ],
+                [
+                    "barcode03",
+                    "lpa2645",
+                    "smolecule1_sub0_consensus.fastq:md5,3d0413b0a65a319ff18f99abea419936"
+                ],
+                [
+                    "barcode03",
+                    "lpa2645",
+                    "smolecule2_sub0_consensus.fastq:md5,ef1f8d62e65952b7918a4fac0f44873e"
+                ],
+                [
+                    "barcode03",
+                    "lpa2645",
+                    "smolecule3_sub0_consensus.fastq:md5,45c378b6ea41b68c1e3fbbca806db1d3"
+                ],
+                [
+                    "barcode03",
+                    "lpa2645",
+                    "smolecule4_sub0_consensus.fastq:md5,feef582d38b07e3d712abaa561fd0c54"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-02-26T15:49:57.731904031"
+    },
+    "Should run without failures": {
+        "content": [
+            [
+                [
+                    "barcode03",
+                    "lpa2645",
+                    "barcode03_combined_clusters_1_consensus.fastq:md5,1e679a28156c5dde61438a93527a603c"
+                ],
+                [
+                    "barcode03",
+                    "lpa2645",
+                    "barcode03_combined_clusters_1_consensus.fastq:md5,3d0413b0a65a319ff18f99abea419936"
+                ],
+                [
+                    "barcode03",
+                    "lpa2645",
+                    "barcode03_combined_clusters_1_consensus.fastq:md5,45c378b6ea41b68c1e3fbbca806db1d3"
+                ],
+                [
+                    "barcode03",
+                    "lpa2645",
+                    "barcode03_combined_clusters_1_consensus.fastq:md5,ef1f8d62e65952b7918a4fac0f44873e"
+                ],
+                [
+                    "barcode03",
+                    "lpa2645",
+                    "barcode03_combined_clusters_1_consensus.fastq:md5,feef582d38b07e3d712abaa561fd0c54"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-02-26T15:50:53.382844925"
+    }
+}

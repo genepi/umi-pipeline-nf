@@ -1,0 +1,18 @@
+{
+    "Maps consensus reads and should run with success": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-02-26T11:10:59.114637"
+    },
+    "Maps final consensus reads and should run with success": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-02-26T11:11:03.840204"
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "Maps raw reads and should run with success": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.05.0"
+        },
+        "timestamp": "2024-06-20T15:14:00.481095"
+    }
+}

@@ -1,0 +1,92 @@
+nextflow_process {
+
+    name "Test Process MERGE_FASTQ"
+    script "modules/local/umi_processing/merge_input.nf"
+    process "MERGE_FASTQ"
+
+    test("Should run without failures: offline") {
+
+        when {
+            params {
+                min_read_length = 1000
+                min_qscore = 9
+                live = false
+            }
+            process {
+                """
+                input[0] = Channel.of(
+                    ["barcode03", 
+                        ["$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_0.fastq.gz", 
+                        "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_1.fastq.gz", 
+                        "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_2.fastq.gz"],
+                    ]
+                ).map{sample, files -> 
+                    sort: { files } 
+                    tuple(sample, files)
+                }
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+    test("Should run without failures: live") {
+
+        when {
+            params {
+                min_read_length = 1000
+                min_qscore = 9
+                live = true
+            }
+            process {
+                """
+                input[0] = Channel.of(
+                    ["barcode03", "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_0.fastq.gz"],
+                    ["barcode03", "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_1.fastq.gz"],
+                    ["barcode03", "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_2.fastq.gz"],
+                )
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+            
+        }
+
+    }
+
+    test("Should output empty file") {
+
+        when {
+            params {
+                min_read_length = 10000
+                min_qscore = 9
+            }
+            process {
+                """
+                input[0] = Channel.of(
+                    ["barcode03", 
+                        ["$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_0.fastq.gz", 
+                        "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_1.fastq.gz", 
+                        "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_2.fastq.gz"],
+                    ]
+                )
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+}

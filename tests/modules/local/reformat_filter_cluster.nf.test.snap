@@ -1,0 +1,314 @@
+{
+    "Should have no output": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    [
+                        "barcode06",
+                        "lpa2645",
+                        "split_cluster_stats.tsv:md5,3e3448252563239e28e5cd232ce3fc76"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "smolecule_cluster_fastqs": [
+                    
+                ],
+                "smolecule_cluster_stats": [
+                    [
+                        "barcode06",
+                        "lpa2645",
+                        "split_cluster_stats.tsv:md5,3e3448252563239e28e5cd232ce3fc76"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-02-26T14:13:25.711189067"
+    },
+    "Should split cluster into 3 smolecule files": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode06",
+                        "lpa2645",
+                        [
+                            "smolecule0_sub3.fastq:md5,329162716077da8b3f4e7a8439cd8755",
+                            "smolecule0_sub4.fastq:md5,bb9be92be96923cc5ab265534ba81cba",
+                            "smolecule0_sub5.fastq:md5,ddc47582df5c0a92c41d0bb3c6cb9daa"
+                        ],
+                        1
+                    ]
+                ],
+                "1": [
+                    [
+                        "barcode06",
+                        "lpa2645",
+                        "split_cluster_stats.tsv:md5,a7be13d1ffaddcc7c01e0cbf2b2f254c"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "smolecule_cluster_fastqs": [
+                    [
+                        "barcode06",
+                        "lpa2645",
+                        [
+                            "smolecule0_sub3.fastq:md5,329162716077da8b3f4e7a8439cd8755",
+                            "smolecule0_sub4.fastq:md5,bb9be92be96923cc5ab265534ba81cba",
+                            "smolecule0_sub5.fastq:md5,ddc47582df5c0a92c41d0bb3c6cb9daa"
+                        ],
+                        1
+                    ]
+                ],
+                "smolecule_cluster_stats": [
+                    [
+                        "barcode06",
+                        "lpa2645",
+                        "split_cluster_stats.tsv:md5,a7be13d1ffaddcc7c01e0cbf2b2f254c"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-02-26T14:13:14.039243185"
+    },
+    "Should split cluster into 6 smolecule files": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode06",
+                        "lpa2645",
+                        [
+                            "smolecule0_sub0.fastq:md5,e5c72d4181ab778f9124f0cf9616f790",
+                            "smolecule0_sub1.fastq:md5,5ca7562b4bb6ad0612eaa0354f3c45b1",
+                            "smolecule0_sub2.fastq:md5,3cc7cc8bed915b7181efa7b5c0162143",
+                            "smolecule0_sub3.fastq:md5,329162716077da8b3f4e7a8439cd8755",
+                            "smolecule0_sub4.fastq:md5,bb9be92be96923cc5ab265534ba81cba",
+                            "smolecule0_sub5.fastq:md5,ddc47582df5c0a92c41d0bb3c6cb9daa"
+                        ],
+                        1
+                    ]
+                ],
+                "1": [
+                    [
+                        "barcode06",
+                        "lpa2645",
+                        "split_cluster_stats.tsv:md5,b60c9a3e1edb0e660fcbf34711274c61"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "smolecule_cluster_fastqs": [
+                    [
+                        "barcode06",
+                        "lpa2645",
+                        [
+                            "smolecule0_sub0.fastq:md5,e5c72d4181ab778f9124f0cf9616f790",
+                            "smolecule0_sub1.fastq:md5,5ca7562b4bb6ad0612eaa0354f3c45b1",
+                            "smolecule0_sub2.fastq:md5,3cc7cc8bed915b7181efa7b5c0162143",
+                            "smolecule0_sub3.fastq:md5,329162716077da8b3f4e7a8439cd8755",
+                            "smolecule0_sub4.fastq:md5,bb9be92be96923cc5ab265534ba81cba",
+                            "smolecule0_sub5.fastq:md5,ddc47582df5c0a92c41d0bb3c6cb9daa"
+                        ],
+                        1
+                    ]
+                ],
+                "smolecule_cluster_stats": [
+                    [
+                        "barcode06",
+                        "lpa2645",
+                        "split_cluster_stats.tsv:md5,b60c9a3e1edb0e660fcbf34711274c61"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-02-26T14:13:00.502382047"
+    },
+    "Should output 24 smolecule files": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode03",
+                        "lpa2645",
+                        [
+                            "smolecule0_sub0.fastq:md5,d7909e95c6a39cf794ef0b5feabc4f82",
+                            "smolecule1_sub0.fastq:md5,4b8807af14154a2459ff60b0921989d7",
+                            "smolecule2_sub0.fastq:md5,752c85c164a83daf5a33a0ceda44522c",
+                            "smolecule3_sub0.fastq:md5,7ccc9d09918a49d559d2f35f81e2f2cb",
+                            "smolecule4_sub0.fastq:md5,0d64e008ffdf045eecfcace087cafa96",
+                            "smolecule5_sub0.fastq:md5,d6251cff355f979a962aa3cd90acf09e"
+                        ],
+                        1
+                    ],
+                    [
+                        "barcode04",
+                        "lpa2645",
+                        [
+                            "smolecule0_sub0.fastq:md5,e5c72d4181ab778f9124f0cf9616f790",
+                            "smolecule1_sub0.fastq:md5,bc94c262f2e6699b277dd782476f7455",
+                            "smolecule2_sub0.fastq:md5,baf065f6235e0d78810e6c3d42d48f7e",
+                            "smolecule3_sub0.fastq:md5,4fb45117837c5a52f3334b4710b8c3ee",
+                            "smolecule4_sub0.fastq:md5,d9f3e0e414bfa39cf25d971e734c7728",
+                            "smolecule5_sub0.fastq:md5,2c6d7531f155d08d3ca41692f800805d"
+                        ],
+                        2
+                    ],
+                    [
+                        "barcode05",
+                        "lpa2645",
+                        [
+                            "smolecule0_sub0.fastq:md5,d7909e95c6a39cf794ef0b5feabc4f82",
+                            "smolecule10_sub0.fastq:md5,b4cb41e8891067cad1e6f73dcc615c78",
+                            "smolecule11_sub0.fastq:md5,5bce7e1be22990e8047ee5379c6c023d",
+                            "smolecule1_sub0.fastq:md5,ed5c3f4b86b40f8347d3822831510ef7",
+                            "smolecule2_sub0.fastq:md5,967d5abe3dc0a280ae4951c5e344b4bf",
+                            "smolecule3_sub0.fastq:md5,9930179d8875e8ccf208659449ef070e",
+                            "smolecule4_sub0.fastq:md5,91d8a702ec083480f16824495e50060e",
+                            "smolecule5_sub0.fastq:md5,b0dde95490d5f00d2dcb96b2826db8d3",
+                            "smolecule6_sub0.fastq:md5,f7e90099799b67c88edf79cd2f0d1a75",
+                            "smolecule7_sub0.fastq:md5,a0a879b4f669a031ebfda0a40e12fe07",
+                            "smolecule8_sub0.fastq:md5,b1d9ee2b85c646fb576f7e0932b3342d",
+                            "smolecule9_sub0.fastq:md5,e6796352cfd784f5df49b8ad5f874a44"
+                        ],
+                        3
+                    ]
+                ],
+                "1": [
+                    [
+                        "barcode03",
+                        "lpa2645",
+                        "split_cluster_stats.tsv:md5,4bcbfb7db6648511dc4dac21332fdc43"
+                    ],
+                    [
+                        "barcode04",
+                        "lpa2645",
+                        "split_cluster_stats.tsv:md5,4875c3c3d2d2d7664812e7252fe3aa79"
+                    ],
+                    [
+                        "barcode05",
+                        "lpa2645",
+                        "split_cluster_stats.tsv:md5,34744f5711bc8afa5ad25df1007add66"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "smolecule_cluster_fastqs": [
+                    [
+                        "barcode03",
+                        "lpa2645",
+                        [
+                            "smolecule0_sub0.fastq:md5,d7909e95c6a39cf794ef0b5feabc4f82",
+                            "smolecule1_sub0.fastq:md5,4b8807af14154a2459ff60b0921989d7",
+                            "smolecule2_sub0.fastq:md5,752c85c164a83daf5a33a0ceda44522c",
+                            "smolecule3_sub0.fastq:md5,7ccc9d09918a49d559d2f35f81e2f2cb",
+                            "smolecule4_sub0.fastq:md5,0d64e008ffdf045eecfcace087cafa96",
+                            "smolecule5_sub0.fastq:md5,d6251cff355f979a962aa3cd90acf09e"
+                        ],
+                        1
+                    ],
+                    [
+                        "barcode04",
+                        "lpa2645",
+                        [
+                            "smolecule0_sub0.fastq:md5,e5c72d4181ab778f9124f0cf9616f790",
+                            "smolecule1_sub0.fastq:md5,bc94c262f2e6699b277dd782476f7455",
+                            "smolecule2_sub0.fastq:md5,baf065f6235e0d78810e6c3d42d48f7e",
+                            "smolecule3_sub0.fastq:md5,4fb45117837c5a52f3334b4710b8c3ee",
+                            "smolecule4_sub0.fastq:md5,d9f3e0e414bfa39cf25d971e734c7728",
+                            "smolecule5_sub0.fastq:md5,2c6d7531f155d08d3ca41692f800805d"
+                        ],
+                        2
+                    ],
+                    [
+                        "barcode05",
+                        "lpa2645",
+                        [
+                            "smolecule0_sub0.fastq:md5,d7909e95c6a39cf794ef0b5feabc4f82",
+                            "smolecule10_sub0.fastq:md5,b4cb41e8891067cad1e6f73dcc615c78",
+                            "smolecule11_sub0.fastq:md5,5bce7e1be22990e8047ee5379c6c023d",
+                            "smolecule1_sub0.fastq:md5,ed5c3f4b86b40f8347d3822831510ef7",
+                            "smolecule2_sub0.fastq:md5,967d5abe3dc0a280ae4951c5e344b4bf",
+                            "smolecule3_sub0.fastq:md5,9930179d8875e8ccf208659449ef070e",
+                            "smolecule4_sub0.fastq:md5,91d8a702ec083480f16824495e50060e",
+                            "smolecule5_sub0.fastq:md5,b0dde95490d5f00d2dcb96b2826db8d3",
+                            "smolecule6_sub0.fastq:md5,f7e90099799b67c88edf79cd2f0d1a75",
+                            "smolecule7_sub0.fastq:md5,a0a879b4f669a031ebfda0a40e12fe07",
+                            "smolecule8_sub0.fastq:md5,b1d9ee2b85c646fb576f7e0932b3342d",
+                            "smolecule9_sub0.fastq:md5,e6796352cfd784f5df49b8ad5f874a44"
+                        ],
+                        3
+                    ]
+                ],
+                "smolecule_cluster_stats": [
+                    [
+                        "barcode03",
+                        "lpa2645",
+                        "split_cluster_stats.tsv:md5,4bcbfb7db6648511dc4dac21332fdc43"
+                    ],
+                    [
+                        "barcode04",
+                        "lpa2645",
+                        "split_cluster_stats.tsv:md5,4875c3c3d2d2d7664812e7252fe3aa79"
+                    ],
+                    [
+                        "barcode05",
+                        "lpa2645",
+                        "split_cluster_stats.tsv:md5,34744f5711bc8afa5ad25df1007add66"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-02-26T14:12:48.220576211"
+    },
+    "Should run with success": {
+        "content": [
+            [
+                [
+                    "barcode03",
+                    "lpa2645",
+                    "split_cluster_stats.tsv:md5,4bcbfb7db6648511dc4dac21332fdc43"
+                ],
+                [
+                    "barcode04",
+                    "lpa2645",
+                    "split_cluster_stats.tsv:md5,4875c3c3d2d2d7664812e7252fe3aa79"
+                ],
+                [
+                    "barcode05",
+                    "lpa2645",
+                    "split_cluster_stats.tsv:md5,a5df686776642aba9712a8c0d765d401"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-02-26T14:12:31.139736724"
+    }
+}

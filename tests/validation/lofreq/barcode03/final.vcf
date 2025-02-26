@@ -1,0 +1,23 @@
+##fileformat=VCFv4.0
+##fileDate=20250218
+##source=lofreq call --ref lpa-ref2645.fasta --out final.vcf --call-indels --min-cov 5 --no-default-filter final.bam 
+##reference=lpa-ref2645.fasta
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Raw Depth">
+##INFO=<ID=AF,Number=1,Type=Float,Description="Allele Frequency">
+##INFO=<ID=SB,Number=1,Type=Integer,Description="Phred-scaled strand bias at this position">
+##INFO=<ID=DP4,Number=4,Type=Integer,Description="Counts for ref-forward bases, ref-reverse, alt-forward and alt-reverse bases">
+##INFO=<ID=INDEL,Number=0,Type=Flag,Description="Indicates that the variant is an INDEL.">
+##INFO=<ID=CONSVAR,Number=0,Type=Flag,Description="Indicates that the variant is a consensus variant (as opposed to a low frequency variant).">
+##INFO=<ID=HRUN,Number=1,Type=Integer,Description="Homopolymer length to the right of report indel position">
+##FILTER=<ID=min_snvqual_34,Description="Minimum SNV Quality (Phred) 34">
+##FILTER=<ID=min_indelqual_20,Description="Minimum Indel Quality (Phred) 20">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
+LPARef_shortPCR	143	.	C	T	346	PASS	DP=6;AF=1.000000;SB=2147483647;DP4=0,0,6,0
+LPARef_shortPCR	236	.	A	G	345	PASS	DP=6;AF=1.000000;SB=2147483647;DP4=0,0,6,0
+LPARef_shortPCR	1139	.	C	G	352	PASS	DP=6;AF=1.000000;SB=2147483647;DP4=0,0,6,0
+LPARef_shortPCR	1179	.	A	G	356	PASS	DP=6;AF=1.000000;SB=2147483647;DP4=0,0,6,0
+LPARef_shortPCR	1242	.	G	C	350	PASS	DP=6;AF=1.000000;SB=2147483647;DP4=0,0,6,0
+LPARef_shortPCR	1465	.	C	G	355	PASS	DP=6;AF=1.000000;SB=2147483647;DP4=0,0,6,0
+LPARef_shortPCR	1498	.	C	A	51	PASS	DP=6;AF=0.166667;SB=0;DP4=5,0,1,0
+LPARef_shortPCR	1946	.	A	G	356	PASS	DP=6;AF=1.000000;SB=2147483647;DP4=0,0,6,0
+LPARef_shortPCR	2289	.	A	G	356	PASS	DP=6;AF=1.000000;SB=2147483647;DP4=0,0,6,0

@@ -69,7 +69,20 @@ def parse_args(argv):
     )
 
     parser.add_argument(
-        "-o", "--output", dest="OUT", type=str, required=False, help="Output folder"
+        "-o",
+        "--output",
+        dest="OUT",
+        type=str,
+        required=False,
+        help="Output folder"
+    )
+
+    parser.add_argument(
+        "--output_filename",
+        dest="OUT_FILENAME",
+        type=str,
+        required=False,
+        help="Output filename"
     )
 
     parser.add_argument(
@@ -118,9 +131,9 @@ def parse_bed(bed_regions):
             return region
 
 
-def write_read(read, output, region, type, format):
+def write_read(read, output, type, format):
     output_fastx = os.path.join(
-        output, "{}_{}.{}".format(region["name"], type, format)
+        output, "{}.{}".format(type, format)
     )
 
     # see if appending line is no problem by running it with nextflow (Otherwise delete files before appending for the first time)
@@ -178,6 +191,7 @@ def filter_reads(args):
     output = args.OUT
     out_format = args.OUT_FORMAT
     tsv = args.TSV
+    output_filename = "{}_filtered".format(args.OUT_FILENAME)
     stats_out_filename = "umi_filter_reads_stats"
 
     n_non_reads = 0
@@ -197,7 +211,7 @@ def filter_reads(args):
         logging.info("Region: {}".format(region["name"]))
 
         for read in bam.fetch(
-            until_eof=True
+            contig=region["chr"], start=region["start"], stop=region["end"], until_eof=True
         ):
 
             if (read.query_sequence is None):
@@ -207,38 +221,38 @@ def filter_reads(args):
             n_total += 1
             if read.is_unmapped:
                 n_unmapped += 1
-                write_read(read, output, region, "unmapped", out_format)
+                write_read(read, output, "unmapped", out_format)
                 continue
 
             if read.is_secondary:
                 n_secondary += 1
                 if not incl_sec:
-                    write_read(read, output, region, "secondary", out_format)
+                    write_read(read, output, "secondary", out_format)
                     continue
 
             if read.is_supplementary:
                 n_supplementary += 1
-                write_read(read, output, region, "supplementary", out_format)
+                write_read(read, output, "supplementary", out_format)
                 continue
 
             n_ontarget += 1
             if read.query_alignment_length < (read.query_length - 2 * adapter_length):
                 n_concatamer += 1
-                write_read(read, output, region, "concatamer", out_format)
+                write_read(read, output, "concatamer", out_format)
                 continue
 
             if read.query_alignment_length < (region_length * min_overlap):
                 n_short += 1
-                write_read(read, output, region, "short", out_format)
+                write_read(read, output, "short", out_format)
                 continue
             
             if read.query_length > (region_length * ( 2 - min_overlap) + 2 * adapter_length):
                 n_long += 1
-                write_read(read, output, region, "long", out_format)
+                write_read(read, output, "long", out_format)
                 continue
             
             n_reads_region += 1
-            write_read(read, output, region, "filtered", out_format)
+            write_read(read, output, output_filename, out_format)
 
     if tsv:
         stats_out_filename = os.path.join(
@@ -264,55 +278,55 @@ def write_tsv(n_total, n_unmapped, n_secondary, n_supplementary, n_ontarget, n_c
             short_perc = 100 * n_short // n_ontarget
             long_perc = 100 * n_long // n_ontarget
 
-    with open(stats_out_filename, "a") as out_f:
-        print(
-            "format",
-            "region",
-            "reads_found",
-            "reads_unmapped",
-            "reads_secondary",
-            "reads_supplementary",
-            "reads_on_target",
-            "reads_concatamer",
-            "reads_short",
-            "reads_long",
-            "reads_filtered",
-            "include_secondary",
-            sep="\t",
-            file=out_f
-        )
-        print(
-            "count",
-            region["name"],
-            n_total,
-            n_unmapped,
-            n_secondary,
-            n_supplementary,
-            n_ontarget,
-            n_concatamer,
-            n_short,
-            n_long,
-            n_reads_region,
-            incl_sec,
-            sep="\t",
-            file=out_f
-        )
-        print(
-            "%",
-            region["name"],
-            "100",
-            unmapped_perc,
-            secondary_perc,
-            supplementary_perc,
-            ontarget_perc,
-            concatermer_perc,
-            short_perc,
-            long_perc,
-            filtered_perc,
-            incl_sec,
-            sep="\t",
-            file=out_f
-        )
+        with open(stats_out_filename, "a") as out_f:
+            print(
+                "format",
+                "region",
+                "reads_found",
+                "reads_unmapped",
+                "reads_secondary",
+                "reads_supplementary",
+                "reads_on_target",
+                "reads_concatamer",
+                "reads_short",
+                "reads_long",
+                "reads_filtered",
+                "include_secondary",
+                sep="\t",
+                file=out_f
+            )
+            print(
+                "count",
+                region["name"],
+                n_total,
+                n_unmapped,
+                n_secondary,
+                n_supplementary,
+                n_ontarget,
+                n_concatamer,
+                n_short,
+                n_long,
+                n_reads_region,
+                incl_sec,
+                sep="\t",
+                file=out_f
+            )
+            print(
+                "%",
+                region["name"],
+                "100",
+                unmapped_perc,
+                secondary_perc,
+                supplementary_perc,
+                ontarget_perc,
+                concatermer_perc,
+                short_perc,
+                long_perc,
+                filtered_perc,
+                incl_sec,
+                sep="\t",
+                file=out_f
+            )
 
 
 def main(argv=sys.argv[1:]):

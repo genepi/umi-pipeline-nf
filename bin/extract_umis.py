@@ -79,6 +79,13 @@ def parse_args(argv):
         help="Output directory"
     )
     parser.add_argument(
+        "--output_filename",
+        dest="OUT_FILENAME",
+        type=str,
+        required=False,
+        help="Output filename"
+    )
+    parser.add_argument(
         "--output_format",
         dest="OUT_FORMAT",
         type=str,
@@ -324,7 +331,7 @@ def extract_umis(
     input_file = args.INPUT_FA
     umi_fwd = args.FWD_UMI
     umi_rev = args.REV_UMI
-    output_file_name = "detected_umis"
+    output_file_name = args.OUT_FILENAME
     format = args.OUT_FORMAT
 
     output_file = os.path.join(

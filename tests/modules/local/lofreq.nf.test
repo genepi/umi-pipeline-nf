@@ -1,0 +1,64 @@
+nextflow_process {
+
+    name "Test Process LOFREQ"
+    script "modules/local/variant_calling/lofreq.nf"
+    process "LOFREQ"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                variant_calling = true 
+                variant_caller = "lofreq"
+            }
+            process {
+                """
+                input[0] = Channel.of(["barcode03", "lpa2645", "$baseDir/tests/input/variant_calling/barcode03/final.bam", "$baseDir/tests/input/variant_calling/barcode03/final.bam.bai"])
+                input[1] = "final"
+                input[2] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta")
+                input[3] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta.fai")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            with(process.out.variants){
+                assert path(get(0).get(1)).vcf.summary == path("$baseDir/tests/validation/lofreq/${get(0).get(0)}/final.vcf").vcf.summary
+            }
+        }
+    }
+
+    test("Should output three files") {
+
+        when {
+            params {
+                variant_calling = true 
+                variant_caller = "lofreq"
+            }
+            process {
+                """
+                input[0] = Channel.of(
+                    ["barcode03", "lpa2645", "$baseDir/tests/input/variant_calling/barcode03/final.bam", "$baseDir/tests/input/variant_calling/barcode03/final.bam.bai"],
+                    ["barcode04", "lpa2645", "$baseDir/tests/input/variant_calling/barcode04/final.bam", "$baseDir/tests/input/variant_calling/barcode04/final.bam.bai"],
+                    ["barcode05", "lpa2645", "$baseDir/tests/input/variant_calling/barcode05/final.bam", "$baseDir/tests/input/variant_calling/barcode05/final.bam.bai"]
+                    )
+                input[1] = "final"
+                input[2] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta")
+                input[3] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta.fai")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            with(process.out.variants){
+                assert path(get(0).get(1)).vcf.summary == path("$baseDir/tests/validation/lofreq/${get(0).get(0)}/final.vcf").vcf.summary
+                assert path(get(1).get(1)).vcf.summary == path("$baseDir/tests/validation/lofreq/${get(1).get(0)}/final.vcf").vcf.summary
+                assert path(get(2).get(1)).vcf.summary == path("$baseDir/tests/validation/lofreq/${get(2).get(0)}/final.vcf").vcf.summary
+            }
+        }
+
+    }
+
+}

@@ -19,5 +19,3 @@ RUN conda update -y conda && \
 
 WORKDIR "/opt"
 RUN wget https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc13.lpa/mutserve_LPA_adapted.jar
-
-
