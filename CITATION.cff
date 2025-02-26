@@ -1,6 +1,6 @@
 cff-version: "1.2.0"
 message: "If you use this software, please cite it as below."
-title: "Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex Lipoprotein(a) KIV-2 VNTR"
+title: "Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex lipoprotein(a) KIV-2 VNTR"
 authors:
   - family-names: "Amstler"
     given-names: "Stephan"
@@ -22,8 +22,8 @@ authors:
     given-names: "Florian"
   - family-names: "Coassin"
     given-names: "Stefan"
-doi: "10.1101/2024.03.01.582741"
-date-released: "2024-03-05"
+doi: "10.1186/s13073-024-01391-8"
+date-released: "2024-10-08"
 license: "Apache-2.0"
 repository-code: "https://github.com/genepi/umi-pipeline-nf"
 preferred-citation:
@@ -49,9 +49,9 @@ preferred-citation:
     given-names: "Florian"
   - family-names: "Coassin"
     given-names: "Stefan"
-  doi: "10.1101/2024.03.01.582741"
-  journal: "bioRxiv"
-  day: 5
-  month: 3
+  doi: "10.1186/s13073-024-01391-8"
+  journal: "Genome Medicine"
+  day: 8
+  month: 10
   title: "Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex Lipoprotein(a) KIV-2 VNTR"
   year: 2024

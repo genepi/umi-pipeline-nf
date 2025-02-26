@@ -26,7 +26,7 @@ The pipeline is organized into four main subworkflows, each with its own process
      - Cluster UMI-tagged reads.
    - **Outputs:**  
      - Processed UMI clusters are passed on to later stages.
-     - Raw alignment files (e.g., in `<output>/<barcodeXX>/align/raw/`).
+     - Raw alignment files (e.g., in `<output>/<barcodeXX>/raw/align/` or `<output>/<barcodeXX>/<target>/fastq_filtered/raw/`).
      - Filtered FastQ files and clustering statistics.
 
     **To stop the pipeline when it's in live mode, create a CONTINUE file in the output directory:**  
@@ -40,7 +40,7 @@ The pipeline is organized into four main subworkflows, each with its own process
      - Perform alignment, UMI extraction, and clustering similar to LIVE processing.
    - **Outputs:**  
      - Processed UMI clusters.
-     - Alignment and subsampling reports (e.g., in `<output>/<barcodeXX>/subsampling/` and `<output>/<barcodeXX>/stats/`).
+     - Alignment and subsampling reports (e.g., in `<output>/<barcodeXX>/raw/subsampling/` and `<output>/<barcodeXX>/<target>/fastq_filtered/raw/`).
 
 3. **UMI POLISHING**  
    - **Purpose:** Refine UMI clusters to generate high-quality consensus sequences.
@@ -50,7 +50,7 @@ The pipeline is organized into four main subworkflows, each with its own process
      - Re-extract and re-cluster UMIs from consensus reads.
      - Parse final consensus clusters.
    - **Outputs:**  
-     - Consensus BAM and FastQ files (e.g., in `<output>/<barcodeXX>/align/consensus/` and `<output>/<barcodeXX>/fastq/consensus/`).
+     - Consensus BAM and FastQ files (e.g., in `<output>/<barcodeXX>/<target>/align/consensus/` and `<output>/<barcodeXX>/<target>/fastq/consensus/`).
      - Polishing logs and detailed cluster statistics.
 
 4. **VARIANT CALLING**  
@@ -58,7 +58,7 @@ The pipeline is organized into four main subworkflows, each with its own process
    - **Steps:**  
      - Perform variant calling using one of the supported callers: [freebayes](https://github.com/freebayes/freebayes), [lofreq](http://csb5.github.io/lofreq/), or [mutserve](https://mitoverse.readthedocs.io/mutserve/mutserve/).
    - **Outputs:**  
-     - VCF files with variant calls (e.g., in `<output>/<barcodeXX>/<freebayes/mutserve/lofreq>/`).
+     - VCF files with variant calls (e.g., in `<output>/<barcodeXX>/<target>/<freebayes/mutserve/lofreq>/`).
 
 > See the [output documentation](docs/output.md) for a detailed overview of the pipeline outputs and directory structure.
 
@@ -72,6 +72,7 @@ The pipeline is organized into four main subworkflows, each with its own process
 * The raw reads can be optionally **subsampled**.
 * The raw reads can be **filtered by read length and quality**.
 * **GPU acceleration for cluster polishing by Medaka** is available when using the `docker` profile. The GPU driver, [nvidia-toolkit](https://developer.nvidia.com/cuda-toolkit), and [nvidia-container-toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) must be installed. Tested with an RTX 4080 SUPER GPU (16 GB). Note: GPU acceleration is not compatible with cluster profiles.
+* Allows multi line bed files to run the pipeline for several targets at once.
  
 > See the [usage documentation](docs/usage.md) for all of the available parameters of the pipeline.
 

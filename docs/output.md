@@ -13,35 +13,35 @@ The pipeline performs the following major steps:
 
 - **Subsample Reads (Offline Only):**  
   Optionally, merged and filtered reads are subsampled using tools like *seqtk sample*.  
-  *Output:* Subsampled data is saved in `<output>/<barcodeXX>/subsampling/` with statistics in `<output>/<barcodeXX>/stats/`.
+  *Output:* Subsampled data is saved with statistics in `<output>/<barcodeXX>/raw/subsampling/`.
 
 - **Align Reads:**  
   Reads are aligned to a reference genome using [minimap2](https://github.com/lh3/minimap2).  
-  *Output:* Alignment files are stored in `<output>/<barcodeXX>/align/<type>/`.
+  *Output:* Alignment files are stored in `<output>/<barcodeXX>/raw/align`.
 
 - **Extract UMI Sequences:**  
   UMI sequences are extracted from the aligned reads using a Python script, embedding the raw read information in the header.  
-  *Output:* Extracted UMIs are saved in `<output>/<barcodeXX>/<fasta/fastq>_umi/<type>/`.
+  *Output:* Extracted UMIs are saved in `<output>/<barcodeXX>/<target><fasta/fastq>_umi/<type>/`.
 
 - **Cluster UMI Sequences:**  
   Reads are clustered by their UMI sequences (using vsearch) and then filtered based on a defined Hamming distance (default: 3). Clusters with too few reads are discarded, and overly abundant clusters may be downsampled.  
-  *Output:* Cluster files are stored in `<output>/<barcodeXX>/clustering/<type>/` and detailed cluster stats in `<output>/<barcodeXX>/stats/<type>/`.
+  *Output:* Cluster files are stored in `<output>/<barcodeXX>/<target>clustering/<type>/` and detailed cluster stats in `<output>/<barcodeXX>/<target>stats/<type>/`.
 
 - **Polish Cluster:**  
   Clusters are polished (using medaka) to generate consensus sequences per cluster.  
-  *Output:* Consensus sequences are produced in `<output>/<barcodeXX>/clustering/<type>/clusters`.
+  *Output:* Consensus sequences are produced in `<output>/<barcodeXX>/<target>clustering/<type>/clusters`.
 
 - **Align Consensus Reads:**  
   Consensus sequences are realigned to the reference genome to verify quality.  
-  *Output:* Aligned consensus files are stored in `<output>/<barcodeXX>/align/<type>/`.
+  *Output:* Aligned consensus files are stored in `<output>/<barcodeXX>/<target>align/<type>/`.
 
 - **Extract & Cluster Consensus UMIs:**  
   UMIs are re-extracted from consensus reads and then re-clustered and parsed using a Python script.  
-  *Output:* Final consensus clusters are parsed and saved in `<output>/<barcodeXX>/align/<type>/`.
+  *Output:* Final consensus clusters are parsed and saved in `<output>/<barcodeXX>/<target>align/<type>/`.
 
 - **Call Variants:**  
   Variant calling is performed on the final consensus sequences using one of several supported callers (LOFREQ, MUTSERVE, or FREEBAYES).  
-  *Output:* VCF files are produced in `<output>/<freebayes/mutserve/lowfreq>/<barcodeXX>/`.
+  *Output:* VCF files are produced in `<output>/<freebayes/mutserve/lowfreq>/<barcodeXX>/<target>/<type>/`.
 
 - **Pipeline Info:**  
   Nextflow’s built-in reporting generates files such as a DAG visualization (`dag.svg`), a detailed report (`report.html`), a timeline (`timeline.html`), and a trace file (`trace.txt`).  
@@ -89,23 +89,6 @@ This subworkflow is designed to process raw FastQ files in real time. It watches
 - **CLUSTER_STATS_LIVE & SUMMARY_CLUSTER_STATS:**  
   Generate real-time and summary statistics for the clustering process.
 
-**Outputs:**
-
-- **Processed UMIs:**  
-  The final output is a channel called `processed_umis` which aggregates UMI clusters for each sample. This data is forwarded to later stages (polishing and variant calling).
-
-- **Raw Alignment Files:**  
-  Under each barcode (e.g., `barcodeXX/align/raw`), you’ll find raw BAM files (e.g., `filtered_no_umis.1.bam`) and their corresponding index files.
-
-- **Filtered FastQ Files:**  
-  Directories like `barcodeXX/fastq_filtered/raw` contain the FastQ files after initial filtering.
-
-- **Statistics:**  
-  Subdirectories (e.g., `barcodeXX/stats/raw`) contain files such as TSV reports summarizing the performance of read splitting and clustering.
-
-- **Clustering Statistics:**  
-  Directory `cluster_stats` contains information about the current number of clusters
-  Subdirectories per sample `barcodeXX/stats/raw` contain more detailed clustering information.
 
 ---
 
@@ -137,19 +120,6 @@ The offline subworkflow processes the input FastQ files in a batch mode. Unlike 
 - **REFORMAT_FILTER_CLUSTER:**  
   Reformats the cluster outputs to produce a standardized `processed_umis` set.
 
-**Outputs:**
-
-- **Processed UMIs:**  
-  As with the live mode, the final output is a set of `processed_umis` which is passed to the polishing stage.
-
-- **Alignment Files:**  
-  BAM files (from mapping) are stored in directories like `barcodeXX/align/raw`.
-
-- **Filtered FastQ and Clustering Results:**  
-  The outputs include filtered FastQ files (in `fastq_filtered/raw`) and clustering outputs. Clustering results include FASTA files with consensus sequences in `clustering/consensus` and raw clustering outputs in `clustering/raw`.
-
-- **Statistical Reports:**  
-  TSV files (e.g., `split_cluster_stats.tsv`) in directories such as `stats/raw` summarize key metrics from this processing stage.
 
 ---
 
@@ -181,17 +151,6 @@ This subworkflow refines the UMI clusters from the previous steps to generate hi
 - **REFORMAT_CONSENSUS_CLUSTER:**  
   Reformats consensus cluster outputs into final, standardized FASTA/FASTQ files.
 
-**Outputs:**
-
-- **Consensus BAM Files:**  
-  - `consensus_bam`: Generated from mapping the consensus FastQ file.  
-  - `final_consensus_bam`: Produced after the final mapping of the polished consensus.
-
-- **Consensus FastQ Files:**  
-  Located in directories such as `barcodeXX/fastq/consensus` (e.g., `masked_consensus.fastq` and `merged_consensus.fastq`) and the final FastQ files in `barcodeXX/fastq/final`.
-
-- **Polishing Logs and Reports:**  
-  Log files (e.g., `barcodeXX_combined_clusters_1_smolecule.log`) and other reports from the polishing process are stored in `polishing/consensus`.
 
 ---
 
@@ -214,15 +173,6 @@ The final subworkflow is dedicated to variant calling. It takes the consensus BA
 - **Output Generation:**  
   The selected variant caller produces VCF files that list the genetic variants.
 
-**Outputs:**
-
-- **VCF Files:**  
-  For each sample, VCF files are generated. For example, when using FREEBAYES, you will see:
-  - Under `freebayes/barcodeXX/consensus`: A file such as `consensus.vcf`
-  - Under `freebayes/barcodeXXba/final`: A file such as `final.vcf`
-  
-- **Caller-Specific Logs/Reports:**  
-  Depending on the caller, additional reports or logs may be created detailing variant calling metrics.
 
 ---
 
@@ -232,30 +182,36 @@ Below is an overview of the directory structure created after a complete pipelin
 
 ``` plaintext
 output_directory/  
-├── barcodeXX/  
-│   ├── align/  
-│   │   ├── raw/           # Raw alignments (e.g., filtered_barcodeXX.1.bam)  
-│   │   ├── consensus/     # Consensus alignments (e.g., masked_consensus.bam)  
-│   │   └── final/         # Final alignments (e.g., final.bam )  
-│   ├── clustering/  
-│   │   ├── raw/           # Raw clustering outputs  
-│   │   └── consensus/     # Consensus clustering outputs (e.g., consensus.fasta)  
-│   ├── fastq/  
-│   │   ├── consensus/     # Consensus FastQ files (e.g., masked_consensus.fastq)  
-│   │   └── final/         # Final FastQ files (e.g., final.fastq)  
-│   ├── fastq_filtered/  
-│   │   └── raw/           # Filtered FastQ files  
-│   ├── fastq_umi/  
-│   │   └── consensus/     # UMI-specific consensus FastQ files  
-│   ├── polishing/  
-│   │   └── consensus/     # Polishing outputs and logs  
-│   └── stats/  
-│       ├── consensus/     # Consensus statistics (e.g., masked_consensus_umis.tsv)  
-│       └── raw/           # Raw statistics  
-└── freebayes/             # Variant calling outputs (if using freebayes)  
+├── barcodeXX/                  # results for BarcodeXX
+│   ├── raw/                    # target unspecific outputs
+│   │   ├── align/              # Raw alignments (e.g., filtered_barcodeXX.1.bam)    
+│   │   └── subsampling/        # subsampled reads
+│   ├── targetX/                # results for targetX
+│   │   ├── align
+│   │   │   ├── consensus/      # Consensus alignments (e.g., masked_consensus.bam)  
+│   │   │   └── final/          # Final alignments (e.g., final.bam )  
+│   │   ├── clustering/  
+│   │   │   ├── raw/            # Raw clustering outputs  
+│   │   │   └── consensus/      # Consensus clustering outputs (e.g., consensus.fasta)  
+│   │   ├── fastq/  
+│   │   │   ├── consensus/      # Consensus FastQ files (e.g., masked_consensus.fastq)  
+│   │   │   └── final/          # Final FastQ files (e.g., final.fastq)  
+│   │   ├── fastq_filtered/  
+│   │   │   └── raw/            # Filtered FastQ files  
+│   │   ├── fastq_umi/  
+│   │   │   └── consensus/      # UMI-specific consensus FastQ files  
+│   │   ├── polishing/  
+│   │   │   └── consensus/      # Polishing outputs and logs  
+│   │   └── stats/  
+│   │       ├── consensus/      # Consensus statistics (e.g., masked_consensus_umis.tsv)  
+│   │       └── raw/            # Raw statistics  
+│   └── targetY/                # results for targetY
+└── freebayes/                  # Variant calling outputs (if using freebayes)  
     └── barcodeXX/  
-       ├── consensus/     # VCF files from consensus BAM (e.g., consensus.vcf)  
-       └── final/         # VCF files from final BAM (e.g., final.vcf)  
+        ├── targetX/            # results for targetX 
+        │   ├── consensus/      # VCF files from consensus BAM (e.g., consensus.vcf)  
+        │   └── final/          # VCF files from final BAM (e.g., final.vcf)  
+        └── targetY/
 
 ```
 ---
