@@ -63,21 +63,21 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of( 
-                    ["barcode03", "lpa2645_filtered", [
+                    ["barcode03", "lpa2645", [
                         "$baseDir/tests/input/reformat_filter_cluster/barcode03/cluster0",
                         "$baseDir/tests/input/reformat_filter_cluster/barcode03/cluster1",
                         "$baseDir/tests/input/reformat_filter_cluster/barcode03/cluster2",
                         "$baseDir/tests/input/reformat_filter_cluster/barcode03/cluster3",
                         "$baseDir/tests/input/reformat_filter_cluster/barcode03/cluster4",
                         "$baseDir/tests/input/reformat_filter_cluster/barcode03/cluster5"]],
-                    ["barcode04", "lpa2645_filtered", [
+                    ["barcode04", "lpa2645", [
                         "$baseDir/tests/input/reformat_filter_cluster/barcode04/cluster0",
                         "$baseDir/tests/input/reformat_filter_cluster/barcode04/cluster1",
                         "$baseDir/tests/input/reformat_filter_cluster/barcode04/cluster2",
                         "$baseDir/tests/input/reformat_filter_cluster/barcode04/cluster3",
                         "$baseDir/tests/input/reformat_filter_cluster/barcode04/cluster4",
                         "$baseDir/tests/input/reformat_filter_cluster/barcode04/cluster5"]],
-                    ["barcode05", "lpa2645_filtered", [
+                    ["barcode05", "lpa2645", [
                         "$baseDir/tests/input/reformat_filter_cluster/barcode05/cluster0",
                         "$baseDir/tests/input/reformat_filter_cluster/barcode05/cluster1",
                         "$baseDir/tests/input/reformat_filter_cluster/barcode05/cluster2",
@@ -112,7 +112,7 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.of(["barcode06", "raw", "$baseDir/tests/input/reformat_filter_cluster/barcode06/cluster0"])
+                input[0] = Channel.of(["barcode06", "lpa2645", "$baseDir/tests/input/reformat_filter_cluster/barcode06/cluster0"])
                 input[1] = Channel.of("raw")
                 input[2] = file( "$baseDir/bin/parse_clusters.py")
                 """
@@ -134,7 +134,7 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.of(["barcode06", "raw", "$baseDir/tests/input/reformat_filter_cluster/barcode06/cluster0"])
+                input[0] = Channel.of(["barcode06", "lpa2645", "$baseDir/tests/input/reformat_filter_cluster/barcode06/cluster0"])
                 input[1] = Channel.of("raw")
                 input[2] = file( "$baseDir/bin/parse_clusters.py")
                 """
@@ -156,7 +156,7 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.of(["barcode06", "raw", "$baseDir/tests/input/reformat_filter_cluster/barcode06/cluster0"])
+                input[0] = Channel.of(["barcode06", "lpa2645", "$baseDir/tests/input/reformat_filter_cluster/barcode06/cluster0"])
                 input[1] = Channel.of("raw")
                 input[2] = file( "$baseDir/bin/parse_clusters.py", checkIfExists: true)
                 """

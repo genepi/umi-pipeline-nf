@@ -21,24 +21,24 @@
                 "1": [
                     [
                         "barcode02",
-                        "LPARef_shortPCR",
+                        "lpa2645",
                         "merged_filtered.fastq:md5,6f7584391d586022225f3ffd7e4cab0c"
                     ],
                     [
                         "barcode03",
-                        "LPARef_shortPCR",
+                        "lpa2645",
                         "merged_filtered.fastq:md5,1e7f3fc141b941603df33f8787e1a16f"
                     ]
                 ],
                 "split_reads_fastx": [
                     [
                         "barcode02",
-                        "LPARef_shortPCR",
+                        "lpa2645",
                         "merged_filtered.fastq:md5,6f7584391d586022225f3ffd7e4cab0c"
                     ],
                     [
                         "barcode03",
-                        "LPARef_shortPCR",
+                        "lpa2645",
                         "merged_filtered.fastq:md5,1e7f3fc141b941603df33f8787e1a16f"
                     ]
                 ]
@@ -48,7 +48,7 @@
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-02-26T11:31:44.799156"
+        "timestamp": "2025-02-26T14:10:56.462132807"
     },
     "Should output only one fastq file": {
         "content": [
@@ -66,24 +66,24 @@
                 "1": [
                     [
                         "barcode04",
-                        "LPARef_shortPCR",
+                        "lpa2645",
                         "merged_filtered.fastq:md5,5a3d0d0b5e8a4c9585f648a0ce62227b"
                     ],
                     [
                         "barcode05",
-                        "LPARef_shortPCR",
+                        "lpa2645",
                         "merged_filtered.fastq:md5,02d75f1eb9af1c2d249e7174c305f068"
                     ]
                 ],
                 "split_reads_fastx": [
                     [
                         "barcode04",
-                        "LPARef_shortPCR",
+                        "lpa2645",
                         "merged_filtered.fastq:md5,5a3d0d0b5e8a4c9585f648a0ce62227b"
                     ],
                     [
                         "barcode05",
-                        "LPARef_shortPCR",
+                        "lpa2645",
                         "merged_filtered.fastq:md5,02d75f1eb9af1c2d249e7174c305f068"
                     ]
                 ]
@@ -93,6 +93,6 @@
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-02-26T11:31:51.644854"
+        "timestamp": "2025-02-26T14:11:06.472018679"
     }
 }
