@@ -10,12 +10,11 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of(
-                    ["barcode02", "raw", "$baseDir/tests/input/split_reads/barcode02/merged.bam", "$baseDir/tests/input/split_reads/barcode02/merged.bam.bai"],
-                    ["barcode03", "raw", "$baseDir/tests/input/split_reads/barcode03/merged.bam", "$baseDir/tests/input/split_reads/barcode03/merged.bam.bai"]
+                    ["barcode02", "$baseDir/tests/input/split_reads/barcode02/merged.bam", "$baseDir/tests/input/split_reads/barcode02/merged.bam.bai", "LPARef_shortPCR", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")],
+                    ["barcode03", "$baseDir/tests/input/split_reads/barcode03/merged.bam", "$baseDir/tests/input/split_reads/barcode03/merged.bam.bai", "LPARef_shortPCR", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")]
                 )
-                input[1] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")
-                input[2] = "raw"
-                input[3] = file("$baseDir/bin/filter_reads.py")
+                input[1] = "raw"
+                input[2] = file("$baseDir/bin/filter_reads.py")
                 """
             }
         }
@@ -33,12 +32,11 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of(
-                    ["barcode04", "raw", "$baseDir/tests/input/split_reads/barcode04/merged.bam", "$baseDir/tests/input/split_reads/barcode04/merged.bam.bai"],
-                    ["barcode05", "raw", "$baseDir/tests/input/split_reads/barcode05/merged.bam", "$baseDir/tests/input/split_reads/barcode05/merged.bam.bai"]
+                    ["barcode04", "$baseDir/tests/input/split_reads/barcode04/merged.bam", "$baseDir/tests/input/split_reads/barcode04/merged.bam.bai", "LPARef_shortPCR", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")],
+                    ["barcode05", "$baseDir/tests/input/split_reads/barcode05/merged.bam", "$baseDir/tests/input/split_reads/barcode05/merged.bam.bai", "LPARef_shortPCR", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")]
                 )
-                input[1] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")
-                input[2] = "raw"
-                input[3] = file("$baseDir/bin/filter_reads.py")
+                input[1] = "raw"
+                input[2] = file("$baseDir/bin/filter_reads.py")
                 """
             }
         }

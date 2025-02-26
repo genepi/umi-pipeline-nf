@@ -1,0 +1,56 @@
+{
+    "Should split bed into two files": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "lpa2645",
+                        "lpa2645.bed:md5,0204fd1c946667aeabff838480ec9cd6"
+                    ],
+                    [
+                        "lpa5104",
+                        "lpa5104.bed:md5,c6225a429857908753c23476a58d7b98"
+                    ]
+                ],
+                "bed_channel": [
+                    [
+                        "lpa2645",
+                        "lpa2645.bed:md5,0204fd1c946667aeabff838480ec9cd6"
+                    ],
+                    [
+                        "lpa5104",
+                        "lpa5104.bed:md5,c6225a429857908753c23476a58d7b98"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-02-26T11:09:40.243912"
+    },
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "lpa2645",
+                        "lpa2645.bed:md5,0204fd1c946667aeabff838480ec9cd6"
+                    ]
+                ],
+                "bed_channel": [
+                    [
+                        "lpa2645",
+                        "lpa2645.bed:md5,0204fd1c946667aeabff838480ec9cd6"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-02-26T11:06:25.952017"
+    }
+}

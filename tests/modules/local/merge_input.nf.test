@@ -24,7 +24,6 @@ nextflow_process {
                     sort: { files } 
                     tuple(sample, files)
                 }
-                .view()
                 """
             }
         }

@@ -5,34 +5,28 @@
                 "0": [
                     [
                         "barcode03",
-                        "target",
                         "filtered_fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_0.fastq:md5,59011fb010a30b71e9db62fc880b508e"
                     ],
                     [
                         "barcode03",
-                        "target",
                         "filtered_fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_1.fastq:md5,8ef8fdc7328409cfc34e5036f8023d7b"
                     ],
                     [
                         "barcode03",
-                        "target",
                         "filtered_fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_2.fastq:md5,420a9ed6574702fa025b2580315a3d1c"
                     ]
                 ],
                 "merged_fastq": [
                     [
                         "barcode03",
-                        "target",
                         "filtered_fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_0.fastq:md5,59011fb010a30b71e9db62fc880b508e"
                     ],
                     [
                         "barcode03",
-                        "target",
                         "filtered_fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_1.fastq:md5,8ef8fdc7328409cfc34e5036f8023d7b"
                     ],
                     [
                         "barcode03",
-                        "target",
                         "filtered_fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_2.fastq:md5,420a9ed6574702fa025b2580315a3d1c"
                     ]
                 ]
@@ -42,7 +36,7 @@
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-02-18T17:39:52.858568"
+        "timestamp": "2025-02-26T11:18:18.244574"
     },
     "Should output empty file": {
         "content": [
@@ -50,14 +44,12 @@
                 "0": [
                     [
                         "barcode03",
-                        "target",
                         "barcode03_merged.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "merged_fastq": [
                     [
                         "barcode03",
-                        "target",
                         "barcode03_merged.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ]
@@ -67,7 +59,7 @@
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-02-18T17:40:57.970231"
+        "timestamp": "2025-02-26T11:18:23.917624"
     },
     "Should run without failures: offline": {
         "content": [
@@ -75,14 +67,12 @@
                 "0": [
                     [
                         "barcode03",
-                        "target",
                         "barcode03_merged.fastq:md5,1a65a32bc2d389105716ebebf13a3d40"
                     ]
                 ],
                 "merged_fastq": [
                     [
                         "barcode03",
-                        "target",
                         "barcode03_merged.fastq:md5,1a65a32bc2d389105716ebebf13a3d40"
                     ]
                 ]
@@ -92,6 +82,6 @@
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-02-18T17:39:37.774507"
+        "timestamp": "2025-02-26T11:18:11.952876"
     }
 }

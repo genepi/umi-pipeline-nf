@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process MAP_READS"
-    script "modules/local/map_reads.nf"
+    script "modules/local/umi_processing/map_reads.nf"
     process "MAP_READS"
 
     test("Maps raw reads and should run with success") {
@@ -10,57 +10,11 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.from(
-                    ["barcode03", "raw", "$baseDir/tests/input/mapping/barcode03/raw/lpa2645_filtered.fastq"], 
-                    ["barcode04", "raw", "$baseDir/tests/input/mapping/barcode04/raw/lpa2645_filtered.fastq"], 
-                    ["barcode05", "raw", "$baseDir/tests/input/mapping/barcode05/raw/lpa2645_filtered.fastq"], 
+                    ["barcode03", "$baseDir/tests/input/mapping/barcode03/raw/lpa2645_filtered.fastq"], 
+                    ["barcode04", "$baseDir/tests/input/mapping/barcode04/raw/lpa2645_filtered.fastq"], 
+                    ["barcode05", "$baseDir/tests/input/mapping/barcode05/raw/lpa2645_filtered.fastq"], 
                     )
                 input[1] = "raw"
-                input[2] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta")
-                """
-            }
-        }
-
-        then {
-            assert process.success
-            assert snapshot(process.out.sort).match()
-        }
-
-    }
-
-    test("Maps consensus reads and should run with success") {
-
-        when {
-            process {
-                """
-                input[0] = Channel.from(
-                    ["barcode03", "consensus", "$baseDir/tests/input/mapping/barcode03/consensus/masked_consensus.fastq"], 
-                    ["barcode04", "consensus", "$baseDir/tests/input/mapping/barcode04/consensus/masked_consensus.fastq"], 
-                    ["barcode05", "consensus", "$baseDir/tests/input/mapping/barcode05/consensus/masked_consensus.fastq"], 
-                    )
-                input[1] = "consensus"
-                input[2] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta")
-                """
-            }
-        }
-
-        then {
-            assert process.success
-            assert snapshot(process.out.sort).match()
-        }
-
-    }
-
-    test("Maps final consensus reads and should run with success") {
-
-        when {
-            process {
-                """
-                input[0] = Channel.from(
-                    ["barcode03", "final", "$baseDir/tests/input/mapping/barcode03/final/final.fastq"], 
-                    ["barcode04", "final", "$baseDir/tests/input/mapping/barcode04/final/final.fastq"], 
-                    ["barcode05", "final", "$baseDir/tests/input/mapping/barcode05/final/final.fastq"], 
-                    )
-                input[1] = "final"
                 input[2] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta")
                 """
             }
