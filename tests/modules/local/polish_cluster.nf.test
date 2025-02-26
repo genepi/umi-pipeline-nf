@@ -13,11 +13,11 @@ nextflow_process {
                 process {
                     """
                     input[0] = Channel.of(
-                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule0_sub0.fastq"],
-                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule1_sub0.fastq"],
-                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule2_sub0.fastq"],
-                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule3_sub0.fastq"],
-                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule4_sub0.fastq"]
+                        ["barcode03", "lpa2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule0_sub0.fastq"],
+                        ["barcode03", "lpa2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule1_sub0.fastq"],
+                        ["barcode03", "lpa2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule2_sub0.fastq"],
+                        ["barcode03", "lpa2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule3_sub0.fastq"],
+                        ["barcode03", "lpa2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule4_sub0.fastq"]
                     )
                     input[1] = "raw"
                     """
@@ -31,11 +31,11 @@ nextflow_process {
             process {
                 """
                     input[0] = Channel.of(
-                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule0_sub0.fastq"],
-                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule1_sub0.fastq"],
-                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule2_sub0.fastq"],
-                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule3_sub0.fastq"],
-                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule4_sub0.fastq"]
+                        ["barcode03", "lpa2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule0_sub0.fastq"],
+                        ["barcode03", "lpa2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule1_sub0.fastq"],
+                        ["barcode03", "lpa2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule2_sub0.fastq"],
+                        ["barcode03", "lpa2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule3_sub0.fastq"],
+                        ["barcode03", "lpa2645", "$baseDir/tests/input/polish_cluster/single_clusters/smolecule4_sub0.fastq"]
                     )
                     input[1] = "consensus"
                 """
@@ -54,7 +54,7 @@ nextflow_process {
             process {
                 """
                     input[0] = Channel.of(
-                        ["barcode03", "LPA2645", "$baseDir/tests/input/polish_cluster/glued_clusters/barcode03_combined_clusters_1.fastq"]
+                        ["barcode03", "lpa2645", "$baseDir/tests/input/polish_cluster/glued_clusters/barcode03_combined_clusters_1.fastq"]
                     )
                     input[1] = "consensus"
                 """

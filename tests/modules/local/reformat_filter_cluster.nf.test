@@ -10,9 +10,9 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of(
-                    ["barcode03", "LPA2645", "$baseDir/tests/input/cluster/barcode03/detected_umis.fastq"],
-                    ["barcode04", "LPA2645", "$baseDir/tests/input/cluster/barcode04/detected_umis.fastq"],
-                    ["barcode05", "LPA2645", "$baseDir/tests/input/cluster/barcode05/detected_umis.fastq"],
+                    ["barcode03", "lpa2645", "$baseDir/tests/input/cluster/barcode03/detected_umis.fastq"],
+                    ["barcode04", "lpa2645", "$baseDir/tests/input/cluster/barcode04/detected_umis.fastq"],
+                    ["barcode05", "lpa2645", "$baseDir/tests/input/cluster/barcode05/detected_umis.fastq"],
                 )
                 input[1] = "raw"
                 """

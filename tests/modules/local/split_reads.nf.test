@@ -10,8 +10,8 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of(
-                    ["barcode02", "$baseDir/tests/input/split_reads/barcode02/merged.bam", "$baseDir/tests/input/split_reads/barcode02/merged.bam.bai", "LPARef_shortPCR", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")],
-                    ["barcode03", "$baseDir/tests/input/split_reads/barcode03/merged.bam", "$baseDir/tests/input/split_reads/barcode03/merged.bam.bai", "LPARef_shortPCR", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")]
+                    ["barcode02", "$baseDir/tests/input/split_reads/barcode02/merged.bam", "$baseDir/tests/input/split_reads/barcode02/merged.bam.bai", "lpa2645", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")],
+                    ["barcode03", "$baseDir/tests/input/split_reads/barcode03/merged.bam", "$baseDir/tests/input/split_reads/barcode03/merged.bam.bai", "lpa2645", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")]
                 )
                 input[1] = "raw"
                 input[2] = file("$baseDir/bin/filter_reads.py")
@@ -32,8 +32,8 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of(
-                    ["barcode04", "$baseDir/tests/input/split_reads/barcode04/merged.bam", "$baseDir/tests/input/split_reads/barcode04/merged.bam.bai", "LPARef_shortPCR", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")],
-                    ["barcode05", "$baseDir/tests/input/split_reads/barcode05/merged.bam", "$baseDir/tests/input/split_reads/barcode05/merged.bam.bai", "LPARef_shortPCR", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")]
+                    ["barcode04", "$baseDir/tests/input/split_reads/barcode04/merged.bam", "$baseDir/tests/input/split_reads/barcode04/merged.bam.bai", "lpa2645", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")],
+                    ["barcode05", "$baseDir/tests/input/split_reads/barcode05/merged.bam", "$baseDir/tests/input/split_reads/barcode05/merged.bam.bai", "lpa2645", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")]
                 )
                 input[1] = "raw"
                 input[2] = file("$baseDir/bin/filter_reads.py")
