@@ -5,7 +5,7 @@ channels:
   - defaults
 dependencies:
   - python>=3.8
-  - medaka>=1.8.0
+  - medaka>2.0.0
   - minimap2=2.24
   - samtools=1.15.1
   - seqtk=1.3
