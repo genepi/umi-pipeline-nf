@@ -8,12 +8,12 @@ process DETECT_UMI_FASTQ {
         path(umi_extract_python)
 
     output:
-        tuple val("${sample}"), val("${target}"), path("${cache_dir}/${sample}/*fastq"), emit: umi_extract_fastq
+        tuple val("${sample}"), val("${target}"), path("${cache_dir}/${sample}/${target}/*fastq"), emit: umi_extract_fastq
         path("${cache_dir}/${sample}/*tsv")
 
     script:
         def output_filename = "extracted_umis_${sample}_${task.index}"
-        def output_dir = "${cache_dir}/${sample}" 
+        def output_dir = "${cache_dir}/${sample}/${target}" 
         def write_report = params.write_reports ? "--tsv" : ""
         
     """
