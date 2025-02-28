@@ -2,9 +2,9 @@ process MUTSERVE {
     publishDir "${params.output}/${params.variant_caller}/${sample}/${target}/${type}", mode: 'copy'
   
     input:
-      tuple val( sample ), val( target ), path( bam ), path( bai )
+      tuple val( sample ), val( _target ), path( bam ), path( bai )
       val( type )
-      path bed
+      tuple val( target ), path( bed )
       path reference
       path reference_fai
     
