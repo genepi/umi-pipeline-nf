@@ -15,7 +15,7 @@ nextflow_process {
                 """
                 input[0] = Channel.of(["barcode03", "lpa2645", "$baseDir/tests/input/variant_calling/barcode03/final.bam", "$baseDir/tests/input/variant_calling/barcode03/final.bam.bai"])
                 input[1] = "final"
-                input[2] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")
+                input[2] = ["lpa2645", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")]
                 input[3] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta")
                 input[4] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta.fai")
                 """
@@ -43,7 +43,7 @@ nextflow_process {
                     ["barcode05", "lpa2645", "$baseDir/tests/input/variant_calling/barcode05/final.bam", "$baseDir/tests/input/variant_calling/barcode05/final.bam.bai"]
                     )
                 input[1] = "final"
-                input[2] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")
+                input[2] = ["lpa2645", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")]
                 input[3] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta")
                 input[4] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta.fai")
                 """
