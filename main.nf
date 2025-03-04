@@ -9,7 +9,7 @@ workflow {
 
      if (params.help) {
           def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-          def String command = "nextflow run genepi/${workflow.manifest.name} -r v1.0.1 -profile test,docker"
+          def String command = "nextflow run genepi/${workflow.manifest.name} -r v1.0.0-beta -profile test,docker"
           log.info paramsHelp(command) + citation
           exit 0
      }
