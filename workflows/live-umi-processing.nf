@@ -35,7 +35,7 @@ workflow LIVE_UMI_PROCESSING {
         CONTINUE_PIPELINE( continue_ch )
 
         Channel
-            .fromPath("${params.input}/barcode*/*.fastq*")
+            .fromPath("${params.input}/barcode*/*.fastq")
             .set{ existing_fastqs }
         
         Channel
