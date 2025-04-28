@@ -39,7 +39,7 @@ workflow LIVE_UMI_PROCESSING {
             .set{ existing_fastqs }
         
         Channel
-            .watchPath("${params.input}/barcode*/*.fastq*", 'create, modify')
+            .watchPath("${params.input}/barcode*/*.fastq", 'create, modify')
             .until { it.getFileName().toString().toLowerCase().contains("continue") } 
             .set { watched_fastqs }
             
