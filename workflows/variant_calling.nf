@@ -18,8 +18,19 @@ workflow VARIANT_CALLING {
                 LOFREQ_CONSENSUS( consensus_bam, consensus, reference, reference_fai )
                 LOFREQ_FINAL_CONSENSUS( final_consensus_bam, final_consensus, reference, reference_fai )
             }else if( params.variant_caller == "mutserve"){
-                MUTSERVE_CONSENSUS( consensus_bam, consensus, bed, reference, reference_fai )
-                MUTSERVE_FINAL_CONSENSUS( final_consensus_bam, final_consensus, bed, reference, reference_fai )
+
+                bed
+                .map{ _target, _bed -> tuple(_bed, _target)}
+                .combine(consensus_bam, by: [1])
+                .set{ consensus_bam_bed }
+                
+                bed
+                .map{ _target, _bed -> tuple(_bed, _target)}
+                .combine(final_consensus_bam, by: [1])
+                .set{ final_consensus_bam_bed }
+
+                MUTSERVE_CONSENSUS( consensus_bam_bed, consensus, reference, reference_fai )
+                MUTSERVE_FINAL_CONSENSUS( final_consensus_bam_bed, final_consensus, reference, reference_fai )
             }else if( params.variant_caller == "freebayes"){
                 FREEBAYES_CONSENSUS( consensus_bam, consensus, reference, reference_fai )
                 FREEBAYES_FINAL_CONSENSUS( final_consensus_bam, final_consensus, reference, reference_fai )
