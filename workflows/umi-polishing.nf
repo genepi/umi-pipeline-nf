@@ -1,5 +1,7 @@
 include {GLUE_CLUSTERS} from '../modules/local/umi_polishing/glue_clusters.nf'
 include {POLISH_CLUSTER} from '../modules/local/umi_polishing/polish_cluster.nf'
+include {ALIGN_CLUSTER} from '../modules/local/umi_polishing/align.nf'
+include {PARSE_BAM} from '../modules/local/umi_polishing/parse_bam.nf'
 include {MERGE_CONSENSUS_FASTQ} from '../modules/local/umi_polishing/merge_consensus_fastq.nf'
 include {FILTER_CONSENSUS_FASTQ} from '../modules/local/umi_polishing/filter_consensus_fastq.nf'
 include {REFORMAT_CONSENSUS_CLUSTER} from '../modules/local/umi_polishing/reformat_consensus_cluster.nf'
@@ -14,6 +16,7 @@ workflow UMI_POLISHING {
         consensus
         final_consensus
         reference
+        umi_parse_bam
         umi_extract
         umi_reformat_consensus
 
@@ -29,7 +32,12 @@ workflow UMI_POLISHING {
             .transpose(by: 2)
             .set { glued_clusters_transposed }
 
-        POLISH_CLUSTER( glued_clusters_transposed, consensus )
+        if ( params.reference_based_polishing ) {
+            ALIGN_CLUSTER( glued_clusters_transposed, consensus , reference)
+            PARSE_BAM( ALIGN_CLUSTER.out.smolecule_clusters_bam, consensus, reference, umi_parse_bam)
+        } else {
+            POLISH_CLUSTER( glued_clusters_transposed, consensus )
+        }
         
         POLISH_CLUSTER.out.consensus_fastq
         .map{ sample, target, fastq -> tuple( groupKey(sample, n_parsed_cluster.get("$sample")), target, fastq) }

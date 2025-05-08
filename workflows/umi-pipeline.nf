@@ -25,6 +25,7 @@ workflow UMI_PIPELINE {
         umi_reformat_consensus      = file( "${projectDir}/bin/reformat_consensus.py", checkIfExists: true )
         umi_cluster_report          = file( "${projectDir}/bin/cluster_report.py", checkIfExists: true )
         umi_cluster_stats_summary   = file( "${projectDir}/bin/summary_cluster_report.py", checkIfExists: true )
+        umi_parse_bam               = file( "${projectDir}/bin/parse_cluster_alignment.py", checkIfExists: true)
 
         // subdirectory and file prefixes
         raw                         = "raw"
@@ -96,6 +97,7 @@ workflow UMI_PIPELINE {
             consensus,
             final_consensus,
             reference,
+            umi_parse_bam,
             umi_extract,
             umi_reformat_consensus
         )
