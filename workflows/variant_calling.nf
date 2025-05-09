@@ -19,7 +19,7 @@
                 .combine(bam, by: [1])
                 .set{ bam_bed }
                 
-                MUTSERVE_CONSENSUS( bam_bed, type, reference, reference_fai )
+                MUTSERVE( bam_bed, type, reference, reference_fai )
                 
             }else if( params.variant_caller == "freebayes"){
                 FREEBAYES( bam, type, reference, reference_fai )
