@@ -1,7 +1,7 @@
 process CREATE_CONSENSUS {
     input:
         tuple val( sample ), val( target ), path( smolecule_clusters_parsed_bam ), path( smolecule_clusters_parsed_bam_bai )
-        val( consensus )
+        val( type )
 
     output:
         tuple val( "${sample}" ), val( "${target}" ), path( "${smolecule_clusters_parsed_bam.baseName}.hdf" ), emit: smolecule_consensus
