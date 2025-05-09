@@ -1,10 +1,11 @@
 nextflow.enable.dsl = 2
 
-include { LIVE_UMI_PROCESSING       } from './live-umi-processing.nf'
-include { OFFLINE_UMI_PROCESSING    } from './offline-umi-processing.nf'
-include { UMI_POLISHING             } from './umi-polishing.nf'
-include { VARIANT_CALLING           } from './variant_calling.nf'
-include { PARSE_BED                 } from '../modules/local/parse_bed.nf'
+include { LIVE_UMI_PROCESSING                                               } from './live-umi-processing.nf'
+include { OFFLINE_UMI_PROCESSING                                            } from './offline-umi-processing.nf'
+include { UMI_POLISHING                                                     } from './umi-polishing.nf'
+include { CONSENSUS_POLISHING                                               } from './consensus_polishing.nf'
+include { VARIANT_CALLING; VARIANT_CALLING as CONSENSUS_VARIANT_CALLING     } from './variant_calling.nf'
+include { PARSE_BED                                                         } from '../modules/local/parse_bed.nf'
 
 workflow UMI_PIPELINE {
 
@@ -95,20 +96,39 @@ workflow UMI_PIPELINE {
             processed_umis,
             n_parsed_cluster,
             consensus,
-            final_consensus,
             reference,
             umi_parse_bam,
-            umi_extract,
-            umi_reformat_consensus
         )
 
-        VARIANT_CALLING(
-            UMI_POLISHING.out.consensus_bam,
-            UMI_POLISHING.out.final_consensus_bam,
-            consensus,
-            final_consensus,
-            reference,
-            reference_fai,
-            bed_ch
-        )
+        
+        if( params.call_variants ){
+            VARIANT_CALLING(
+                UMI_POLISHING.out.consensus_bam,
+                consensus,
+                reference,
+                reference_fai,
+                bed_ch
+            )
+        }
+
+        if( !params.reference_based_polishing ){
+            CONSENSUS_POLISHING(
+                UMI_POLISHING.out.consensus_fastq,
+                consensus,
+                final_consensus,
+                reference,
+                umi_extract,
+                umi_reformat_consensus
+            )
+
+           if( params.call_variants ){
+                CONSENSUS_VARIANT_CALLING(
+                    CONSENSUS_POLISHING.out.final_consensus_bam,
+                    final_consensus,
+                    reference,
+                    reference_fai,
+                    bed_ch
+                )
+           }
+        }
 }

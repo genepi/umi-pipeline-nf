@@ -2,6 +2,8 @@ include {GLUE_CLUSTERS} from '../modules/local/umi_polishing/glue_clusters.nf'
 include {POLISH_CLUSTER} from '../modules/local/umi_polishing/polish_cluster.nf'
 include {ALIGN_CLUSTER} from '../modules/local/umi_polishing/align.nf'
 include {PARSE_BAM} from '../modules/local/umi_polishing/parse_bam.nf'
+include {CREATE_CONSENSUS} from '../modules/local/umi_polishing/create_consensus.nf'
+include {STITCH_CONSENSUS} from '../modules/local/umi_polishing/stitch_consensus.nf'
 include {MERGE_CONSENSUS_FASTQ} from '../modules/local/umi_polishing/merge_consensus_fastq.nf'
 include {FILTER_CONSENSUS_FASTQ} from '../modules/local/umi_polishing/filter_consensus_fastq.nf'
 include {REFORMAT_CONSENSUS_CLUSTER} from '../modules/local/umi_polishing/reformat_consensus_cluster.nf'
@@ -14,11 +16,8 @@ workflow UMI_POLISHING {
         processed_umis
         n_parsed_cluster
         consensus
-        final_consensus
         reference
         umi_parse_bam
-        umi_extract
-        umi_reformat_consensus
 
     main:
          GLUE_CLUSTERS(processed_umis, consensus)
@@ -35,11 +34,17 @@ workflow UMI_POLISHING {
         if ( params.reference_based_polishing ) {
             ALIGN_CLUSTER( glued_clusters_transposed, consensus , reference)
             PARSE_BAM( ALIGN_CLUSTER.out.smolecule_clusters_bam, consensus, reference, umi_parse_bam)
+            CREATE_CONSENSUS( PARSE_BAM.out.smolecule_clusters_bam_parsed, consensus)
+            STITCH_CONSENSUS( CREATE_CONSENSUS.out.smolecule_consensus, consensus, PARSE_BAM.out.parsed_reference )
+            STITCH_CONSENSUS.out.consensus_fastq
+            .set{ consensus_fastq }
         } else {
             POLISH_CLUSTER( glued_clusters_transposed, consensus )
+            POLISH_CLUSTER.out.consensus_fastq
+            .set{ consensus_fastq }
         }
         
-        POLISH_CLUSTER.out.consensus_fastq
+        consensus_fastq
         .map{ sample, target, fastq -> tuple( groupKey(sample, n_parsed_cluster.get("$sample")), target, fastq) }
         .groupTuple( by: [0,1] )
         .set{ merge_consensus }
@@ -56,15 +61,9 @@ workflow UMI_POLISHING {
         }
 
         MAP_CONSENSUS( consensus_fastq, consensus, reference )
-        DETECT_UMI_CONSENSUS_FASTQ( consensus_fastq, consensus, umi_extract )
-        CLUSTER_CONSENSUS( DETECT_UMI_CONSENSUS_FASTQ.out.umi_extract_fastq , consensus )
-        REFORMAT_CONSENSUS_CLUSTER( CLUSTER_CONSENSUS.out.consensus_fasta, final_consensus, umi_reformat_consensus )
-        MAP_FINAL_CONSENSUS( REFORMAT_CONSENSUS_CLUSTER.out.consensus_fastq, final_consensus, reference )
-        
-
 
     emit: 
         consensus_bam = MAP_CONSENSUS.out.bam_consensus
-        final_consensus_bam = MAP_FINAL_CONSENSUS.out.bam_consensus
+        consensus_fastq
 
 }

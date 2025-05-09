@@ -7,7 +7,7 @@ process PARSE_BAM {
 
     output:
         tuple val( "${sample}" ), val( "${target}" ), path( "${smolecule_clusters_bam.baseName}_parsed.bam" ), path( "${smolecule_clusters_bam.baseName}_parsed.bam.bai" ), emit: smolecule_clusters_bam_parsed
-        path ( "parsed_reference.fasta" ), emit: parsed_reference 
+        path ( "reference_parsed.fasta" ), emit: parsed_reference 
 
     script:
     """

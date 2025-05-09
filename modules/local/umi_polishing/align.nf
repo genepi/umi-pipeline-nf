@@ -15,8 +15,8 @@ process ALIGN_CLUSTER {
         mini_align \
             -d map-ont \
             -m \
-            -r ${reference}
-            -i ${smolecule_clusters_fastq}
-            -p ${smolecule_clusters_fastq.baseName}.bam
+            -r ${reference} \
+            -i ${smolecule_clusters_fastq} \
+            -p ${smolecule_clusters_fastq.baseName}
     """
 }
