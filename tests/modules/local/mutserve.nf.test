@@ -13,11 +13,10 @@ nextflow_process {
             }
             process {
                 """
-                input[0] = Channel.of(["barcode03", "lpa2645", "$baseDir/tests/input/variant_calling/barcode03/final.bam", "$baseDir/tests/input/variant_calling/barcode03/final.bam.bai"])
+                input[0] = Channel.of(["lpa2645", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed"), "barcode03", "$baseDir/tests/input/variant_calling/barcode03/final.bam", "$baseDir/tests/input/variant_calling/barcode03/final.bam.bai"], )
                 input[1] = "final"
-                input[2] = ["lpa2645", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")]
-                input[3] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta")
-                input[4] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta.fai")
+                input[2] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta")
+                input[3] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta.fai")
                 """
             }
         }
@@ -38,14 +37,13 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of(
-                    ["barcode03", "lpa2645", "$baseDir/tests/input/variant_calling/barcode03/final.bam", "$baseDir/tests/input/variant_calling/barcode03/final.bam.bai"],
-                    ["barcode04", "lpa2645", "$baseDir/tests/input/variant_calling/barcode04/final.bam", "$baseDir/tests/input/variant_calling/barcode04/final.bam.bai"],
-                    ["barcode05", "lpa2645", "$baseDir/tests/input/variant_calling/barcode05/final.bam", "$baseDir/tests/input/variant_calling/barcode05/final.bam.bai"]
+                    ["lpa2645", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed"), "barcode03", "$baseDir/tests/input/variant_calling/barcode03/final.bam", "$baseDir/tests/input/variant_calling/barcode03/final.bam.bai"],
+                    ["lpa2645", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed"), "barcode04", "$baseDir/tests/input/variant_calling/barcode04/final.bam", "$baseDir/tests/input/variant_calling/barcode04/final.bam.bai"],
+                    ["lpa2645", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed"), "barcode05", "$baseDir/tests/input/variant_calling/barcode05/final.bam", "$baseDir/tests/input/variant_calling/barcode05/final.bam.bai"]
                     )
                 input[1] = "final"
-                input[2] = ["lpa2645", file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.bed")]
-                input[3] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta")
-                input[4] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta.fai")
+                input[2] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta")
+                input[3] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta.fai")
                 """
             }
         }

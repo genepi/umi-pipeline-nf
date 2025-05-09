@@ -35,11 +35,11 @@ workflow LIVE_UMI_PROCESSING {
         CONTINUE_PIPELINE( continue_ch )
 
         Channel
-            .fromPath("${params.input}/barcode*/*.fastq*")
+            .fromPath("${params.input}/barcode*/*.fastq")
             .set{ existing_fastqs }
         
         Channel
-            .watchPath("${params.input}/barcode*/*.fastq*", 'create, modify')
+            .watchPath("${params.input}/barcode*/*.fastq", 'create, modify')
             .until { it.getFileName().toString().toLowerCase().contains("continue") } 
             .set { watched_fastqs }
             

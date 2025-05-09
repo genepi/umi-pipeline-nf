@@ -13,9 +13,9 @@
                     "final_raw.txt:md5,f8da170e2122c7caffa8fb3efb311434"
                 ],
                 "2": [
-                    "final_parsed.txt:md5,6acf8a7a7f2d4481996671da99ab520d",
-                    "final_parsed.txt:md5,f199bb8726d869d680004d35713cbdd4",
-                    "final_parsed.txt:md5,ff76e27a92d752db87135a57951f3cc4"
+                    "final_parsed.txt:md5,2b3f9210738b4fc0c07d48decaecd327",
+                    "final_parsed.txt:md5,9c029f65b9ab61dee763ef25c7a584d2",
+                    "final_parsed.txt:md5,c330ab0899268519e2eecb0e9f9456f1"
                 ],
                 "variants": [
                     "final.txt:md5,1e5554e27b3b8a0687374df975a6c9cb",
@@ -23,9 +23,9 @@
                     "final.txt:md5,bdcd9fa23bcd1e226b07988460f9b162"
                 ],
                 "variants_parsed": [
-                    "final_parsed.txt:md5,6acf8a7a7f2d4481996671da99ab520d",
-                    "final_parsed.txt:md5,f199bb8726d869d680004d35713cbdd4",
-                    "final_parsed.txt:md5,ff76e27a92d752db87135a57951f3cc4"
+                    "final_parsed.txt:md5,2b3f9210738b4fc0c07d48decaecd327",
+                    "final_parsed.txt:md5,9c029f65b9ab61dee763ef25c7a584d2",
+                    "final_parsed.txt:md5,c330ab0899268519e2eecb0e9f9456f1"
                 ],
                 "variants_raw": [
                     "final_raw.txt:md5,94352f26d9095f38eb44ff730db75dbc",
@@ -36,9 +36,9 @@
         ],
         "meta": {
             "nf-test": "0.9.0-rc2",
-            "nextflow": "24.05.0"
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-06-20T13:06:51.2669"
+        "timestamp": "2025-05-07T17:45:04.071076814"
     },
     "Should run without failures": {
         "content": [
@@ -50,13 +50,13 @@
                     "final_raw.txt:md5,94352f26d9095f38eb44ff730db75dbc"
                 ],
                 "2": [
-                    "final_parsed.txt:md5,f199bb8726d869d680004d35713cbdd4"
+                    "final_parsed.txt:md5,c330ab0899268519e2eecb0e9f9456f1"
                 ],
                 "variants": [
                     "final.txt:md5,1e5554e27b3b8a0687374df975a6c9cb"
                 ],
                 "variants_parsed": [
-                    "final_parsed.txt:md5,f199bb8726d869d680004d35713cbdd4"
+                    "final_parsed.txt:md5,c330ab0899268519e2eecb0e9f9456f1"
                 ],
                 "variants_raw": [
                     "final_raw.txt:md5,94352f26d9095f38eb44ff730db75dbc"
@@ -65,8 +65,8 @@
         ],
         "meta": {
             "nf-test": "0.9.0-rc2",
-            "nextflow": "24.05.0"
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-06-20T13:06:38.306114"
+        "timestamp": "2025-05-07T17:44:48.551176604"
     }
 }

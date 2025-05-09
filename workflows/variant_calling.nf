@@ -14,7 +14,13 @@
             if( params.variant_caller == "lofreq" ){
                 LOFREQ( bam, type, reference, reference_fai )
             }else if( params.variant_caller == "mutserve"){
-                MUTSERVE( bam, type, bed, reference, reference_fai )
+                bed
+                .map{ _target, _bed -> tuple(_bed, _target)}
+                .combine(bam, by: [1])
+                .set{ bam_bed }
+                
+                MUTSERVE_CONSENSUS( bam_bed, type, reference, reference_fai )
+                
             }else if( params.variant_caller == "freebayes"){
                 FREEBAYES( bam, type, reference, reference_fai )
             }else{
