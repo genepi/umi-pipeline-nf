@@ -62,8 +62,8 @@ def parse_alignment(bam_file, reference_fasta, output_reference, output_bam):
             raise ValueError("Reference '{}' not found in BAM header".format(oldref))
 
         new_name = "{}_{}".format(oldref, cluster)
-        cluster_to_newname[cluster] = new_name
-        new_sq.append({"SN": new_name, "LN": length})
+        cluster_to_newname[cluster] = cluster
+        new_sq.append({"SN": cluster, "LN": length})
 
     new_header = {"HD": {"VN": "1.0"}, "SQ": new_sq}
 
