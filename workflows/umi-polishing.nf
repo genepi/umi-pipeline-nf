@@ -35,7 +35,12 @@ workflow UMI_POLISHING {
             ALIGN_CLUSTER( glued_clusters_transposed, consensus , reference)
             PARSE_BAM( ALIGN_CLUSTER.out.smolecule_clusters_bam, consensus, reference, umi_parse_bam)
             CREATE_CONSENSUS( PARSE_BAM.out.smolecule_clusters_bam_parsed, consensus)
-            STITCH_CONSENSUS( CREATE_CONSENSUS.out.smolecule_consensus, consensus, PARSE_BAM.out.parsed_reference )
+
+            CREATE_CONSENSUS.out.smolecule_consensus
+            .join(PARSE_BAM.out.parsed_reference, by : [0, 1, 2])
+            .set{ smolecule_consensus_parsed_reference }
+
+            STITCH_CONSENSUS( smolecule_consensus_parsed_reference, consensus )
             STITCH_CONSENSUS.out.consensus_fastq
             .set{ consensus_fastq }
         } else {

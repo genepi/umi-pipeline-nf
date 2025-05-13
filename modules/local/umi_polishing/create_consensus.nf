@@ -3,12 +3,12 @@ process CREATE_CONSENSUS {
     publishDir "${params.output}/${sample}/${target}/polishing/${type}", mode: 'copy'
     
     input:
-        tuple val( sample ), val( target ), path( smolecule_clusters_parsed_bam ), path( smolecule_clusters_parsed_bam_bai )
+        tuple val( sample ), val( target ), val( smolecule_cluster_name), path( smolecule_clusters_parsed_bam ), path( smolecule_clusters_parsed_bam_bai )
         val( type )
 
     output:
-        tuple val( "${sample}" ), val( "${target}" ), path( "${smolecule_clusters_parsed_bam.baseName}.hdf" ), emit: smolecule_consensus
-        path( "${smolecule_clusters_parsed_bam.baseName}.log" )
+        tuple val( "${sample}" ), val( "${target}" ), val( "${smolecule_cluster_name}" ), path( "${smolecule_cluster_name}.hdf" ), emit: smolecule_consensus
+        path( "${smolecule_cluster_name}.log" )
 
 
     script:
@@ -22,6 +22,6 @@ process CREATE_CONSENSUS {
             --batch_size ${params.chunk_size} \
             --model ${params.medaka_model} \
             ${smolecule_clusters_parsed_bam} \
-            ${smolecule_clusters_parsed_bam.baseName}.hdf 2> "${smolecule_clusters_parsed_bam.baseName}.log"
+            ${smolecule_cluster_name}.hdf 2> "${smolecule_cluster_name}.log"
     """
 }
