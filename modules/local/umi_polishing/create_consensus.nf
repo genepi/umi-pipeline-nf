@@ -10,6 +10,8 @@ process CREATE_CONSENSUS {
         def medaka_subtool = workflow.manifest.version.matches( '<= 0.2.1') ? 'consensus' : 'inference'
     """
         medaka $medaka_subtool \
+            --check_output \
+            --save_features \
             --batch_size ${params.chunk_size} \
             --model ${params.medaka_model} \
             ${smolecule_clusters_parsed_bam} \
