@@ -12,7 +12,7 @@ The newest version of the pipeline supports live analysis of the clusters during
 Umi-pipeline-nf originated from a Snakemake-based analysis pipeline ([pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon); originally developed by [Karst et al, Nat Biotechnol 18:165–169, 2021](https://www.nature.com/articles/s41592-020-01041-y)). We have migrated the pipeline to [Nextflow](https://www.nextflow.io) and incorporated several optimizations and additional functionalities.
 
 
-![Workflow](docs/images/umi-pipeline-nf_metro-map.svg)
+![Workflow](docs/images/metro-map.svg)
 
 ## Workflow
 
