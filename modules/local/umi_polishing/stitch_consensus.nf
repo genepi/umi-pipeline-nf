@@ -12,7 +12,7 @@ process STITCH_CONSENSUS {
     script:
     """
         medaka stitch \
-            $qualities \
+            --qualities \
             ${smolecule_consensus} \
             ${parsed_reference} \
             ${smolecule_cluster_name}_consensus.fastq
