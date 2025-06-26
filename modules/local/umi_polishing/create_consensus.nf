@@ -12,13 +12,10 @@ process CREATE_CONSENSUS {
 
 
     script:
-        def medaka_subtool = workflow.manifest.version.matches( '<= 0.2.1') ? 'consensus' : 'inference'
-        def precision = workflow.manifest.version.matches( '<= 0.2.1') ? '' : '--full_precision'
     """
-        medaka $medaka_subtool \
+        medaka consensus \
             --check_output \
             --save_features \
-            $precision \
             --batch_size ${params.chunk_size} \
             --model ${params.medaka_model} \
             ${smolecule_clusters_parsed_bam} \
