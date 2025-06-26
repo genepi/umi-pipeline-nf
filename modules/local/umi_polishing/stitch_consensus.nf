@@ -10,10 +10,8 @@ process STITCH_CONSENSUS {
         tuple val( "${sample}" ), val( "${target}" ), path( "${smolecule_cluster_name}_consensus.fastq" ), emit: consensus_fastq
 
     script:
-        def medaka_subtool = workflow.manifest.version.matches( '<= 0.2.1') ? 'stitch' : 'sequence'
-        def qualities = params.output_format == "fastq" ? "--qualities" : ""
     """
-        medaka $medaka_subtool \
+        medaka stitch \
             $qualities \
             ${smolecule_consensus} \
             ${parsed_reference} \
