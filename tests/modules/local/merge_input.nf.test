@@ -10,7 +10,7 @@ nextflow_process {
             params {
                 min_read_length = 1000
                 min_qscore = 9
-                live = false
+                subsampling = true
             }
             process {
                 """
@@ -20,7 +20,7 @@ nextflow_process {
                         "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_1.fastq.gz", 
                         "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_2.fastq.gz"],
                     ]
-                ).map{sample, files -> 
+                ).map{ sample, files -> 
                     sort: { files } 
                     tuple(sample, files)
                 }
@@ -72,11 +72,9 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of(
-                    ["barcode03", 
-                        ["$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_0.fastq.gz", 
-                        "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_1.fastq.gz", 
-                        "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_2.fastq.gz"],
-                    ]
+                    ["barcode03", "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_0.fastq.gz"], 
+                    ["barcode03", "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_1.fastq.gz"], 
+                    ["barcode03", "$baseDir/tests/input/merge_fastq/fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_2.fastq.gz"], 
                 )
                 """
             }
