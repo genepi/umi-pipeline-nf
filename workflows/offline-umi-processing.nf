@@ -30,13 +30,13 @@ workflow OFFLINE_UMI_PROCESSING {
                 fastqs -> 
                 def barcode = fastqs.parent.name
                 tuple(barcode, fastqs)
-                }
+            }
             .set{ existing_fastqs }
 
         if( params.subsampling ){
-            existing_fastqs.
+            existing_fastqs
             .groupTuple( by: 0 ) 
-            .set{ existing_fastqs_grouped )
+            .set{ existing_fastqs_grouped }
             
             MERGE_FASTQ( existing_fastqs_grouped )
             SUBSAMPLING( MERGE_FASTQ.out.merged_fastq, raw )

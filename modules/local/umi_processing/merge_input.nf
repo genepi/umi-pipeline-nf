@@ -6,7 +6,7 @@ process MERGE_FASTQ {
         tuple val( "${sample}" ), path( "*fastq" ), emit: merged_fastq
     
     script:
-    def fastq_name = params.live ? "filtered_${fastq_path.baseName.replaceAll(/(\.fastq|\.fq)(\.gz)?$/, "")}.fastq" : "${sample}_merged.fastq"
+    def fastq_name = params.subsampling ? "${sample}_merged.fastq" : "filtered_${fastq_path.baseName.replaceAll(/(\.fastq|\.fq)(\.gz)?$/, "")}.fastq"
     """
         catfishq \
             --min-length ${params.min_read_length} \
