@@ -43,7 +43,7 @@ def parse_args(argv):
         help="Print debug information",
     )
     parser.add_argument(
-        "--max-error",
+        "--max_error",
         dest="MAX_ERROR",
         type=int,
         default=2,
@@ -93,14 +93,14 @@ def parse_args(argv):
         default="fasta"
     )
     parser.add_argument(
-        "--fwd-umi",
+        "--fwd_umi",
         dest="FWD_UMI",
         type=str,
         default="TTTVVVVTTVVVVTTVVVVTTVVVVTTT",
         help="Forward UMI sequence",
     )
     parser.add_argument(
-        "--rev-umi",
+        "--rev_umi",
         dest="REV_UMI",
         type=str,
         default="AAABBBBAABBBBAABBBBAABBBBAAA",
@@ -113,14 +113,14 @@ def parse_args(argv):
         help="Filtered Reads"
     )
     parser.add_argument(
-        "--fwd-primer",
+        "--fwd_primer",
         dest="FWD_PRIMER",
         type=str,
         default="GTATCGTGTAGAGACTGCGTAGG",
         help="Forward primer sequence"
     )
     parser.add_argument(
-        "--rev-primer",
+        "--rev_primer",
         dest="REV_PRIMER",
         type=str,
         default="CACTCGCACTGACTCGATCACT",
