@@ -112,6 +112,20 @@ def parse_args(argv):
         default="/dev/stdin",
         help="Filtered Reads"
     )
+    parser.add_argument(
+        "--fwd-primer",
+        dest="FWD_PRIMER",
+        type=str,
+        default="GTATCGTGTAGAGACTGCGTAGG",
+        help="Forward primer sequence"
+    )
+    parser.add_argument(
+        "--rev-primer",
+        dest="REV_PRIMER",
+        type=str,
+        default="CACTCGCACTGACTCGATCACT",
+        help="Reverse primer sequence"
+    )
 
     args = parser.parse_args(argv)
 
@@ -120,52 +134,54 @@ def parse_args(argv):
 
 def clip_entry(entry, umi_start_fwd, umi_start_rev, adapter_length, format):
     clip_fwd = umi_start_fwd
-    if adapter_length == umi_start_rev:
-        clip_rev = None
-    else: 
-        clip_rev = umi_start_rev - adapter_length
+    clip_rev = umi_start_rev - adapter_length
     
-    entry.sequence = entry.sequence[clip_fwd:clip_rev]
+    entry.sequence = entry.sequence[clip_fwd : clip_rev]
     
     if format == "fastq":
-        entry.quality = entry.quality[clip_fwd:clip_rev]
+        entry.quality = entry.quality[clip_fwd : clip_rev]
     
     return entry
 
-def extract_umi(query_seq, query_qual, pattern, max_edit_dist, format, direction):
+def extract_umi(query_seq, query_qual, primer, pattern, max_edit_dist, format, direction):
     umi_qual = None
-    equalities = [("M", "A"), ("M", "C"), ("R", "A"), ("R", "G"), ("W", "A"), ("W", "T"), ("S", "C"), ("S", "G"), ("Y", "C"), ("Y", "T"), ("K", "G"), ("K", "T"), ("V", "A"), ("V", "C"),
-                  ("V", "G"), ("H", "A"), ("H", "C"), ("H", "T"), ("D", "A"), ("D", "G"), ("D", "T"), ("B", "C"), ("B", "G"), ("B", "T"), ("N", "A"), ("N", "C"), ("N", "G"), ("N", "T"),
-                  ("m", "a"), ("m", "c"), ("r", "a"), ("r", "g"), ("w", "a"), ("w", "t"), ("s", "c"), ("s", "g"), ("y", "c"), ("y", "t"), ("k", "g"), ("k", "t"), ("v", "a"), ("v", "c"),
-                  ("v", "g"), ("h", "a"), ("h", "c"), ("h", "t"), ("d", "a"), ("d", "g"), ("d", "t"), ("b", "c"), ("b", "g"), ("b", "t"), ("n", "a"), ("n", "c"), ("n", "g"), ("n", "t"), 
-                  ("a", "A"), ("c", "C"), ("t", "T"), ("g", "G")]
+    equalities = [
+        ("M", "A"), ("M", "C"), ("R", "A"), ("R", "G"), ("W", "A"), ("W", "T"), ("S", "C"), ("S", "G"),
+        ("Y", "C"), ("Y", "T"), ("K", "G"), ("K", "T"), ("V", "A"), ("V", "C"), ("V", "G"), ("H", "A"),
+        ("H", "C"), ("H", "T"), ("D", "A"), ("D", "G"), ("D", "T"), ("B", "C"), ("B", "G"), ("B", "T"),
+        ("N", "A"), ("N", "C"), ("N", "G"), ("N", "T"), ("m", "a"), ("m", "c"), ("r", "a"), ("r", "g"),
+        ("w", "a"), ("w", "t"), ("s", "c"), ("s", "g"), ("y", "c"), ("y", "t"), ("k", "g"), ("k", "t"),
+        ("v", "a"), ("v", "c"), ("v", "g"), ("h", "a"), ("h", "c"), ("h", "t"), ("d", "a"), ("d", "g"),
+        ("d", "t"), ("b", "c"), ("b", "g"), ("b", "t"), ("n", "a"), ("n", "c"), ("n", "g"), ("n", "t"),
+        ("a", "A"), ("c", "C"), ("t", "T"), ("g", "G")
+    ]
+    max_umi_length = len(pattern) + max_edit_dist
+    
+    # Step 1: match primer
+    search_pattern = primer + pattern if direction == "fwd" else pattern + primer
+    
+    # Assuming Primer plus UMI pattern will occur only once in the defined adapter sequence
+    primer_result = edlib.align(search_pattern, query_seq, task="path", mode="HW", k=-1, additionalEqualities=equalities)
+    if primer_result["editDistance"] == -1:
+        return None, None, None, None
+    
+    primer_start, primer_end = primer_result["locations"][0]    
+        
+    umi_search_seq = query_seq[primer_start : primer_end + 1]
+    umi_search_qual = query_qual[primer_start : primer_end + 1] if format == "fastq" else None
 
-    result = edlib.align(
-        pattern,
-        query_seq,
-        task="path",
-        mode="HW",
-        k=max_edit_dist,
-        additionalEqualities=equalities,
-    )
-    if result["editDistance"] == -1:
+    # Step 2: extract UMI
+    umi_result = edlib.align(pattern, umi_search_seq, task="path", mode="HW", k=max_edit_dist, additionalEqualities=equalities)
+    if umi_result["editDistance"] == -1:
         return None, None, None, None
 
-    edit_dist = result["editDistance"]
-    locs = result["locations"][0]
-    umi_start_pos = locs[0]
-    umi_end_pos = locs[1] + 1
-    umi = query_seq[umi_start_pos:umi_end_pos]
+    umi_start, umi_end = umi_result["locations"][0]
+    umi_seq = umi_search_seq[umi_start : umi_end + 1]
+    umi_qual = umi_search_qual[umi_start : umi_end + 1] if format == "fastq" else None
     
-    if direction == "fwd":
-        umi_start = umi_start_pos
-    else:
-        umi_start = umi_end_pos
-
-    if format == "fastq":
-        umi_qual = query_qual[locs[0]:locs[1]+1]
-
-    return edit_dist, umi, umi_qual, umi_start
+    clip_position = primer_start if direction == "fwd" else primer_end
+    
+    return umi_result["editDistance"], umi_seq, umi_qual, clip_position
 
 
 def extract_adapters(entry, adapter_length, format):
@@ -331,6 +347,8 @@ def extract_umis(
     input_file = args.INPUT_FA
     umi_fwd = args.FWD_UMI
     umi_rev = args.REV_UMI
+    fwd_primer = args.FWD_PRIMER
+    rev_primer = args.REV_PRIMER
     output_file_name = args.OUT_FILENAME
     format = args.OUT_FORMAT
 
@@ -357,11 +375,11 @@ def extract_umis(
 
             # Extract fwd UMI
             result_5p_fwd_umi_dist, result_5p_fwd_umi_seq, result_5p_fwd_umi_qual, umi_start_fwd = extract_umi(
-                read_5p_seq, read_5p_qual, umi_fwd, max_pattern_dist, format, "fwd"
+                read_5p_seq, read_5p_qual, fwd_primer, umi_fwd, max_pattern_dist, format, "fwd"
             )
             # Extract rev UMI
             result_3p_rev_umi_dist, result_3p_rev_umi_seq, result_3p_rev_umi_qual, umi_start_rev = extract_umi(
-                read_3p_seq, read_3p_qual, umi_rev, max_pattern_dist, format, "rev"
+                read_3p_seq, read_3p_qual, rev_primer, umi_rev, max_pattern_dist, format, "rev"
             )
 
             if not result_5p_fwd_umi_seq or not result_3p_rev_umi_seq:

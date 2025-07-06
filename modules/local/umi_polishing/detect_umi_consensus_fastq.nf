@@ -18,6 +18,8 @@ process DETECT_UMI_CONSENSUS_FASTQ {
         python ${umi_extract_python} \
         --fwd-umi ${params.fwd_umi} \
         --rev-umi ${params.rev_umi} \
+        --fwd-primer ${params.fwd_context} \
+        --rev_primer ${params.rev_context} \
         --max-error ${params.umi_errors} \
         --adapter_length ${params.adapter_length} \
         --output_format ${params.output_format} \
