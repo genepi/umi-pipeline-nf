@@ -161,7 +161,7 @@ def extract_umi(query_seq, query_qual, primer, pattern, max_edit_dist, format, d
     search_pattern = primer + pattern if direction == "fwd" else pattern + primer
     
     # Assuming Primer plus UMI pattern will occur only once in the defined adapter sequence
-    primer_result = edlib.align(search_pattern, query_seq, task="path", mode="HW", k=-1, additionalEqualities=equalities)
+    primer_result = edlib.align(search_pattern, query_seq, task="path", mode="HW", k=max_edit_dist * 2, additionalEqualities=equalities)
     if primer_result["editDistance"] == -1:
         return None, None, None, None
     
