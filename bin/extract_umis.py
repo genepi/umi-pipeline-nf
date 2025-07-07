@@ -224,7 +224,6 @@ def extract_umi(query_seq, query_qual, primer, pattern, max_edit_dist, format, d
         
         clip_position = primer_end
         
-    print(umi_seq)
     return umi_result["editDistance"], umi_seq, umi_qual, clip_position
 
 
