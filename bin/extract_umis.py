@@ -155,32 +155,76 @@ def extract_umi(query_seq, query_qual, primer, pattern, max_edit_dist, format, d
         ("d", "t"), ("b", "c"), ("b", "g"), ("b", "t"), ("n", "a"), ("n", "c"), ("n", "g"), ("n", "t"),
         ("a", "A"), ("c", "C"), ("t", "T"), ("g", "G")
     ]
-    max_umi_length = len(pattern) + max_edit_dist
     
-    # Step 1: match primer
-    search_pattern = primer + pattern if direction == "fwd" else pattern + primer
-    
-    # Assuming Primer plus UMI pattern will occur only once in the defined adapter sequence
-    primer_result = edlib.align(search_pattern, query_seq, task="path", mode="HW", k=max_edit_dist * 2, additionalEqualities=equalities)
-    if primer_result["editDistance"] == -1:
-        return None, None, None, None
-    
-    primer_start, primer_end = primer_result["locations"][0]    
+    if direction == "fwd":
+        # Step 1: match primer
+        search_pattern = primer + pattern
         
-    umi_search_seq = query_seq[primer_start : primer_end + 1]
-    umi_search_qual = query_qual[primer_start : primer_end + 1] if format == "fastq" else None
+        # Assuming Primer plus UMI pattern will occur only once in the defined adapter sequence
+        primer_result = edlib.align(search_pattern, query_seq, task="path", mode="HW", k=-1, additionalEqualities=equalities)
+        if primer_result["editDistance"] == -1:
+            return None, None, None, None
+        
+        primer_start, primer_end = primer_result["locations"][0]
+        primer_seq = query_seq[ primer_start : primer_end + 1]
+        primer_qual = query_qual[ primer_start : primer_end + 1] if format == "fastq" else None
+        
+        # Step 2: exlude primer sequence
+        context_primer_result = edlib.align(primer, primer_seq, task="path", mode="HW", k=-1, additionalEqualities=equalities)
+        if context_primer_result["editDistance"] == -1:
+            return None, None, None, None
+                
+        context_primer_start, context_primer_end = context_primer_result["locations"][0]    
+        
+        umi_search_seq = primer_seq[context_primer_end : ]
+        umi_search_qual = primer_qual[context_primer_end : ] if format == "fastq" else None
 
-    # Step 2: extract UMI
-    umi_result = edlib.align(pattern, umi_search_seq, task="path", mode="HW", k=max_edit_dist, additionalEqualities=equalities)
-    if umi_result["editDistance"] == -1:
-        return None, None, None, None
+        # Step 3: extract UMI
+        umi_result = edlib.align(pattern, umi_search_seq, task="path", mode="HW", k=max_edit_dist, additionalEqualities=equalities)
+        if umi_result["editDistance"] == -1:
+            return None, None, None, None
 
-    umi_start, umi_end = umi_result["locations"][0]
-    umi_seq = umi_search_seq[umi_start : umi_end + 1]
-    umi_qual = umi_search_qual[umi_start : umi_end + 1] if format == "fastq" else None
-    
-    clip_position = primer_start if direction == "fwd" else primer_end
-    
+        umi_start, umi_end = umi_result["locations"][0]
+        umi_seq = umi_search_seq[umi_start : umi_end + 1]
+        umi_qual = umi_search_qual[umi_start : umi_end + 1] if format == "fastq" else None
+        
+        clip_position = primer_start
+    else:    
+        # Step 1: match primer
+        search_pattern = pattern + primer
+        
+        # Assuming Primer plus UMI pattern will occur only once in the defined adapter sequence
+        primer_result = edlib.align(search_pattern, query_seq, task="path", mode="HW", k=-1, additionalEqualities=equalities)
+        if primer_result["editDistance"] == -1:
+            return None, None, None, None
+        
+        primer_start, primer_end = primer_result["locations"][0]    
+        
+        primer_seq = query_seq[ primer_start : primer_end + 1]
+        primer_qual = query_qual[ primer_start : primer_end + 1] if format == "fastq" else None
+        
+        # Step 2: exclude primer sequence
+        context_primer_result = edlib.align(primer, primer_seq, task="path", mode="HW", k=-1, additionalEqualities=equalities)
+        if context_primer_result["editDistance"] == -1:
+            return None, None, None, None
+                
+        context_primer_start, context_primer_end = context_primer_result["locations"][0]    
+        
+        umi_search_seq = primer_seq[ : context_primer_start]
+        umi_search_qual = primer_qual[ : context_primer_start] if format == "fastq" else None
+
+        # Step 3: extract UMI
+        umi_result = edlib.align(pattern, umi_search_seq, task="path", mode="HW", k=max_edit_dist, additionalEqualities=equalities)
+        if umi_result["editDistance"] == -1:
+            return None, None, None, None
+
+        umi_start, umi_end = umi_result["locations"][0]
+        umi_seq = umi_search_seq[umi_start : umi_end + 1]
+        umi_qual = umi_search_qual[umi_start : umi_end + 1] if format == "fastq" else None
+        
+        clip_position = primer_end
+        
+    print(umi_seq)
     return umi_result["editDistance"], umi_seq, umi_qual, clip_position
 
 
