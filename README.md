@@ -75,8 +75,11 @@ The pipeline is organized into four main subworkflows, each with its own process
 * **GPU acceleration for cluster polishing by Medaka** is available when using the `docker` profile. Tested with an RTX 4080 SUPER GPU (16 GB).
 * Allows multi line bed files to run the pipeline for several targets at once.
 * Supports live analysis of the clusters during sequencing and seemless polishing of the clusters as soon as enough clusters are found
- 
-> See the [usage documentation](docs/usage.md) for all of the available parameters of the pipeline.
+
+To see all available parameters run 
+```bash
+nextflow run genepi/umi-pipeline-nf -r main --help
+```
 
 ## Quick Start
 
