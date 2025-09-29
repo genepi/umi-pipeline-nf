@@ -1,21 +1,27 @@
-FROM ubuntu:22.04
+# Use micromamba minimal base image
+FROM mambaorg/micromamba:1.5.8
 
 LABEL authors="Amstler Stephan" \
       email="amstler.stephan@i-med.ac.at"
 
-COPY environment.yml .
+# Copy environment.yml into container
+COPY environment.yml /tmp/environment.yml
 
-RUN apt-get update && \
-    apt-get install -y wget && \
-    rm -rf /var/lib/apt/lists/*
+# Install all dependencies into base environment, including wget
+RUN micromamba install -y -n base -f /tmp/environment.yml && \
+    micromamba install -y -n base -c conda-forge wget && \
+    micromamba clean --all --yes
 
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py38_23.9.0-0-Linux-x86_64.sh -O ~/miniconda.sh && \
-    /bin/bash ~/miniconda.sh -b -p /opt/conda
-ENV PATH=/opt/conda/bin:${PATH}
+# Ensure base environment binaries are on PATH (already default, but explicit)
+ENV PATH=/opt/conda/bin:$PATH
 
-RUN conda update -y conda && \
-    conda env update -n root -f environment.yml && \
-    conda clean --all
+# Make /opt writable by the default non-root user
+USER root
+RUN mkdir -p /opt && chown $MAMBA_USER:$MAMBA_USER /opt
+USER $MAMBA_USER
 
-WORKDIR "/opt"
+# Set working directory
+WORKDIR /opt
+
+# Download mutserve jar as non-root
 RUN wget https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc13.lpa/mutserve_LPA_adapted.jar
