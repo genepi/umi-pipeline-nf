@@ -15,7 +15,7 @@ process DETECT_UMI_FASTQ {
         def output_filename = "extracted_umis_${sample}_${task.index}"
         def output_dir = "${cache_dir}/${sample}/${target}" 
         def write_report = params.write_reports ? "--tsv" : ""
-        
+        def use_context = params.use_context ? "--use_context" : ""
     """
     mkdir -p $output_dir
     
@@ -28,6 +28,7 @@ process DETECT_UMI_FASTQ {
         --adapter_length ${params.adapter_length} \
         --output_format ${params.output_format} \
         --output_filename $output_filename \
+        $use_context \
         $write_report \
         -o $output_dir ${fastq}
 
