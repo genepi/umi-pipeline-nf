@@ -1,5 +1,5 @@
 process MAP_READS {
-    publishDir "${params.output}/${sample}/${type}/align/", mode: 'copy'
+    publishDir "${params.output}/${sample}/${type}/align/", mode: 'copy', enabled: "${params.verbose}"
 
     input:
         tuple val( sample ), path( fastq )

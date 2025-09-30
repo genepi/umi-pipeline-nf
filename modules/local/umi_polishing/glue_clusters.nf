@@ -1,6 +1,6 @@
 process GLUE_CLUSTERS {
     tag "${sample}"
-    publishDir "${params.output}/${sample}/${target}/clustering/${type}/glued", pattern: "${sample}_glued_clusters_*.${params.output_format}", mode: 'copy'
+    publishDir "${params.output}/${sample}/${target}/clustering/${type}/glued", pattern: "${sample}_glued_clusters_*.${params.output_format}", mode: 'copy', enabled: "${params.verbose}"
 
     input:
     tuple val( sample ), val ( target ), path( cluster_files )

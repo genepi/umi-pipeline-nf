@@ -1,5 +1,5 @@
 process PARSE_BED {
-    publishDir "${params.output}/bed", mode: 'copy'
+    publishDir "${params.output}/bed", mode: 'copy', enabled: "${params.verbose}"
     
     input:
     tuple val( target ), val( line )

@@ -1,6 +1,6 @@
 process POLISH_CLUSTER {
     tag "${sample}"
-    publishDir "${params.output}/${sample}/${target}/polishing/${type}", mode: 'copy'
+    publishDir "${params.output}/${sample}/${target}/polishing/${type}", mode: 'copy', enabled: "${params.verbose}"
 
     input:
         tuple val( sample ), val( target ), path( smolecule_clusters_fastq )

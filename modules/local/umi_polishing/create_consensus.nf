@@ -1,6 +1,6 @@
 process CREATE_CONSENSUS {
     tag "${sample}"
-    publishDir "${params.output}/${sample}/${target}/polishing/${type}", mode: 'copy'
+    publishDir "${params.output}/${sample}/${target}/polishing/${type}", mode: 'copy', enabled: "${params.verbose}"
     
     input:
         tuple val( sample ), val( target ), val( smolecule_cluster_name), path( smolecule_clusters_parsed_bam ), path( smolecule_clusters_parsed_bam_bai )
