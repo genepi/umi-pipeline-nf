@@ -1,21 +1,27 @@
-FROM ubuntu:22.04
+FROM mambaorg/micromamba:1.5.8
 
 LABEL authors="Amstler Stephan" \
       email="amstler.stephan@i-med.ac.at"
 
-COPY environment.yml .
+# Copy environment.yml
+COPY environment.yml /tmp/environment.yml
+RUN micromamba install -y -n base -f /tmp/environment.yml && \
+    micromamba clean --all --yes
 
+# Installing software using system package manager
+USER root
+
+# Install software
 RUN apt-get update && \
-    apt-get install -y wget && \
+    apt-get install -y \
+    wget \
+    zlib1g-dev \
+    libgomp1 \
+    procps && \
     rm -rf /var/lib/apt/lists/*
 
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py38_23.9.0-0-Linux-x86_64.sh -O ~/miniconda.sh && \
-    /bin/bash ~/miniconda.sh -b -p /opt/conda
-ENV PATH=/opt/conda/bin:${PATH}
+# Working directory
+WORKDIR /opt
 
-RUN conda update -y conda && \
-    conda env update -n root -f environment.yml && \
-    conda clean --all
-
-WORKDIR "/opt"
+# Download mutserve jar
 RUN wget https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc13.lpa/mutserve_LPA_adapted.jar

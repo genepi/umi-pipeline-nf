@@ -12,7 +12,8 @@
       "properties": {
         "help": { "type": "boolean", "default": false, "description": "Display help information and exit." },
         "validate_params": { "type": "boolean", "default": true, "description": "Validate pipeline parameters before execution." },
-        "version": { "type": "boolean", "default": false, "description": "Show current version of the pipeline and exit." }
+        "version": { "type": "boolean", "default": false, "description": "Show current version of the pipeline and exit." }, 
+        "verbose": { "type": "boolean", "default": false, "description": "Enable verbose logging output." }
       }
     },
     "general_options": {
@@ -72,7 +73,7 @@
         "min_reads_per_barcode": { "type": "integer", "default": 1000, "description": "Minimum number of reads per barcode." },
         "umi_errors": { "type": "integer", "default": 2, "description": "Maximum allowed differences in extracted UMIs." },
         "max_dist_umi": { "type": "integer", "default": 2, "description": "Maximum distance allowed for UMI merging." },
-        "vsearch_sequence_identity": { "type": "integer", "default": 0.90, "description": "Percentage of sequence identity used to cluster UMIs with VSEARCH" },
+        "vsearch_sequence_identity": { "type": "number", "default": 0.90, "description": "Percentage of sequence identity used to cluster UMIs with VSEARCH" },
         "min_reads_per_cluster": { "type": "integer", "default": 20, "description": "Minimum number of reads required for consensus cluster formation." },
         "max_reads_per_cluster": { "type": "integer", "default": 60, "description": "Maximum number of reads used for consensus cluster formation." },
         "clusters_per_polishing_file": { "type": "integer", "default": 100, "description": "Maximum number of clusters per polishing file." },
@@ -85,16 +86,20 @@
         "include_secondary_reads": { "type": "boolean", "default": false, "description": "Include secondary reads in analysis." },
         "balance_strands": { "type": "boolean", "default": true, "description": "Balance forward and reverse raw reads in clusters." },
         "use_gpu": { "type": "boolean", "default": false, "description": "Use GPU acceleration for cluster polishing with Medaka." },
-        "gpu_memory": { "type": "integer", "default": 16, "description": "Specifiy available memory of GPU in GB" },
-        "gpus": { "type": "string", "default": "all", "description": "Specifiy number of gpus to use" },
+        "gpu_memory": { "type": "integer", "default": 16, "description": "Specify available memory of GPU in GB" },
+        "gpus": { "type": "string", "default": "all", "description": "Specify number of GPUs to use" },
         "medaka_model": { "type": "string", "default": "r1041_e82_400bps_hac_g615", "description": "Medaka model used for consensus read computation." },
+        "reference_based_polishing": { "type": "boolean", "default": false, "description": "Enable reference-based polishing step." },
         "fwd_umi": { "type": "string", "default": "TTTVVVVTTVVVVTTVVVVTTVVVVTTT", "description": "Forward UMI sequence pattern." },
-        "rev_umi": { "type": "string", "default": "AAABBBBAABBBBAABBBBAABBBBAAA", "description": "Reverse UMI sequence pattern." },
+        "rev_umi": { "type": "string", "default": "AAABBBBAABBBBAABBBBAABBBBAAA", "description": "Reverse UMI sequence pattern (Reverse complement)." },
+        "fwd_context": { "type": "string", "default": "GTATCGTGTAGAGACTGCGTAGG", "description": "Forward UVP primer sequence." },
+        "rev_context": { "type": "string", "default": "AGTGATCGAGTCAGTGCGAGTG", "description": "Reverse UVP primer sequence (Reverse complement)." },
+        "use_context": { "type": "boolean", "default": false, "description": "Use primer context sequences for UMI detection." },
         "adapter_length": { "type": "integer", "default": 100, "description": "Length of adapter trimming." },
         "min_length": { "type": "integer", "default": 40, "description": "Minimum combined UMI length." },
         "max_length": { "type": "integer", "default": 60, "description": "Maximum combined UMI length." },
         "minimap2_param": { "type": "string", "default": "-ax map-ont -k 13 --MD", "description": "Parameters for minimap2 aligner." },
-        "threads": { "type": "integer", "default": "(Runtime.runtime.availableProcessors() - 1)", "description": "Number of CPU threads to use." }
+        "threads": { "type": "string", "default": "(Runtime.runtime.availableProcessors() - 1)", "description": "Number of CPU threads to use." }
       }
     }
   }

@@ -44,13 +44,29 @@
                 "0": [
                     [
                         "barcode03",
-                        "barcode03_merged.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "filtered_fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_0.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode03",
+                        "filtered_fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_1.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode03",
+                        "filtered_fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_2.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "merged_fastq": [
                     [
                         "barcode03",
-                        "barcode03_merged.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "filtered_fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_0.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode03",
+                        "filtered_fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_1.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ],
+                    [
+                        "barcode03",
+                        "filtered_fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_2.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ]
             }
@@ -59,7 +75,7 @@
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-02-26T11:18:23.917624"
+        "timestamp": "2025-06-27T15:25:51.046257618"
     },
     "Should run without failures: offline": {
         "content": [

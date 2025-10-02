@@ -23,19 +23,22 @@ workflow OFFLINE_UMI_PROCESSING {
 
         bed
 
-    main:       
+    main:        
         Channel
             .fromPath("${params.input}/barcode*/*.fastq")
             .map{ 
                 fastqs -> 
                 def barcode = fastqs.parent.name
                 tuple(barcode, fastqs)
-                }
-            .groupTuple( by: 0 ) 
+            }
             .set{ existing_fastqs }
 
         if( params.subsampling ){
-            MERGE_FASTQ( existing_fastqs )
+            existing_fastqs
+            .groupTuple( by: 0 ) 
+            .set{ existing_fastqs_grouped }
+            
+            MERGE_FASTQ( existing_fastqs_grouped )
             SUBSAMPLING( MERGE_FASTQ.out.merged_fastq, raw )
             SUBSAMPLING.out.subsampled_fastq
             .set { input_fastqs }
@@ -43,6 +46,7 @@ workflow OFFLINE_UMI_PROCESSING {
             MERGE_FASTQ( existing_fastqs )
             .set { input_fastqs }
         }
+
 
         input_fastqs
             .splitFastq( by: params.chunk_size , file: true)

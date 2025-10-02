@@ -26,11 +26,7 @@ process MUTSERVE {
       echo -e "Sample\tPosition\tReference\tVariant\tVariant-level" > ${type}_parsed.txt && \
       tail -n +2 ${type}_raw.txt | \
       awk -F'\t' '(\$3 == \$4 && \$27 >= $min_variant_level) || \$3 != \$4' | \
-      awk -F'\t' '{print \$1, \$2, \$3, (\$3 == \$4 ? \$5 : \$4), (\$3 != \$4 ? \$25 : \$27)}' >> ${type}_parsed.txt
+      awk -F'\t' 'BEGIN {OFS="\t"} {print \$1, \$2, \$3, (\$3 == \$4 ? \$5 : \$4), (\$3 != \$4 ? \$25 : \$27)}' >> ${type}_parsed.txt
 
     """
 }
-// awk -F'\t' 'NR==1 || (\$3 != \$4 || \$3 == \$4 && \$27 >= $min_variant_level)' ${type}_raw.txt > ${type}_filtered.txt
-
-
-

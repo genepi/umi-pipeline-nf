@@ -1,5 +1,5 @@
 process REFORMAT_CONSENSUS_CLUSTER {
-    publishDir "${params.output}/${sample}/${target}/fastq/${type}", mode: 'copy'
+    publishDir "${params.output}/${sample}/${target}/fastq/${type}", mode: 'copy', enabled: "${params.verbose}"
 
     input:
       tuple val( sample ), val( target ), path( cluster_consensus_fasta )

@@ -21,15 +21,15 @@ The pipeline performs the following major steps:
 
 - **Extract UMI Sequences:**  
   UMI sequences are extracted from the aligned reads using a Python script, embedding the raw read information in the header.  
-  *Output:* Extracted UMIs are saved in `<output>/<barcodeXX>/<target><fasta/fastq>_umi/<type>/`.
+  *Output (only in verbose):* Extracted UMIs are saved in `<output>/<barcodeXX>/<target><fasta/fastq>_umi/<type>/`.
 
 - **Cluster UMI Sequences:**  
   Reads are clustered by their UMI sequences (using vsearch) and then filtered based on a defined Hamming distance (default: 3). Clusters with too few reads are discarded, and overly abundant clusters may be downsampled.  
-  *Output:* Cluster files are stored in `<output>/<barcodeXX>/<target>clustering/<type>/` and detailed cluster stats in `<output>/<barcodeXX>/<target>stats/<type>/`.
+  *Output (only in verbose):* Cluster files are stored in `<output>/<barcodeXX>/<target>clustering/<type>/` and detailed cluster stats in `<output>/<barcodeXX>/<target>stats/<type>/`.
 
 - **Polish Cluster:**  
   Clusters are polished (using medaka) to generate consensus sequences per cluster.  
-  *Output:* Consensus sequences are produced in `<output>/<barcodeXX>/<target>clustering/<type>/clusters`.
+  *Output (only in verbose):* Consensus sequences are produced in `<output>/<barcodeXX>/<target>clustering/<type>/clusters`.
 
 - **Align Consensus Reads:**  
   Consensus sequences are realigned to the reference genome to verify quality.  
@@ -37,7 +37,7 @@ The pipeline performs the following major steps:
 
 - **Extract & Cluster Consensus UMIs:**  
   UMIs are re-extracted from consensus reads and then re-clustered and parsed using a Python script.  
-  *Output:* Final consensus clusters are parsed and saved in `<output>/<barcodeXX>/<target>align/<type>/`.
+  *Output (only in verbose):* Final consensus clusters are parsed and saved in `<output>/<barcodeXX>/<target>align/<type>/`.
 
 - **Call Variants:**  
   Variant calling is performed on the final consensus sequences using one of several supported callers (LOFREQ, MUTSERVE, or FREEBAYES).  
@@ -183,25 +183,25 @@ Below is an overview of the directory structure created after a complete pipelin
 ``` plaintext
 output_directory/  
 ├── barcodeXX/                  # results for BarcodeXX
-│   ├── raw/                    # target unspecific outputs
-│   │   ├── align/              # Raw alignments (e.g., filtered_barcodeXX.1.bam)    
+│   ├── raw/                    # target unspecific outputs (only in verbose)
+│   │   ├── align/              # Raw alignments (e.g., filtered_barcodeXX.1.bam) (only in verbose)    
 │   │   └── subsampling/        # subsampled reads
 │   ├── targetX/                # results for targetX
 │   │   ├── align
 │   │   │   ├── consensus/      # Consensus alignments (e.g., masked_consensus.bam)  
 │   │   │   └── final/          # Final alignments (e.g., final.bam )  
 │   │   ├── clustering/  
-│   │   │   ├── raw/            # Raw clustering outputs  
-│   │   │   └── consensus/      # Consensus clustering outputs (e.g., consensus.fasta)  
+│   │   │   ├── raw/            # Raw clustering outputs (only in verbose)  
+│   │   │   └── consensus/      # Consensus clustering outputs (e.g., consensus.fasta) (only in verbose)  
 │   │   ├── fastq/  
 │   │   │   ├── consensus/      # Consensus FastQ files (e.g., masked_consensus.fastq)  
 │   │   │   └── final/          # Final FastQ files (e.g., final.fastq)  
 │   │   ├── fastq_filtered/  
-│   │   │   └── raw/            # Filtered FastQ files  
+│   │   │   └── raw/            # Filtered FastQ files (only in verbose) 
 │   │   ├── fastq_umi/  
-│   │   │   └── consensus/      # UMI-specific consensus FastQ files  
+│   │   │   └── consensus/      # UMI-specific consensus FastQ files (only in verbose)  
 │   │   ├── polishing/  
-│   │   │   └── consensus/      # Polishing outputs and logs  
+│   │   │   └── consensus/      # Polishing outputs and logs (only in verbose)  
 │   │   └── stats/  
 │   │       ├── consensus/      # Consensus statistics (e.g., masked_consensus_umis.tsv)  
 │   │       └── raw/            # Raw statistics  
