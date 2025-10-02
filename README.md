@@ -55,6 +55,25 @@ The pipeline is organized into four main subworkflows, each with its own process
      - Consensus BAM and FastQ files (e.g., in `<output>/<barcodeXX>/<target>/align/consensus/` and `<output>/<barcodeXX>/<target>/fastq/consensus/`).
      - Polishing logs and detailed cluster statistics.
 
+   ### Polishing Strategies
+
+   Two complementary polishing strategies are implemented in the pipeline:
+
+   **1. POA-based polishing (graph-based consensus):**  
+   - Implemented via Medaka’s *smolecule* workflow.  
+   - Reads within a UMI cluster are aligned to each other using a Partial Order Alignment (POA) algorithm, which represents bases as nodes in a directed acyclic graph (DAG).  
+   - This captures substitutions, insertions, and deletions efficiently while preserving positional context.  
+   - The POA alignment is used to generate an initial consensus, which is then refined with Medaka’s neural network.  
+   - Terminal UMI sequences are retained, enabling optional second-round polishing.  
+   - **Strengths:** Highly accurate, effective for targets lacking a close reference or with structural variation.  
+   - **Trade-offs:** Computationally more intensive in terms of time and memory.
+
+   **2. Reference-based polishing (fast reference-aligned consensus):**  
+   - Reads are directly aligned to the reference sequence using minimap2.  
+   - Consensus is generated with Medaka’s consensus and stitch modules.  
+   - By bypassing the POA graph construction, this approach reduces RAM usage (up to 5×) and runtime (up to 30×).  
+   - **Strengths:** Highly efficient and scalable, suitable when a sufficiently similar reference is available.  
+   - **Trade-offs:** Less robust for targets with large indels, rearrangements, or high sequence heterogeneity.
 4. **VARIANT CALLING**  
    - **Purpose:** Identify genetic variants from the consensus data.
    - **Steps:**  
@@ -74,6 +93,9 @@ The pipeline is organized into four main subworkflows, each with its own process
 * The raw reads can be optionally **subsampled**.
 * The raw reads can be **filtered by read length and quality**.
 * **GPU acceleration for cluster polishing by Medaka** is available when using the `docker` profile. Tested with an RTX 4080 SUPER GPU (16 GB).
+* Two polishing strategies are supported:
+  * POA-based polishing for maximum accuracy, especially in regions with high variation or no close reference.
+  * Reference-based polishing for faster, memory-efficient consensus building when a reliable reference is available.
 * Allows **multi line bed files** to run the pipeline for several targets at once.
 * Supports **live analysis of the clusters during sequencing and seemless polishing** of the clusters as soon as enough clusters are found.
 * Use **verbose parameter** to output all intermediate files.
