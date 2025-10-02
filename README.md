@@ -12,7 +12,7 @@ The newest version of the pipeline supports live analysis of the clusters during
 Umi-pipeline-nf originated from a Snakemake-based analysis pipeline ([pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon); originally developed by [Karst et al, Nat Biotechnol 18:165–169, 2021](https://www.nature.com/articles/s41592-020-01041-y)). We have migrated the pipeline to [Nextflow](https://www.nextflow.io) and incorporated several optimizations and additional functionalities.
 
 
-![Workflow](docs/images/umi-pipeline-nf_metro-map.svg)
+![Workflow](docs/images/umi-pipeline-nf_metro-map.jpg)
 
 ## Workflow
 
@@ -25,13 +25,14 @@ The pipeline is organized into four main subworkflows, each with its own process
      - Align reads to the reference genome.
      - Extract UMI sequences.
      - Cluster UMI-tagged reads.
-   - **Outputs:**  
+   - **Outputs (in verbose):**  
      - Processed UMI clusters are passed on to later stages.
      - Raw alignment files (e.g., in `<output>/<barcodeXX>/raw/align/` or `<output>/<barcodeXX>/<target>/fastq_filtered/raw/`).
      - Filtered FastQ files and clustering statistics.
 
     **To stop the pipeline when it's in live mode, create a CONTINUE file in the output directory:**  
-    `touch <output>/CONTINUE`
+    `touch <output>/CONTINUE`  
+    *Note: Nextflow needs write permission in the output directory of MinKNOW -> Add nextflow to the minknow user group (Root rights required to change permissions).
 
 2. **OFFLINE UMI PROCESSING**  
    - **Purpose:** Batch processing with an optional subsampling step.
@@ -39,7 +40,7 @@ The pipeline is organized into four main subworkflows, each with its own process
      - Merge and filter FastQ files.
      - Optionally subsample the merged reads.
      - Perform alignment, UMI extraction, and clustering similar to LIVE processing.
-   - **Outputs:**  
+   - **Outputs (in verbose):**  
      - Processed UMI clusters.
      - Alignment and subsampling reports (e.g., in `<output>/<barcodeXX>/raw/subsampling/` and `<output>/<barcodeXX>/<target>/fastq_filtered/raw/`).
 
@@ -73,8 +74,10 @@ The pipeline is organized into four main subworkflows, each with its own process
 * The raw reads can be optionally **subsampled**.
 * The raw reads can be **filtered by read length and quality**.
 * **GPU acceleration for cluster polishing by Medaka** is available when using the `docker` profile. Tested with an RTX 4080 SUPER GPU (16 GB).
-* Allows multi line bed files to run the pipeline for several targets at once.
-* Supports live analysis of the clusters during sequencing and seemless polishing of the clusters as soon as enough clusters are found
+* Allows **multi line bed files** to run the pipeline for several targets at once.
+* Supports **live analysis of the clusters during sequencing and seemless polishing** of the clusters as soon as enough clusters are found.
+* Use **verbose parameter** to output all intermediate files.
+* **Optional context primer** help improving the UMI extraction for non-unique UMI sequences. 
  
 > See the [usage documentation](docs/usage.md) for all of the available parameters of the pipeline.
 
