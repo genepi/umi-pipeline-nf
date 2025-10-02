@@ -2,7 +2,7 @@
 
 This document details the outputs produced by each subworkflow of the UMI analysis pipeline. The pipeline is split into distinct subworkflows, each handling a specific part of the processing—from raw input to variant calling. This guide explains the outputs, the processing steps/modules used, and how these outputs are organized.
 
-![Workflow](images/umi-pipeline-nf_metro-map.svg)
+![Workflow](images/metro-map.svg)
 
 ## Pipeline Overview
 
