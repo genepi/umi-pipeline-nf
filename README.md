@@ -100,8 +100,6 @@ The pipeline is organized into four main subworkflows, each with its own process
 * Supports **live analysis of the clusters during sequencing and seemless polishing** of the clusters as soon as enough clusters are found.
 * Use **verbose parameter** to output all intermediate files.
 * **Optional context primer** help improving the UMI extraction for non-unique UMI sequences. 
- 
-> See the [usage documentation](docs/usage.md) for all of the available parameters of the pipeline.
 
 ## Quick Start
 
