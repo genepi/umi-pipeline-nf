@@ -60,6 +60,34 @@
         },
         "timestamp": "2025-02-26T16:03:20.779070632"
     },
+    "Should detect the UMIs using context primer": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode_context",
+                        "lpa2645",
+                        "extracted_umis_barcode_context_1.fastq:md5,d98f53ef8fb52f5ca0cffda16e10c5b5"
+                    ]
+                ],
+                "1": [
+                    "extracted_umis_barcode_context_1.tsv:md5,242202b6b70f9216e3594432722bfbc8"
+                ],
+                "umi_extract_fastq": [
+                    [
+                        "barcode_context",
+                        "lpa2645",
+                        "extracted_umis_barcode_context_1.fastq:md5,d98f53ef8fb52f5ca0cffda16e10c5b5"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-10-01T13:28:46.910247796"
+    },
     "Should detect the same UMIs - short adapter": {
         "content": [
             {
@@ -120,6 +148,34 @@
             "nextflow": "24.10.0"
         },
         "timestamp": "2025-02-26T16:03:08.582178233"
+    },
+    "Should detect UMIs": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "barcode_context",
+                        "lpa2645",
+                        "extracted_umis_barcode_context_1.fastq:md5,f02454a788bf0ce6bbff1a05b64afa75"
+                    ]
+                ],
+                "1": [
+                    "extracted_umis_barcode_context_1.tsv:md5,c1a3bfcf4bcf7894f12e9b3038c62c66"
+                ],
+                "umi_extract_fastq": [
+                    [
+                        "barcode_context",
+                        "lpa2645",
+                        "extracted_umis_barcode_context_1.fastq:md5,f02454a788bf0ce6bbff1a05b64afa75"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-10-01T14:48:05.939635732"
     },
     "Should output empty file": {
         "content": [

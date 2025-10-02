@@ -7,6 +7,9 @@ nextflow_process {
     test("Should run without failures") {
 
         when {
+            params{
+                use_context = false
+            }
             process {
                 """
                 input[0] = Channel.of(
@@ -33,6 +36,7 @@ nextflow_process {
         when {
             params{
                 adapter_length = 50
+                use_context = false
             }
             process {
                 """
@@ -67,6 +71,7 @@ nextflow_process {
         when {
             params{
                 adapter_length = 500
+                use_context = false
             }
             process {
                 """
@@ -96,12 +101,64 @@ nextflow_process {
 
     }
 
+    test("Should detect UMIs") {
+
+        when {
+            params{
+                adapter_length = 250
+            }
+            process {
+                """
+                input[0] = Channel.of(
+                    ["barcode_context", "lpa2645", "$baseDir/tests/input/detect_umi/barcode_context/lpa2645_filtered.fastq"],
+                )
+                input[1] = file( "$baseDir/.nf-test/tests/")
+                input[2] = "raw"
+                input[3] = file("$baseDir/bin/extract_umis.py")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+
+    test("Should detect the UMIs using context primer") {
+
+        when {
+            params{
+                adapter_length = 250
+                use_context = true
+            }
+            process {
+                """
+                input[0] = Channel.of(
+                    ["barcode_context", "lpa2645", "$baseDir/tests/input/detect_umi/barcode_context/lpa2645_filtered.fastq"],
+                )
+                input[1] = file( "$baseDir/.nf-test/tests/")
+                input[2] = "raw"
+                input[3] = file("$baseDir/bin/extract_umis.py")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+            with(process.out.umi_extract_fastq){
+                assert path(get(0).get(2)).md5 == "d98f53ef8fb52f5ca0cffda16e10c5b5"
+            }
+        }
+
+    }
+
     test("Should output empty file") {
 
         when {
             params {
-                // define parameters here. Example:
-                // outdir = "tests/results"
+                use_context = false
             }
             process {
                 """
@@ -130,6 +187,7 @@ nextflow_process {
         when {
             params{
                 adapter_length = 20
+                use_context = false
             }
             process {
                 """
