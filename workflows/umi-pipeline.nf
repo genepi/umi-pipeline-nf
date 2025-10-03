@@ -40,21 +40,16 @@ workflow UMI_PIPELINE {
         def cluster_summary_cache_dir = new File (".nextflow/cache/${workflow.sessionId}/cluster_summary_cache_dir")
         cluster_summary_cache_dir.mkdir()
         cluster_summary_cache_dir_nf = file( cluster_summary_cache_dir )
+        bed_input_ch = Channel.fromPath( bed )
+        
+        PARSE_BED(bed_input_ch)
 
-
-        // Use Nextflow to split input bed file
-        Channel.fromPath( bed )
-        .splitText()
-        .map { line ->
-            def fields = line.tokenize('\t')
-            def target = fields[3].trim()  // Trim to remove trailing \n or spaces
-            return tuple(target, line)
-        }
-        .set{ bed_channel }
-        PARSE_BED( bed_channel )
-
-        PARSE_BED.out.bed_channel
-            .set{ bed_ch }
+        PARSE_BED.out.bed_files
+            .map { bed_file ->
+                def target = bed_file.baseName
+                tuple(target, bed_file)
+            }
+            .set { bed_ch }
 
         if ( params.live ){        
             LIVE_UMI_PROCESSING(
