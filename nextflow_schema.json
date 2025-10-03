@@ -69,6 +69,7 @@
       "type": "object",
       "description": "Advanced settings for pipeline execution.",
       "properties": {
+        "single_sample": { "type": "boolean", "default": false, "description": "Can be used if the sample is not organized in barcode directories" },
         "chunk_size": { "type": "integer", "default": 50000, "description": "Number of reads per file for processing." },
         "min_reads_per_barcode": { "type": "integer", "default": 1000, "description": "Minimum number of reads per barcode." },
         "umi_errors": { "type": "integer", "default": 2, "description": "Maximum allowed differences in extracted UMIs." },

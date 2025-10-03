@@ -34,24 +34,28 @@ workflow LIVE_UMI_PROCESSING {
 
         CONTINUE_PIPELINE( continue_ch )
 
-        Channel
-            .fromPath("${params.input}/barcode*/*.fastq")
-            .set{ existing_fastqs }
-        
-        Channel
-            .watchPath("${params.input}/barcode*/*.fastq", 'create, modify')
-            .until { it.getFileName().toString().toLowerCase().contains("continue") } 
+        def fastq_pattern = params.single_sample ?
+            "${params.input}/*.{fastq,fq,fastq.gz,fq.gz}" :
+            "${params.input}/barcode*/*.{fastq,fq,fastq.gz,fq.gz}"
+
+        // Existing FASTQs
+        Channel.fromPath(fastq_pattern, checkIfExists: true)
+            .set { existing_fastqs }
+
+        // Watch for new FASTQs until a "continue" file appears
+        Channel.watchPath(fastq_pattern, 'create,modify', checkIfExists: true)
+            .until { it.getFileName().toString().toLowerCase().contains("continue") }
             .set { watched_fastqs }
-            
+
+        // Combine existing and watched FASTQs
         existing_fastqs
-            .concat( watched_fastqs )
-            .map{ 
-                fastq -> 
+            .concat(watched_fastqs)
+            .map { fastq ->
                 def barcode = fastq.parent.name
                 tuple(barcode, fastq)
-                }
-            .splitFastq( by: params.chunk_size , file: true)
-            .set{ chunked_input_fastqs }
+            }
+            .splitFastq(by: params.chunk_size, file: true)
+            .set { chunked_input_fastqs }
 
                 
         MERGE_FASTQ( chunked_input_fastqs )

@@ -24,8 +24,12 @@ workflow OFFLINE_UMI_PROCESSING {
         bed
 
     main:        
-        Channel
-            .fromPath("${params.input}/barcode*/*.fastq")
+
+        def fastq_channel = params.single_sample ?
+            Channel.fromPath("${params.input}/*.{fastq,fq,fastq.gz,fq.gz}", checkIfExists: true) :
+            Channel.fromPath("${params.input}/barcode*/*.{fastq,fq,fastq.gz,fq.gz}", checkIfExists: true)
+        
+        fastq_channel
             .map{ 
                 fastqs -> 
                 def barcode = fastqs.parent.name
