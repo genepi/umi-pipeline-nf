@@ -1,0 +1,65 @@
+nextflow_process {
+
+    name "Test Process SUMMARIZE_FILTER_READ_STATS"
+    script "modules/local/umi_processing/summarize_filter_read_stats.nf"
+    process "SUMMARIZE_FILTER_READ_STATS"
+
+    test("Should summarize stats for one sample and one target") {
+
+        when{
+            process {
+                """
+                input[0] = Channel.of(tuple(
+                    "sample1",
+                    "target1",
+                    [file("${baseDir}/tests/input/summarize_filter_read_stats/sample1_target1_stats1.tsv"),
+                    file("${baseDir}/tests/input/summarize_filter_read_stats/sample1_target1_stats2.tsv")]
+                ))
+                input[1] = "raw"
+                input[2] = file("$baseDir/bin/summarize_split_read_stats.py", checkIfExists: true)
+                """
+            }
+        }
+        
+        then{
+            assert process.success
+            assert snapshot(process.out.summary_stats).match()
+        }
+    }
+
+    test("Should summarize stats for multiple samples and targets") {
+
+        when{
+            process {
+                """
+                input[0] = Channel.of(tuple(
+                    "sample1",
+                    "target1",
+                    [file("${baseDir}/tests/input/summarize_filter_read_stats/sample1_target1_stats1.tsv"),
+                    file("${baseDir}/tests/input/summarize_filter_read_stats/sample1_target1_stats2.tsv")]
+                ),
+                tuple(
+                    "sample1",
+                    "target2",
+                    [file("${baseDir}/tests/input/summarize_filter_read_stats/sample1_target2_stats1.tsv"),
+                    file("${baseDir}/tests/input/summarize_filter_read_stats/sample1_target2_stats2.tsv")]
+                ),
+                tuple(
+                    "sample2",
+                    "target2",
+                    [file("${baseDir}/tests/input/summarize_filter_read_stats/sample2_target2_stats1.tsv"),
+                    file("${baseDir}/tests/input/summarize_filter_read_stats/sample2_target2_stats2.tsv")]
+                ))
+                input[1] = "raw"
+                input[2] = file("$baseDir/bin/summarize_split_read_stats.py", checkIfExists: true)
+                """
+            }
+        }
+        
+        then{
+            assert process.success
+            assert snapshot(process.out.summary_stats).match()
+        }
+    }
+
+}

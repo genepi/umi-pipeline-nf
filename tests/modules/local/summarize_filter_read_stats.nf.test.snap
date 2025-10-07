@@ -1,0 +1,44 @@
+{
+    "Should summarize stats for multiple samples and targets": {
+        "content": [
+            [
+                [
+                    "sample1",
+                    "target1",
+                    "sample1_target1_filtered_reads.tsv:md5,baadf2eeda323dbbbc66f0c9edd0fbed"
+                ],
+                [
+                    "sample1",
+                    "target2",
+                    "sample1_target2_filtered_reads.tsv:md5,90953c0242123bcc53777746a6fb0d9f"
+                ],
+                [
+                    "sample2",
+                    "target2",
+                    "sample2_target2_filtered_reads.tsv:md5,004710eae85329cf3c850d5e23f9af1d"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-10-07T11:29:05.214066045"
+    },
+    "Should summarize stats for one sample and one target": {
+        "content": [
+            [
+                [
+                    "sample1",
+                    "target1",
+                    "sample1_target1_filtered_reads.tsv:md5,baadf2eeda323dbbbc66f0c9edd0fbed"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-10-07T11:28:56.116812084"
+    }
+}

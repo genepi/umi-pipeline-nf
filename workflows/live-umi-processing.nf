@@ -9,6 +9,7 @@ include {CLUSTER} from '../modules/local/umi_processing/cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../modules/local/umi_processing/reformat_filter_cluster.nf'
 include {CLUSTER_STATS} from '../modules/local/umi_processing/cluster_stats.nf'
 include {SUMMARY_CLUSTER_STATS} from '../modules/local/umi_processing/summary_cluster_stats.nf'
+include {SUMMARIZE_FILTER_READ_STATS} from '../modules/local/umi_processing/summarize_filter_read_stats.nf'
 
 workflow LIVE_UMI_PROCESSING {
     take:
@@ -20,6 +21,7 @@ workflow LIVE_UMI_PROCESSING {
         umi_parse_clusters
         umi_cluster_report
         umi_cluster_stats_summary
+        umi_summarize_filter_reads
         cluster_summary_cache_dir_nf
         bed
 
@@ -66,6 +68,14 @@ workflow LIVE_UMI_PROCESSING {
         .set{ bam_consensus_bed_sets }
 
         SPLIT_READS( bam_consensus_bed_sets, raw, umi_filter_reads )
+
+        // Group stats files by sample and target
+        SPLIT_READS.out.split_reads_stats
+            .groupTuple(by: [0, 1]) // Group by sample (0) and target (1)
+            .set { grouped_stats }
+
+        // Run the SUMMARIZE_FILTER_READ_STATS process
+        SUMMARIZE_FILTER_READ_STATS(grouped_stats, raw, umi_summarize_filter_reads)
 
         SPLIT_READS.out.split_reads_fastx
         .filter{ _sample, _target, fastq -> fastq.countFastq() > params.min_reads_per_barcode }

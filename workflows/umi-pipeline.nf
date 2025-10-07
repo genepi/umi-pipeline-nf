@@ -27,6 +27,7 @@ workflow UMI_PIPELINE {
         umi_cluster_report          = file( "${projectDir}/bin/cluster_report.py", checkIfExists: true )
         umi_cluster_stats_summary   = file( "${projectDir}/bin/summary_cluster_report.py", checkIfExists: true )
         umi_parse_bam               = file( "${projectDir}/bin/parse_cluster_alignment.py", checkIfExists: true)
+        umi_summarize_filter_reads  = file( "${projectDir}/bin/summarize_split_read_stats.py", checkIfExists: true)
 
         // subdirectory and file prefixes
         raw                         = "raw"
@@ -61,6 +62,7 @@ workflow UMI_PIPELINE {
                 umi_parse_clusters,
                 umi_cluster_report,
                 umi_cluster_stats_summary,
+                umi_summarize_filter_reads,
                 cluster_summary_cache_dir_nf,
                 bed_ch
                 )
@@ -77,6 +79,7 @@ workflow UMI_PIPELINE {
                 umi_parse_clusters,
                 umi_cluster_report,
                 umi_cluster_stats_summary,
+                umi_summarize_filter_reads,
                 cluster_summary_cache_dir_nf,
                 bed_ch
             )
