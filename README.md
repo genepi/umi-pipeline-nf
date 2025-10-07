@@ -1,4 +1,4 @@
-[![Nextflow](https://img.shields.io/badge/nextflow-20.07.1-brightgreen.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow-25.04.8-brightgreen.svg)](https://www.nextflow.io/)
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
 [![CI Tests](https://github.com/genepi/umi-pipeline-nf/actions/workflows/ci-tests.yml/badge.svg)](https://github.com/genepi/umi-pipeline-nf/actions/workflows/ci-tests.yml)
 
