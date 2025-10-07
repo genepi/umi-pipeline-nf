@@ -11,24 +11,24 @@
                     [
                         "barcode03",
                         "lpa2645",
-                        "extracted_umis_barcode03_2.fastq:md5,ef06dacd82cc76a3e1797fafed348d97"
+                        "extracted_umis_barcode03_2.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ],
                     [
                         "barcode04",
                         "lpa2645",
-                        "extracted_umis_barcode04_3.fastq:md5,75c1c38a134cf1270f5e94d3ea938006"
+                        "extracted_umis_barcode04_3.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ],
                     [
                         "barcode05",
                         "lpa2645",
-                        "extracted_umis_barcode05_4.fastq:md5,fe23b244bdfdfe5f62e2488c6acff007"
+                        "extracted_umis_barcode05_4.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "1": [
                     "extracted_umis_barcode02_1.tsv:md5,ad5e1bbeb6edb594841e6cfd3172d20c",
-                    "extracted_umis_barcode03_2.tsv:md5,f1fb453e4c7e2496b9ef2bd3940a3579",
-                    "extracted_umis_barcode04_3.tsv:md5,669511d3a919f063813db044a8a42d65",
-                    "extracted_umis_barcode05_4.tsv:md5,353a7a314c1a8f46bb05b74cc035c64d"
+                    "extracted_umis_barcode03_2.tsv:md5,1d7cb5b915aa09b2dc37531f66222a45",
+                    "extracted_umis_barcode04_3.tsv:md5,fb3a528714e818653113163369c6dcf8",
+                    "extracted_umis_barcode05_4.tsv:md5,0dba9d0ed906743cc8150b8bea054b35"
                 ],
                 "umi_extract_fastq": [
                     [
@@ -39,18 +39,24 @@
                     [
                         "barcode03",
                         "lpa2645",
-                        "extracted_umis_barcode03_2.fastq:md5,ef06dacd82cc76a3e1797fafed348d97"
+                        "extracted_umis_barcode03_2.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ],
                     [
                         "barcode04",
                         "lpa2645",
-                        "extracted_umis_barcode04_3.fastq:md5,75c1c38a134cf1270f5e94d3ea938006"
+                        "extracted_umis_barcode04_3.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ],
                     [
                         "barcode05",
                         "lpa2645",
-                        "extracted_umis_barcode05_4.fastq:md5,fe23b244bdfdfe5f62e2488c6acff007"
+                        "extracted_umis_barcode05_4.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
+                ],
+                "umi_extract_fastq_stats": [
+                    "extracted_umis_barcode02_1.tsv:md5,ad5e1bbeb6edb594841e6cfd3172d20c",
+                    "extracted_umis_barcode03_2.tsv:md5,1d7cb5b915aa09b2dc37531f66222a45",
+                    "extracted_umis_barcode04_3.tsv:md5,fb3a528714e818653113163369c6dcf8",
+                    "extracted_umis_barcode05_4.tsv:md5,0dba9d0ed906743cc8150b8bea054b35"
                 ]
             }
         ],
@@ -58,7 +64,7 @@
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-02-26T16:03:20.779070632"
+        "timestamp": "2025-10-07T13:40:23.501461633"
     },
     "Should detect the UMIs using context primer": {
         "content": [
@@ -79,6 +85,9 @@
                         "lpa2645",
                         "extracted_umis_barcode_context_1.fastq:md5,d98f53ef8fb52f5ca0cffda16e10c5b5"
                     ]
+                ],
+                "umi_extract_fastq_stats": [
+                    "extracted_umis_barcode_context_1.tsv:md5,242202b6b70f9216e3594432722bfbc8"
                 ]
             }
         ],
@@ -86,7 +95,7 @@
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-10-01T13:28:46.910247796"
+        "timestamp": "2025-10-07T13:40:41.252022806"
     },
     "Should detect the same UMIs - short adapter": {
         "content": [
@@ -100,24 +109,24 @@
                     [
                         "barcode03",
                         "lpa2645",
-                        "extracted_umis_barcode03_2.fastq:md5,ef06dacd82cc76a3e1797fafed348d97"
+                        "extracted_umis_barcode03_2.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ],
                     [
                         "barcode04",
                         "lpa2645",
-                        "extracted_umis_barcode04_3.fastq:md5,75c1c38a134cf1270f5e94d3ea938006"
+                        "extracted_umis_barcode04_3.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ],
                     [
                         "barcode05",
                         "lpa2645",
-                        "extracted_umis_barcode05_4.fastq:md5,fe23b244bdfdfe5f62e2488c6acff007"
+                        "extracted_umis_barcode05_4.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "1": [
                     "extracted_umis_barcode02_1.tsv:md5,ad5e1bbeb6edb594841e6cfd3172d20c",
-                    "extracted_umis_barcode03_2.tsv:md5,f1fb453e4c7e2496b9ef2bd3940a3579",
-                    "extracted_umis_barcode04_3.tsv:md5,669511d3a919f063813db044a8a42d65",
-                    "extracted_umis_barcode05_4.tsv:md5,353a7a314c1a8f46bb05b74cc035c64d"
+                    "extracted_umis_barcode03_2.tsv:md5,1d7cb5b915aa09b2dc37531f66222a45",
+                    "extracted_umis_barcode04_3.tsv:md5,fb3a528714e818653113163369c6dcf8",
+                    "extracted_umis_barcode05_4.tsv:md5,0dba9d0ed906743cc8150b8bea054b35"
                 ],
                 "umi_extract_fastq": [
                     [
@@ -128,18 +137,24 @@
                     [
                         "barcode03",
                         "lpa2645",
-                        "extracted_umis_barcode03_2.fastq:md5,ef06dacd82cc76a3e1797fafed348d97"
+                        "extracted_umis_barcode03_2.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ],
                     [
                         "barcode04",
                         "lpa2645",
-                        "extracted_umis_barcode04_3.fastq:md5,75c1c38a134cf1270f5e94d3ea938006"
+                        "extracted_umis_barcode04_3.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ],
                     [
                         "barcode05",
                         "lpa2645",
-                        "extracted_umis_barcode05_4.fastq:md5,fe23b244bdfdfe5f62e2488c6acff007"
+                        "extracted_umis_barcode05_4.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
+                ],
+                "umi_extract_fastq_stats": [
+                    "extracted_umis_barcode02_1.tsv:md5,ad5e1bbeb6edb594841e6cfd3172d20c",
+                    "extracted_umis_barcode03_2.tsv:md5,1d7cb5b915aa09b2dc37531f66222a45",
+                    "extracted_umis_barcode04_3.tsv:md5,fb3a528714e818653113163369c6dcf8",
+                    "extracted_umis_barcode05_4.tsv:md5,0dba9d0ed906743cc8150b8bea054b35"
                 ]
             }
         ],
@@ -147,7 +162,7 @@
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-02-26T16:03:08.582178233"
+        "timestamp": "2025-10-07T13:40:10.512697525"
     },
     "Should detect UMIs": {
         "content": [
@@ -156,18 +171,21 @@
                     [
                         "barcode_context",
                         "lpa2645",
-                        "extracted_umis_barcode_context_1.fastq:md5,f02454a788bf0ce6bbff1a05b64afa75"
+                        "extracted_umis_barcode_context_1.fastq:md5,d98f53ef8fb52f5ca0cffda16e10c5b5"
                     ]
                 ],
                 "1": [
-                    "extracted_umis_barcode_context_1.tsv:md5,c1a3bfcf4bcf7894f12e9b3038c62c66"
+                    "extracted_umis_barcode_context_1.tsv:md5,242202b6b70f9216e3594432722bfbc8"
                 ],
                 "umi_extract_fastq": [
                     [
                         "barcode_context",
                         "lpa2645",
-                        "extracted_umis_barcode_context_1.fastq:md5,f02454a788bf0ce6bbff1a05b64afa75"
+                        "extracted_umis_barcode_context_1.fastq:md5,d98f53ef8fb52f5ca0cffda16e10c5b5"
                     ]
+                ],
+                "umi_extract_fastq_stats": [
+                    "extracted_umis_barcode_context_1.tsv:md5,242202b6b70f9216e3594432722bfbc8"
                 ]
             }
         ],
@@ -175,7 +193,7 @@
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-10-01T14:48:05.939635732"
+        "timestamp": "2025-10-07T13:40:31.764555091"
     },
     "Should output empty file": {
         "content": [
@@ -196,6 +214,9 @@
                         "lpa2645",
                         "extracted_umis_barcode02_1.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
+                ],
+                "umi_extract_fastq_stats": [
+                    "extracted_umis_barcode02_1.tsv:md5,ad5e1bbeb6edb594841e6cfd3172d20c"
                 ]
             }
         ],
@@ -203,7 +224,7 @@
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-02-26T14:14:59.285418401"
+        "timestamp": "2025-10-07T13:40:51.406381973"
     },
     "Should not find any UMI": {
         "content": [
@@ -257,6 +278,12 @@
                         "lpa2645",
                         "extracted_umis_barcode05_4.fastq:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
+                ],
+                "umi_extract_fastq_stats": [
+                    "extracted_umis_barcode02_1.tsv:md5,ad5e1bbeb6edb594841e6cfd3172d20c",
+                    "extracted_umis_barcode03_2.tsv:md5,1d7cb5b915aa09b2dc37531f66222a45",
+                    "extracted_umis_barcode04_3.tsv:md5,fb3a528714e818653113163369c6dcf8",
+                    "extracted_umis_barcode05_4.tsv:md5,0dba9d0ed906743cc8150b8bea054b35"
                 ]
             }
         ],
@@ -264,7 +291,7 @@
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-02-26T14:15:12.640118179"
+        "timestamp": "2025-10-07T13:41:04.127245359"
     },
     "Should run without failures": {
         "content": [
@@ -318,6 +345,12 @@
                         "raw",
                         "extracted_umis_barcode05_4.fastq:md5,fe23b244bdfdfe5f62e2488c6acff007"
                     ]
+                ],
+                "umi_extract_fastq_stats": [
+                    "extracted_umis_barcode02_1.tsv:md5,ad5e1bbeb6edb594841e6cfd3172d20c",
+                    "extracted_umis_barcode03_2.tsv:md5,f1fb453e4c7e2496b9ef2bd3940a3579",
+                    "extracted_umis_barcode04_3.tsv:md5,669511d3a919f063813db044a8a42d65",
+                    "extracted_umis_barcode05_4.tsv:md5,353a7a314c1a8f46bb05b74cc035c64d"
                 ]
             }
         ],
@@ -325,6 +358,6 @@
             "nf-test": "0.9.0-rc2",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2025-02-19T19:10:20.140414"
+        "timestamp": "2025-10-07T13:39:58.852046491"
     }
 }

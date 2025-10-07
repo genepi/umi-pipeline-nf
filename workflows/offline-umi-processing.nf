@@ -8,7 +8,7 @@ include {REFORMAT_FILTER_CLUSTER} from '../modules/local/umi_processing/reformat
 include {CLUSTER_STATS} from '../modules/local/umi_processing/cluster_stats.nf'
 include {SUMMARY_CLUSTER_STATS} from '../modules/local/umi_processing/summary_cluster_stats.nf'
 include {SUMMARIZE_FILTER_READ_STATS} from '../modules/local/umi_processing/summarize_filter_read_stats.nf'
-
+include {SUMMARIZE_UMI_STATS} from '../modules/local/umi_processing/summarize_umi_stats.nf'
 
 workflow OFFLINE_UMI_PROCESSING {
 
@@ -21,6 +21,7 @@ workflow OFFLINE_UMI_PROCESSING {
         umi_cluster_report
         umi_cluster_stats_summary
         umi_summarize_filter_reads
+        umi_summarize_umi_stats
         cluster_summary_cache_dir_nf
         bed
 
@@ -65,13 +66,11 @@ workflow OFFLINE_UMI_PROCESSING {
 
         SPLIT_READS( bam_consensus_bed_sets, raw, umi_filter_reads )
 
-        // Group stats files by sample and target
         SPLIT_READS.out.split_reads_stats
             .groupTuple(by: [0, 1]) // Group by sample (0) and target (1)
-            .set { grouped_stats }
+            .set { grouped_split_reads_stats }
 
-        // Run the SUMMARIZE_FILTER_READ_STATS process
-        SUMMARIZE_FILTER_READ_STATS(grouped_stats, raw, umi_summarize_filter_reads)
+        SUMMARIZE_FILTER_READ_STATS(grouped_split_reads_stats, raw, umi_summarize_filter_reads)
 
         SPLIT_READS.out.split_reads_fastx
         .filter{ _sample, _target, fastq -> fastq.countFastq() > params.min_reads_per_barcode }
@@ -82,6 +81,12 @@ workflow OFFLINE_UMI_PROCESSING {
         DETECT_UMI_FASTQ.out.umi_extract_fastq
         .groupTuple( by: [0, 1])
         .set{ extracted_umis }
+
+        DETECT_UMI_FASTQ.out.umi_extract_fastq_stats
+            .groupTuple(by: [0, 1]) // Group by sample (0) and target (1)
+            .set { grouped_umi_stats }
+
+        SUMMARIZE_UMI_STATS(grouped_umi_stats, raw, umi_summarize_umi_stats)
 
         CLUSTER( extracted_umis, raw )
 
