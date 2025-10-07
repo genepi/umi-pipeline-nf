@@ -1,7 +1,6 @@
 process DETECT_UMI_FASTQ {
     publishDir "${params.output}/${sample}/${target}/stats/${type}", pattern: "*.tsv", mode: 'copy', enabled: "${params.verbose}"
-    publishDir "${params.output}/${sample}/${target}/${params.output_format}_umi/${type}", pattern: "*${params.output_format}", mode: 'copy', enabled: "${params.verbose}"
-
+    
     input:
         tuple val(sample), val(target), path(fastq)
         path (cache_dir)
@@ -9,7 +8,7 @@ process DETECT_UMI_FASTQ {
         path(umi_extract_python)
 
     output:
-        tuple val("${sample}"), val("${target}"), path("*${params.output_format}"), emit: umi_extract_fastq
+        tuple val("${sample}"), val("${target}"), path("${cache_dir}/${sample}/${target}/*fastq"), emit: umi_extract_fastq
         tuple val( "${sample}" ), val( "${target}" ), path("*tsv"), emit: umi_extract_fastq_stats
 
     script:
@@ -31,10 +30,9 @@ process DETECT_UMI_FASTQ {
         --output_filename $output_filename \
         $use_context \
         $write_report \
-        -o ./ ${fastq}
+        -o $output_dir ${fastq}
 
-    cp ${output_filename}.${params.output_format} $output_dir/
-    cp ${output_filename}.tsv $output_dir/
+    cp $output_dir/${output_filename}.tsv ./
 
     """
 }
