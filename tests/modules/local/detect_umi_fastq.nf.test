@@ -9,15 +9,14 @@ nextflow_process {
         when {
             params{
                 use_context = false
-                verbose = true
             }
             process {
                 """
                 input[0] = Channel.of(
-                    ["barcode02", "lpa2645", "$baseDir/tests/input/detect_umi/barcode02/lpa2645_filtered.fastq"],
-                    ["barcode03", "lpa2645", "$baseDir/tests/input/detect_umi/barcode03/lpa2645_filtered.fastq"],
-                    ["barcode04", "lpa2645", "$baseDir/tests/input/detect_umi/barcode04/lpa2645_filtered.fastq"],
-                    ["barcode05", "lpa2645", "$baseDir/tests/input/detect_umi/barcode05/lpa2645_filtered.fastq"],
+                    ["barcode02", "raw", "$baseDir/tests/input/detect_umi/barcode02/lpa2645_filtered.fastq"],
+                    ["barcode03", "raw", "$baseDir/tests/input/detect_umi/barcode03/lpa2645_filtered.fastq"],
+                    ["barcode04", "raw", "$baseDir/tests/input/detect_umi/barcode04/lpa2645_filtered.fastq"],
+                    ["barcode05", "raw", "$baseDir/tests/input/detect_umi/barcode05/lpa2645_filtered.fastq"],
                 )
                 input[1] = file( "$baseDir/.nf-test/tests/")
                 input[2] = "raw"
@@ -74,7 +73,6 @@ nextflow_process {
             params{
                 adapter_length = 500
                 use_context = false
-                verbose = true
             }
             process {
                 """
@@ -109,7 +107,6 @@ nextflow_process {
         when {
             params{
                 adapter_length = 250
-                verbose = true
             }
             process {
                 """
@@ -135,7 +132,6 @@ nextflow_process {
             params{
                 adapter_length = 250
                 use_context = true
-                verbose = true
             }
             process {
                 """
@@ -164,7 +160,6 @@ nextflow_process {
         when {
             params {
                 use_context = false
-                verbose = true
             }
             process {
                 """
@@ -194,7 +189,6 @@ nextflow_process {
             params{
                 adapter_length = 20
                 use_context = false
-                verbose = true
             }
             process {
                 """
