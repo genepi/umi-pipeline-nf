@@ -47,7 +47,8 @@ workflow LIVE_UMI_PROCESSING {
             .set { existing_fastqs }
 
         // Watch for new FASTQs until a "continue" file appears
-        Channel.watchPath(fastq_pattern, 'create,modify', checkIfExists: true)
+        Channel
+            .watchPath(fastq_pattern, 'create,modify')
             .until { it.getFileName().toString().toLowerCase().contains("continue") }
             .set { watched_fastqs }
 

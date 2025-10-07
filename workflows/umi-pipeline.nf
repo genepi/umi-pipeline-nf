@@ -42,6 +42,10 @@ workflow UMI_PIPELINE {
         cluster_summary_cache_dir.mkdir()
         cluster_summary_cache_dir_nf = file( cluster_summary_cache_dir )
         bed_input_ch = Channel.fromPath( bed )
+
+        // make sure output directory exists
+        def outputDir = file(params.output)
+        outputDir.mkdirs()
         
         PARSE_BED(bed_input_ch)
 
