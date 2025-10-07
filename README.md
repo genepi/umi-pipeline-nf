@@ -9,7 +9,7 @@ Umi-pipeline-nf
 The pipeline processes FastQ files (typically from the `fastq_pass` folder of your nanopore run) and outputs high-quality aligned consensus sequences in BAM format for each UMI cluster. The optional variant calling creates a vcf file for all variants that are found in the consensus sequences.  
 The newest version of the pipeline supports live analysis of the clusters during sequencing and seamless polishing of the clusters as soon as enough clusters are found.
 
-Umi-pipeline-nf originated from a Snakemake-based analysis pipeline ([pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon); originally developed by [Karst et al, Nat Biotechnol 18:165–169, 2021](https://www.nature.com/articles/s41592-020-01041-y)). We have migrated the pipeline to [Nextflow](https://www.nextflow.io) and incorporated several optimizations and additional functionalities.
+Umi-pipeline-nf is conceptually based on the Snakemake-based UMI analysis pipeline by ONT ([pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon), which relies on the workflow developed by [Karst et al, Nat Biotechnol 18:165–169, 2021](https://www.nature.com/articles/s41592-020-01041-y)). We newly implemented umi-pipeline-nf in [Nextflow](https://www.nextflow.io) and performed a complete redesign and comprehensive functional extension. Umi-pipeline-nf is a fundamentally restructured, extensively optimized and extended pipeline to analyse UMI-tagged nanopore data. It incorporates new modules, GPU-accelerated polishing, two different polishing strategies, real-time sequencing integration, enhanced scalability, simple portability and improved usability.
 
 ![Workflow](docs/images/umi-pipeline-nf_metro-map.jpg)
 
@@ -30,8 +30,14 @@ The pipeline is organized into four main subworkflows, each with its own process
      - Filtered FastQ files and clustering statistics.
 
     **To stop the pipeline when it's in live mode, create a CONTINUE file in the output directory:**  
-    `touch <output>/CONTINUE`  
-    *Note: Nextflow needs write permission in the output directory of MinKNOW -> Add nextflow to the minknow user group (Root rights required to change permissions).
+    ```bash
+    touch <output>/CONTINUE
+    ```  
+    **Note**  
+    Nextflow needs write permission in the output directory of MinKNOW -> Add nextflow to the minknow user group (Root rights required to change permissions).
+    ```bash
+    sudo usermod -aG minknow nextflow
+    ```  
 
 2. **OFFLINE UMI PROCESSING**  
    - **Purpose:** Batch processing with an optional subsampling step.
@@ -60,7 +66,7 @@ The pipeline is organized into four main subworkflows, each with its own process
 
    **1. POA-based polishing (graph-based consensus):**  
    - Implemented via Medaka’s *smolecule* workflow.  
-   - Reads within a UMI cluster are aligned to each other using a Partial Order Alignment (POA) algorithm, which represents bases as nodes in a directed acyclic graph (DAG).  
+   - All reads within a UMI cluster are aligned to each other using a Partial Order Alignment (POA) algorithm, which represents bases as nodes in a directed acyclic graph (DAG).  
    - This captures substitutions, insertions, and deletions efficiently while preserving positional context.  
    - The POA alignment is used to generate an initial consensus, which is then refined with Medaka’s neural network.  
    - Terminal UMI sequences are retained, enabling optional second-round polishing.  
@@ -132,7 +138,7 @@ bash live_demo/run_demo.sh --iterations 4 --interval 20
 - Processed consensus sequences and clustering statistics appear in `live/output/barcode*/`.  
 - Logs and intermediate files are visible if `--verbose` is enabled.
 
-## Main Adaptations
+## Main features and differences to other UMI pipelines
 
 * It comes with a docker/singularity container making **installation simple, easy to use on clusters** and **results highly reproducible**.
 * The pipeline is **optimized for parallelization**.
@@ -141,7 +147,7 @@ bash live_demo/run_demo.sh --iterations 4 --interval 20
 * **Three commonly used variant callers** ([freebayes](https://github.com/freebayes/freebayes), [lofreq](http://csb5.github.io/lofreq/) or [mutserve](https://mitoverse.readthedocs.io/mutserve/mutserve/)) are supported by the pipeline.
 * The raw reads can be optionally **subsampled**.
 * The raw reads can be **filtered by read length and quality**.
-* **GPU acceleration for cluster polishing by Medaka** is available when using the `docker` profile. Tested with an RTX 4080 SUPER GPU (16 GB).
+* **GPU acceleration for cluster polishing by Medaka** is available when using the `docker` profile. Tested with an NVIDIA RTX 4080 SUPER GPU (16 GB).
 * Two polishing strategies are supported:
   * POA-based polishing for maximum accuracy, especially in regions with high variation or no close reference.
   * Reference-based polishing for faster, memory-efficient consensus building when a reliable reference is available.
