@@ -1,5 +1,5 @@
 process CONTINUE_PIPELINE {
-  publishDir "${params.input}/barcode_continue/", mode: 'copy'
+    publishDir params.single_sample ? "${params.input}/" : "${params.input}/barcode_continue/", mode: 'copy'
 
     input:
     val continue_condition
@@ -9,7 +9,6 @@ process CONTINUE_PIPELINE {
 
     script:
     """
-      touch continue.fastq
+    touch continue.fastq
     """
-
 }
