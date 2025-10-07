@@ -7,13 +7,11 @@ Umi-pipeline-nf
 
 **Umi-pipeline-nf** creates highly accurate single-molecule consensus sequences for unique molecular identifier (UMI)-tagged amplicons from nanopore sequencing data.  
 The pipeline processes FastQ files (typically from the `fastq_pass` folder of your nanopore run) and outputs high-quality aligned consensus sequences in BAM format for each UMI cluster. The optional variant calling creates a vcf file for all variants that are found in the consensus sequences.  
-The newest version of the pipeline supports live analysis of the clusters during sequencing and seemless polishing of the clusters as soon as enough clusters are found.
+The newest version of the pipeline supports live analysis of the clusters during sequencing and seamless polishing of the clusters as soon as enough clusters are found.
 
 Umi-pipeline-nf originated from a Snakemake-based analysis pipeline ([pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon); originally developed by [Karst et al, Nat Biotechnol 18:165–169, 2021](https://www.nature.com/articles/s41592-020-01041-y)). We have migrated the pipeline to [Nextflow](https://www.nextflow.io) and incorporated several optimizations and additional functionalities.
 
-
 ![Workflow](docs/images/umi-pipeline-nf_metro-map.jpg)
-
 
 ## Workflow
 
@@ -75,6 +73,7 @@ The pipeline is organized into four main subworkflows, each with its own process
    - By bypassing the POA graph construction, this approach reduces RAM usage (up to 5×) and runtime (up to 30×).  
    - **Strengths:** Highly efficient and scalable, suitable when a sufficiently similar reference is available.  
    - **Trade-offs:** Less robust for targets with large indels, rearrangements, or high sequence heterogeneity.
+
 4. **VARIANT CALLING**  
    - **Purpose:** Identify genetic variants from the consensus data.
    - **Steps:**  
@@ -83,6 +82,55 @@ The pipeline is organized into four main subworkflows, each with its own process
      - VCF files with variant calls (e.g., in `<output>/<barcodeXX>/<target>/<freebayes/mutserve/lofreq>/`).
 
 > See the [output documentation](docs/output.md) for a detailed overview of the pipeline outputs and directory structure.
+
+## Live Demo
+
+The **live_demo** is a self-contained example that simulates a nanopore sequencing run with UMI-tagged reads. It allows users to **test the live mode of the pipeline without actual sequencing data** and observe the real-time processing, clustering, and polishing of reads.
+
+### Purpose
+
+- Demonstrates the **LIVE UMI PROCESSING** workflow in action.
+- Helps users understand how the pipeline handles **incoming reads**, performs **UMI clustering**, and polishes consensus sequences on-the-fly.
+- Useful for training, testing, or debugging the pipeline without connecting to a sequencing device.
+
+### How It Works
+
+1. **Simulated Read Generation**  
+   - A small input FASTQ file is repeatedly copied into barcode-specific folders (`barcode01`, `barcode02`, …) at regular intervals.  
+   - This mimics the arrival of reads from a live nanopore run.
+
+2. **Live Pipeline Execution**  
+   - The pipeline is started in background mode using the `--live` flag.  
+   - As new reads appear in the input directories, the pipeline automatically processes them, extracts UMIs, clusters reads, and updates consensus sequences.
+
+3. **Stopping the Demo**  
+   - To gracefully stop the pipeline, create a `CONTINUE` file in the output directory:  
+     ```bash
+     touch <output>/CONTINUE
+     ```  
+   - The pipeline will finish processing the currently queued reads and terminate.
+
+4. **Cleanup**  
+   - After the pipeline finishes, temporary input and output files can be safely removed using the included cleanup script.
+
+### Running the Live Demo (Make sure Nextflow is installed on your system)
+
+```bash
+git clone https://github.com/genepi/umi-pipeline-nf.git
+cd umi-pipeline-nf
+bash live_demo/run_demo.sh --iterations 4 --interval 20
+```
+
+- `--iterations`: Number of times the input FASTQ is copied to simulate new reads (default: 5).  
+- `--interval`: Time in seconds between iterations (default: 30).  
+
+> The demo runs a complete simulated live sequencing session, showing how **UMI extraction, clustering, and consensus polishing** happen in real time.
+
+### Output
+
+- Simulated input reads are placed in `live/data/fastq_pass/barcode*/`.  
+- Processed consensus sequences and clustering statistics appear in `live/output/barcode*/`.  
+- Logs and intermediate files are visible if `--verbose` is enabled.
 
 ## Main Adaptations
 
@@ -98,15 +146,14 @@ The pipeline is organized into four main subworkflows, each with its own process
   * POA-based polishing for maximum accuracy, especially in regions with high variation or no close reference.
   * Reference-based polishing for faster, memory-efficient consensus building when a reliable reference is available.
 * Allows **multi line bed files** to run the pipeline for several targets at once.
-* Supports **live analysis of the clusters during sequencing and seemless polishing** of the clusters as soon as enough clusters are found.
+* Supports **live analysis of the clusters during sequencing and seamless polishing** of the clusters as soon as enough clusters are found.
 * Use **verbose parameter** to output all intermediate files.
-* **Optional context primer** help improving the UMI extraction for non-unique UMI sequences. 
+* **Optional context primer** help improving the UMI extraction for non-unique UMI sequences.
 
-To see all available parameters run 
+To see all available parameters run
 ```bash
 nextflow run genepi/umi-pipeline-nf -r main --help
 ```
-
 
 ## Quick Start
 
@@ -122,15 +169,14 @@ nextflow run genepi/umi-pipeline-nf -r v1.0.0-beta -profile test,docker
 3.1 Download and adapt the config/custom.config with paths to your data (relative and absolute paths possible).
 
 ```bash
-nextflow run genepi/umi-pipeline-nf -r v1.0.0-beta -c <custom.config> -profile custom,<docker,singularity> 
+nextflow run genepi/umi-pipeline-nf -r v1.0.0-beta -c <custom.config> -profile custom,<docker,singularity>
 ```
 
-## Citation 
+## Citation
 
 If you use the pipeline please cite [our Paper](https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-024-01391-8):
 
 Amstler S, Streiter G, Pfurtscheller C, Forer L, Di Maio S, Weissensteiner H, Paulweber B, Schoenherr S, Kronenberg F, Coassin S. Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex lipoprotein(a) KIV-2 VNTR. Genome Med 16, 117 (2024). https://doi.org/10.1186/s13073-024-01391-8
-
 
 ### Credits
 
@@ -138,3 +184,4 @@ The pipeline was written by [@StephanAmstler](https://github.com/AmstlerStephan)
 Nextflow template pipeline: [EcSeq](https://github.com/ecSeq).  
 Snakemake-based ONT pipeline for UMI nanopore sequencing analysis: [nanoporetech/pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon).  
 UMI-corrected nanopore sequencing analysis first shown by: [SorenKarst/longread_umi](https://github.com/SorenKarst/longread_umi).
+
