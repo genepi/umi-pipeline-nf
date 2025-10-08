@@ -1,0 +1,2 @@
+output_file	max_pattern_distance	detected_forward_strands	detected_reverse_strands	ratio_fwd_rvs	total_reads	included_reads	percent_of_total_reads
+barcode03_lpa2645_filtered_umi_KIV2A_2.1_filtered_umis	2	58	58	1.0	116	116	100.0

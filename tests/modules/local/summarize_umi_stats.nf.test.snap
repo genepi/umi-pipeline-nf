@@ -1,0 +1,18 @@
+{
+    "Should summarize stats for multiple samples and targets": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-10-07T12:08:39.894269622"
+    },
+    "Should summarize stats for one sample and one target": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.9.0-rc2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2025-10-07T12:08:28.039742138"
+    }
+}

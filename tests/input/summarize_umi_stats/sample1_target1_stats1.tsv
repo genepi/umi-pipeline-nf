@@ -1,0 +1,2 @@
+output_file	max_pattern_distance	detected_forward_strands	detected_reverse_strands	ratio_fwd_rvs	total_reads	included_reads	percent_of_total_reads
+barcode06_lpa2645_filtered_fastq_runid_b05e9ba03fee394fc76a041d3df7426ff48616c9_0.1_filtered_umis	2	740	744	0.9946236559139785	1484	1355	91.30727762803234

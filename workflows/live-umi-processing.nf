@@ -9,6 +9,8 @@ include {CLUSTER} from '../modules/local/umi_processing/cluster.nf'
 include {REFORMAT_FILTER_CLUSTER} from '../modules/local/umi_processing/reformat_filter_cluster.nf'
 include {CLUSTER_STATS} from '../modules/local/umi_processing/cluster_stats.nf'
 include {SUMMARY_CLUSTER_STATS} from '../modules/local/umi_processing/summary_cluster_stats.nf'
+include {SUMMARIZE_FILTER_READ_STATS} from '../modules/local/umi_processing/summarize_filter_read_stats.nf'
+include {SUMMARIZE_UMI_STATS} from '../modules/local/umi_processing/summarize_umi_stats.nf'
 
 workflow LIVE_UMI_PROCESSING {
     take:
@@ -20,6 +22,8 @@ workflow LIVE_UMI_PROCESSING {
         umi_parse_clusters
         umi_cluster_report
         umi_cluster_stats_summary
+        umi_summarize_filter_reads
+        umi_summarize_umi_stats
         cluster_summary_cache_dir_nf
         bed
 
@@ -34,24 +38,29 @@ workflow LIVE_UMI_PROCESSING {
 
         CONTINUE_PIPELINE( continue_ch )
 
+        def fastq_pattern = params.single_sample ?
+            "${params.input}/*.{fastq,fq,fastq.gz,fq.gz}" :
+            "${params.input}/barcode*/*.{fastq,fq,fastq.gz,fq.gz}"
+
+        // Existing FASTQs
+        Channel.fromPath(fastq_pattern, checkIfExists: true)
+            .set { existing_fastqs }
+
+        // Watch for new FASTQs until a "continue" file appears
         Channel
-            .fromPath("${params.input}/barcode*/*.fastq")
-            .set{ existing_fastqs }
-        
-        Channel
-            .watchPath("${params.input}/barcode*/*.fastq", 'create, modify')
-            .until { it.getFileName().toString().toLowerCase().contains("continue") } 
+            .watchPath(fastq_pattern, 'create,modify')
+            .until { it.getFileName().toString().toLowerCase().contains("continue") }
             .set { watched_fastqs }
-            
+
+        // Combine existing and watched FASTQs
         existing_fastqs
-            .concat( watched_fastqs )
-            .map{ 
-                fastq -> 
+            .concat(watched_fastqs)
+            .map { fastq ->
                 def barcode = fastq.parent.name
                 tuple(barcode, fastq)
-                }
-            .splitFastq( by: params.chunk_size , file: true)
-            .set{ chunked_input_fastqs }
+            }
+            .splitFastq(by: params.chunk_size, file: true)
+            .set { chunked_input_fastqs }
 
                 
         MERGE_FASTQ( chunked_input_fastqs )
@@ -63,11 +72,27 @@ workflow LIVE_UMI_PROCESSING {
 
         SPLIT_READS( bam_consensus_bed_sets, raw, umi_filter_reads )
 
+        // Group stats files by sample and target
+        SPLIT_READS.out.split_reads_stats
+            .groupTuple(by: [0, 1]) // Group by sample (0) and target (1)
+            .set { grouped_split_reads_stats }
+
+        // Run the SUMMARIZE_FILTER_READ_STATS process
+        SUMMARIZE_FILTER_READ_STATS(grouped_split_reads_stats, raw, umi_summarize_filter_reads)
+
         SPLIT_READS.out.split_reads_fastx
         .filter{ _sample, _target, fastq -> fastq.countFastq() > params.min_reads_per_barcode }
         .set{ split_reads_filtered }
 
         DETECT_UMI_FASTQ( split_reads_filtered, extracted_fastq_cache_dir_nf, raw, umi_extract )
+
+        // Group stats files by sample and target for UMI stats
+        DETECT_UMI_FASTQ.out.umi_extract_fastq_stats
+            .groupTuple(by: [0, 1]) // Group by sample (0) and target (1)
+            .set { grouped_umi_stats }
+
+        // Run the SUMMARIZE_UMI_STATS process
+        SUMMARIZE_UMI_STATS(grouped_umi_stats, raw, umi_summarize_umi_stats)
 
         CLUSTER( DETECT_UMI_FASTQ.out.umi_extract_fastq, raw )
 

@@ -37,6 +37,7 @@ nextflow_process {
             params{
                 adapter_length = 50
                 use_context = false
+                verbose = true
             }
             process {
                 """

@@ -192,7 +192,7 @@ def filter_reads(args):
     out_format = args.OUT_FORMAT
     tsv = args.TSV
     output_filename = "{}_filtered".format(args.OUT_FILENAME)
-    stats_out_filename = "umi_filter_reads_stats"
+    stats_out_filename = "{}_umi_filter_reads_stats".format(args.OUT_FILENAME)
 
     n_non_reads = 0
     n_unmapped = 0
