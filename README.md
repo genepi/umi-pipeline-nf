@@ -158,7 +158,7 @@ bash live_demo/run_demo.sh --iterations 4 --interval 20
 
 To see all available parameters run
 ```bash
-nextflow run genepi/umi-pipeline-nf -r main --help
+nextflow run genepi/umi-pipeline-nf -r v1.0.0 --help
 ```
 
 ## Quick Start
