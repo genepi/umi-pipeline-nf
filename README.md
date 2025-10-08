@@ -11,7 +11,7 @@ The newest version of the pipeline supports live analysis of the clusters during
 
 Umi-pipeline-nf is conceptually based on the Snakemake-based UMI analysis pipeline by ONT ([pipeline-umi-amplicon](https://github.com/nanoporetech/pipeline-umi-amplicon), which relies on the workflow developed by [Karst et al, Nat Biotechnol 18:165–169, 2021](https://www.nature.com/articles/s41592-020-01041-y)). We newly implemented umi-pipeline-nf in [Nextflow](https://www.nextflow.io) and performed a complete redesign and comprehensive functional extension. Umi-pipeline-nf is a fundamentally restructured, extensively optimized and extended pipeline to analyse UMI-tagged nanopore data. It incorporates new modules, GPU-accelerated polishing, two different polishing strategies, real-time sequencing integration, enhanced scalability, simple portability and improved usability.
 
-![Workflow](docs/images/metro-map_umi-pipeline-nf.jpg)
+![Workflow](docs/metro-map_umi-pipeline-nf.jpg)
 
 ## Workflow
 
