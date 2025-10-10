@@ -21,11 +21,8 @@ RUN micromamba install -y -n base -c conda-forge -c bioconda -c defaults \
     unzip=6.0 \
     matplotlib=3.7.2 \
     networkx=3.1 \
-    numpy=1.23.4 \
-    pysam=0.19.1 \
     pyfastx=1.1.0 \
     pandas=1.5.0 \
-    edlib=1.3.9 \
     pip && \
     micromamba clean --all --yes
 
