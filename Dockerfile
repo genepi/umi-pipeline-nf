@@ -8,6 +8,17 @@ COPY environment.yml /tmp/environment.yml
 RUN micromamba install -y -n base -f /tmp/environment.yml && \
     micromamba clean --all --yes
 
+# Install pip-only dependencies in a separate layer
+RUN micromamba run -n base pip install \
+    matplotlib==3.7.2 \
+    networkx==3.1 \
+    catfishq==1.4.0 \
+    numpy==1.23.4 \
+    pysam==0.19.1 \
+    pyfastx==1.1.0 \
+    pandas==1.5.0 \
+    edlib==1.3.9
+
 # Installing software using system package manager
 USER root
 
