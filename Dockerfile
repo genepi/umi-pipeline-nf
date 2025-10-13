@@ -1,46 +1,24 @@
-# syntax=docker/dockerfile:1
+FROM continuumio/miniconda3:24.7.1-0
 
-FROM mambaorg/micromamba:1.5.8
+LABEL maintainer="Amstler Stephan <amstler.stephan@i-med.ac.at>" \
+    version="1.0.1"
 
-LABEL authors="Amstler Stephan" \
-      email="amstler.stephan@i-med.ac.at"
-
-# Install everything via conda-forge/bioconda, except catfishq (pip)
-RUN micromamba install -y -n base -c conda-forge -c bioconda -c defaults \
-    python>=3.8 \
-    medaka=2.0.1 \
-    minimap2=2.24 \
-    samtools=1.15.1 \
-    seqtk=1.3 \
-    lofreq=2.1.5 \
-    freebayes=1.3.2 \
-    vcflib=1.0.0 \
-    bedtools=2.30.0 \
-    vsearch=2.21.2 \
-    openjdk=11.0.9 \
-    unzip=6.0 \
-    matplotlib=3.7.2 \
-    networkx=3.1 \
-    pyfastx=1.1.0 \
-    pandas=1.5.0 \
-    pip && \
-    micromamba clean --all --yes
-
-# Only pip-install catfishq (not on conda)
-RUN micromamba run -n base pip install catfishq==1.4.0
-
-# Install Linux tools
-USER root
 RUN apt-get update && \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
     wget \
     zlib1g-dev \
     libgomp1 \
     procps && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Working directory
+COPY environment.yml /tmp/environment.yml
+
+RUN conda install -y -n base -c conda-forge conda-libmamba-solver && \
+    conda config --set solver libmamba && \
+    conda env update -n base -f /tmp/environment.yml && \
+    conda clean --all --yes
+
 WORKDIR /opt
 
-# Download mutserve JAR
-RUN wget https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc13.lpa/mutserve_LPA_adapted.jar
+RUN wget -q https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc13.lpa/mutserve_LPA_adapted.jar
+
