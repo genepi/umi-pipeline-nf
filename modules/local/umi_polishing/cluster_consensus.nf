@@ -4,14 +4,14 @@ vsearch_dir="vsearch_clusters"
 process CLUSTER_CONSENSUS {
     publishDir "${params.output}/${sample}/${target}/clustering/${type}", pattern: "${consensus_fasta}", mode: 'copy', enabled: "${params.verbose}"
     publishDir "${params.output}/${sample}/${target}/clustering/${type}", pattern: "cluster*", mode: 'copy', enabled: "${params.verbose}"
-    
+
     input:
         tuple val( sample ), val( target ), path( detected_umis_fastq )
         val ( type )
     output:
         tuple val( "${sample}" ), val( "${target}" ), path( "${consensus_fasta}" ), optional: true, emit:consensus_fasta
         tuple val( "${sample}" ), val( "${target}" ), path( "cluster*" ), optional: true, emit:cluster_fastas
-        
+
     script:
         def id = "${type}" == "raw" ? 0.90 : 0.99
     """

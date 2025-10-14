@@ -3,16 +3,16 @@ process DETECT_UMI_CONSENSUS_FASTQ {
     publishDir "${params.output}/${sample}/${target}/${params.output_format}_umi/${type}", pattern: "*${params.output_format}", mode: 'copy', enabled: "${params.verbose}"
 
     input:
-        tuple val( sample ), val( target ), path ( fastq )
-        val ( type )
-        path umi_extract_python
-    
+    tuple val(sample), val(target), path(fastq)
+    val type
+    path umi_extract_python
+
     output:
-        tuple val( "${sample}" ), val( "${target}" ), path ( "*${params.output_format}" ), emit: umi_extract_fastq
-        tuple val( "${sample}" ), val( "${target}" ), path ("*.tsv"), emit: umi_extract_fastq_stats
+    tuple val("${sample}"), val("${target}"), path("*${params.output_format}"), emit: umi_extract_fastq
+    tuple val("${sample}"), val("${target}"), path("*.tsv"), emit: umi_extract_fastq_stats
 
     script:
-        def write_report = params.write_reports ? "--tsv" : ""
+    def write_report = params.write_reports ? "--tsv" : ""
 
     """
         python ${umi_extract_python} \
@@ -24,7 +24,7 @@ process DETECT_UMI_CONSENSUS_FASTQ {
         --adapter_length ${params.adapter_length} \
         --output_format ${params.output_format} \
         --output_filename ${fastq.baseName}_umis \
-        $write_report \
+        ${write_report} \
         -o ./ ${fastq}
     """
 }

@@ -43,16 +43,16 @@ def load_and_update_summary(cluster_stats_parsed, sample, target, task_index, cu
 # Generate histograms split by target
 def plot_cluster_histogram(summary, output_pdf):
     targets = summary['target'].unique()
-    
+
     fig, axes = plt.subplots(len(targets), 1, figsize=(10, 6 * len(targets)), squeeze=False)
-    
+
     for ax, target in zip(axes.flatten(), targets):
         target_data = summary[summary['target'] == target]
         target_data.plot.barh(y='n_cluster', x='sample', ax=ax, legend=False)
         ax.set_xlabel('Number of Clusters')
         ax.set_ylabel('Sample')
         ax.set_title(f'Number of Found Clusters for Target: {target}')
-    
+
     plt.tight_layout()
     plt.savefig(output_pdf)
     plt.close()
@@ -60,7 +60,7 @@ def plot_cluster_histogram(summary, output_pdf):
 # Main execution
 if __name__ == "__main__":
     args = parse_args()
-    
+
     cluster_stats_parsed = parse_cluster_stat(args.cluster_stat, args.sample, args.target, args.task_index)
     summary = load_and_update_summary(cluster_stats_parsed, args.sample, args.target, args.task_index, args.current_summary, args.output_tsv)
     plot_cluster_histogram(summary, args.output_pdf)

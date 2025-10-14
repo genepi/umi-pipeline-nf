@@ -2,13 +2,13 @@ process SUMMARIZE_UMI_STATS {
     publishDir "${params.output}/${sample}/${target}/stats/${type}/", mode: 'copy', pattern: "*.tsv"
 
     input:
-        tuple val( sample ), val( target ), path( stats_files )
-        val ( type )
-        path python_summarize_umi_stats
+    tuple val(sample), val(target), path(stats_files)
+    val type
+    path python_summarize_umi_stats
 
     output:
-        tuple val( sample ), val( target ), path( "${sample}_${target}_umi_summary.tsv"), emit: umi_summary
-        
+    tuple val(sample), val(target), path("${sample}_${target}_umi_summary.tsv"), emit: umi_summary
+
     script:
     """
         python ${python_summarize_umi_stats} \

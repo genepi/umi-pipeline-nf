@@ -1,27 +1,24 @@
-FROM mambaorg/micromamba:1.5.8
+FROM continuumio/miniconda3:24.7.1-0
 
-LABEL authors="Amstler Stephan" \
-      email="amstler.stephan@i-med.ac.at"
+LABEL maintainer="Amstler Stephan <amstler.stephan@i-med.ac.at>" \
+    version="1.0.1"
 
-# Copy environment.yml
-COPY environment.yml /tmp/environment.yml
-RUN micromamba install -y -n base -f /tmp/environment.yml && \
-    micromamba clean --all --yes
-
-# Installing software using system package manager
-USER root
-
-# Install software
 RUN apt-get update && \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
     wget \
     zlib1g-dev \
     libgomp1 \
     procps && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Working directory
+COPY environment.yml /tmp/environment.yml
+
+RUN conda install -y -n base -c conda-forge conda-libmamba-solver && \
+    conda config --set solver libmamba && \
+    conda env update -n base -f /tmp/environment.yml && \
+    conda clean --all --yes
+
 WORKDIR /opt
 
-# Download mutserve jar
-RUN wget https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc13.lpa/mutserve_LPA_adapted.jar
+RUN wget -q https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc13.lpa/mutserve_LPA_adapted.jar
+

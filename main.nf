@@ -25,7 +25,7 @@ workflow {
      }
      // Print summary of supplied parameters
      log.info paramsSummaryLog(workflow)
-     
+
      // Run the workflow
      UMI_PIPELINE()
 }
@@ -33,6 +33,6 @@ workflow {
 workflow.onError { log.info "Oops... Pipeline execution stopped with the following message: ${workflow.errorMessage}" }
 workflow.onComplete {
      println "Pipeline completed at: $workflow.complete"
-     println "Execution status: ${ workflow.success ? 'OK' : 'failed' }" 
-     WorkflowMain.onComplete(workflow, baseDir, params) 
+     println "Execution status: ${ workflow.success ? 'OK' : 'failed' }"
+     WorkflowMain.onComplete(workflow, baseDir, params)
 }
