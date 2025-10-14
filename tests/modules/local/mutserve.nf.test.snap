@@ -68,5 +68,34 @@
             "nextflow": "24.10.0"
         },
         "timestamp": "2025-05-15T17:07:12.453706442"
+    },
+    "Should combine channels correctly": {
+        "content": [
+            {
+                "0": [
+                    "final.txt:md5,1e5554e27b3b8a0687374df975a6c9cb"
+                ],
+                "1": [
+                    "final_raw.txt:md5,94352f26d9095f38eb44ff730db75dbc"
+                ],
+                "2": [
+                    "final_parsed.txt:md5,6d367fbfc32f86586b02ed68c1bad36b"
+                ],
+                "variants": [
+                    "final.txt:md5,1e5554e27b3b8a0687374df975a6c9cb"
+                ],
+                "variants_parsed": [
+                    "final_parsed.txt:md5,6d367fbfc32f86586b02ed68c1bad36b"
+                ],
+                "variants_raw": [
+                    "final_raw.txt:md5,94352f26d9095f38eb44ff730db75dbc"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
+        },
+        "timestamp": "2025-10-14T16:41:43.330109559"
     }
 }

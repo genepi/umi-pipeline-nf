@@ -4,11 +4,63 @@ nextflow_process {
     script "modules/local/variant_calling/mutserve.nf"
     process "MUTSERVE"
 
+            setup{
+            run("PARSE_BED"){
+                script "modules/local/parse_bed.nf"
+                process {
+                    """
+                    input[0] = Channel.fromPath(
+                        file("$baseDir/tests/input/parse_bed/lpa-ref2645.bed", checkIfExists: true)
+                    )
+                    """
+                }
+            }
+
+        }
+
+    test("Should combine channels correctly") {
+
+        when {
+            params {
+                variant_calling = true
+                variant_caller = "mutserve"
+            }
+            process {
+                """
+                input[0] = PARSE_BED.out.bed_files
+                    .flatten()
+                    .map { bed_file ->
+                        tuple(bed_file, bed_file.baseName)
+                    }
+                    .combine(
+                        channel.of(
+                            tuple(
+                                "barcode03",
+                                "lpa2645",
+                                file("$baseDir/tests/input/variant_calling/barcode03/final.bam"),
+                                file("$baseDir/tests/input/variant_calling/barcode03/final.bam.bai")
+                            )
+                        )
+                    , by: 1)
+                    .view()
+                input[1] = "final"
+                input[2] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta")
+                input[3] = file("$baseDir/tests/input/pipeline/ref/lpa-ref2645.fasta.fai")
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+    }
+
     test("Should run without failures") {
 
         when {
             params {
-                variant_calling = true 
+                variant_calling = true
                 variant_caller = "mutserve"
             }
             process {
@@ -31,7 +83,7 @@ nextflow_process {
 
         when {
             params {
-                variant_calling = true 
+                variant_calling = true
                 variant_caller = "mutserve"
             }
             process {

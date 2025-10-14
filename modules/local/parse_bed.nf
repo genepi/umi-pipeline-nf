@@ -12,7 +12,7 @@ process PARSE_BED {
     while read -r line; do
         # Split BED line by tab
         IFS=\$'\\t' read -r -a fields <<< "\$line"
-        target=\$(echo "\${fields[3]}" | tr -d '[:space:]')
+        target=\$(echo "\${fields[3]}")
 
         # Write to a per-target BED file
         echo "\$line" >> \${target}.bed
