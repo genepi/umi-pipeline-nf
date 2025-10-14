@@ -14,7 +14,7 @@ process MAP_READS {
           ${params.minimap2_param} \
           -t ${params.threads} \
           ${reference} \
-          ${fastq} | 
+          ${fastq} |
         samtools sort \
           -@ ${params.threads} \
           -o ${fastq.baseName}.bam - && \

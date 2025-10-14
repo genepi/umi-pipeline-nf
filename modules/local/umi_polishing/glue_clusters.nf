@@ -1,16 +1,16 @@
 process GLUE_CLUSTERS {
-    tag "${sample}"
-    publishDir "${params.output}/${sample}/${target}/clustering/${type}/glued", pattern: "${sample}_glued_clusters_*.${params.output_format}", mode: 'copy', enabled: "${params.verbose}"
+  tag "${sample}"
+  publishDir "${params.output}/${sample}/${target}/clustering/${type}/glued", pattern: "${sample}_glued_clusters_*.${params.output_format}", mode: 'copy', enabled: "${params.verbose}"
 
-    input:
-    tuple val( sample ), val ( target ), path( cluster_files )
-    val (type )
+  input:
+  tuple val(sample), val(target), path(cluster_files)
+  val type
 
-    output:
-    tuple val( sample ), val ( "${target}" ), path( "*${params.output_format}" ), emit: glued_clusters
+  output:
+  tuple val(sample), val("${target}"), path("*${params.output_format}"), emit: glued_clusters
 
-    script:
-    """
+  script:
+  """
     #!/bin/bash
     set -euo pipefail
 
@@ -20,7 +20,7 @@ process GLUE_CLUSTERS {
     file_index=1
     cluster_count=0
     output_file="${sample}_combined_clusters_\${file_index}.${params.output_format}"
-    
+
     # Loop over each provided cluster file.
     for file in ${cluster_files.join(' ')}; do
       # If the current output file already holds the allowed number of clusters,
@@ -33,7 +33,7 @@ process GLUE_CLUSTERS {
 
       # Increase the count for the current file.
       cluster_count=\$((cluster_count+1))
-      
+
       # Process the current cluster file, appending the cluster number to each header.
       if [ "${params.output_format}" = "fasta" ]; then
         # For FASTA, header lines start with ">"

@@ -12,7 +12,7 @@
       "properties": {
         "help": { "type": "boolean", "default": false, "description": "Display help information and exit." },
         "validate_params": { "type": "boolean", "default": true, "description": "Validate pipeline parameters before execution." },
-        "version": { "type": "boolean", "default": false, "description": "Show current version of the pipeline and exit." }, 
+        "version": { "type": "boolean", "default": false, "description": "Show current version of the pipeline and exit." },
         "verbose": { "type": "boolean", "default": false, "description": "Enable verbose logging output." }
       }
     },

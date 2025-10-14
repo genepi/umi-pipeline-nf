@@ -2,14 +2,14 @@ def consensus_fasta="consensus.fasta"
 def vsearch_dir="vsearch_clusters"
 
 process CLUSTER {
-    
+
     input:
         tuple val( sample ), val( target ), path( detected_umis_fastqs )
         val ( type )
     output:
         tuple val( "${sample}" ), val( "${target}" ), path( "${consensus_fasta}" ), optional: true, emit:consensus_fasta
         tuple val( "${sample}" ), val( "${target}" ), path( "cluster*" ), optional: true, emit:cluster_fastas
-        
+
     script:
         def id = "${type}" == "raw" ? params.vsearch_sequence_identity : 0.99
     """
@@ -31,5 +31,5 @@ process CLUSTER {
         --minwordmatches 0 \
         --qmask none \
         --id $id
-    """ 
+    """
 }

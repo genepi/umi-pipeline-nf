@@ -93,7 +93,7 @@ def parse_args(argv):
         default=2,
         help="Max edit distance allowed between reads in a subcluster",
     )
-    
+
     parser.add_argument(
         "-o", "--output", dest="OUTPUT", required=True, help="Output folder"
     )
@@ -190,7 +190,7 @@ def get_split_reads(reads):
     """
     reads_fwd = []
     reads_rev = []
-    
+
     for read in reads:
         strand = get_read_strand(read)
         if strand == "+":
@@ -288,7 +288,7 @@ def write_subcluster(subcluster, subcluster_filename):
         for read in subcluster:
             print(">{}".format(read.name), file=out_f)
             print("{}".format(read.sequence), file=out_f)
-            
+
 
 def write_tsv_line(stats_out_filename, cluster_id, cluster_written, reads_found, n_fwd, n_rev, reads_written_fwd, reads_written_rev, reads_skipped_fwd, reads_skipped_rev):
     with open(stats_out_filename, "a") as out_f:
@@ -313,15 +313,15 @@ def parse_cluster(min_reads, max_reads, filter, format, cluster, output_folder, 
     """
     residual_reads, n_residual_reads = get_reads(cluster)
     cluster_id = get_cluster_id(cluster)
-    
+
     # Cluster reads into subclusters based on pairwise edit distance
     subclusters = cluster_reads(residual_reads, max_edit_dist)
-    
+
     for n_subcluster, subcluster in enumerate(subclusters):
         # Write the subcluster reads (for reference/debugging)
         subcluster_file = os.path.join(output_folder, "{}_subcluster_{}".format(cluster_id, n_subcluster))
         write_subcluster(subcluster, subcluster_file)
-        
+
         reads_found = len(subcluster)
         reads_fwd, reads_rev = get_split_reads(subcluster)
         n_fwd = len(reads_fwd)

@@ -52,7 +52,7 @@ def parse_args(argv):
         default=0.9,
         help="Min overlap with target region",
     )
-    
+
     parser.add_argument(
         "--adapter_length",
         dest="ADAPTER_LENGTH",
@@ -245,12 +245,12 @@ def filter_reads(args):
                 n_short += 1
                 write_read(read, output, "short", out_format)
                 continue
-            
+
             if read.query_length > (region_length * ( 2 - min_overlap) + 2 * adapter_length):
                 n_long += 1
                 write_read(read, output, "long", out_format)
                 continue
-            
+
             n_reads_region += 1
             write_read(read, output, output_filename, out_format)
 
@@ -265,7 +265,7 @@ def write_tsv(n_total, n_unmapped, n_secondary, n_supplementary, n_ontarget, n_c
     concatermer_perc = 0
     short_perc = 0
     long_perc = 0
-    
+
     if n_total > 0:
         if incl_sec:
             filtered_perc = 100 * n_reads_region // n_total

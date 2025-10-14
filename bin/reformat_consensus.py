@@ -49,7 +49,7 @@ def parse_args(argv):
     parser.add_argument(
         "-o", "--output", dest="OUTPUT", required=True, help="Output folder"
     )
-    
+
     parser.add_argument(
         "-t", "--threads", dest="THREADS", type=int, default=1, help="Number of threads."
     )
@@ -71,8 +71,8 @@ def parse_stdin(args):
     consensus_filename = args.CONS_FASTA
     output_folder = args.OUTPUT
     cluster_filename = os.path.join(output_folder, "final.fastq")
-    
-    with open(cluster_filename, "w") as out, pysam.FastxFile(consensus_filename) as reads:        
+
+    with open(cluster_filename, "w") as out, pysam.FastxFile(consensus_filename) as reads:
         for read in reads:
             read_name = get_read_name(read)
             read_seq = get_read_seq(read)
