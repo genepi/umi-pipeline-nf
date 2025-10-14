@@ -158,7 +158,7 @@ bash live_demo/run_demo.sh --iterations 4 --interval 20
 
 To see all available parameters run
 ```bash
-nextflow run genepi/umi-pipeline-nf -r v1.0.0 --help
+nextflow run genepi/umi-pipeline-nf -r v1.0.1 --help
 ```
 
 ## Quick Start
@@ -168,14 +168,14 @@ nextflow run genepi/umi-pipeline-nf -r v1.0.0 --help
 2. Download the pipeline and test it on a [minimal dataset](data/info.txt) with a single command.
 
 ```bash
-nextflow run genepi/umi-pipeline-nf -r v1.0.0 -profile test,docker
+nextflow run genepi/umi-pipeline-nf -r v1.0.1 -profile test,docker
 ```
 
 3. Start running your own analysis!
 3.1 Download and adapt the config/custom.config with paths to your data (relative and absolute paths possible).
 
 ```bash
-nextflow run genepi/umi-pipeline-nf -r v1.0.0 -c <custom.config> -profile custom,<docker,singularity>
+nextflow run genepi/umi-pipeline-nf -r v1.0.1 -c <custom.config> -profile custom,<docker,singularity>
 ```
 
 ## Citation

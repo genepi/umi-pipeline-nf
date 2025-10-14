@@ -1,7 +1,7 @@
 FROM continuumio/miniconda3:24.7.1-0
 
 LABEL maintainer="Amstler Stephan <amstler.stephan@i-med.ac.at>" \
-    version="1.0.1"
+    version="v1.0.1"
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
