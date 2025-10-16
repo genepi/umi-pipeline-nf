@@ -9,7 +9,7 @@ process SPLIT_READS {
 
     output:
     path "*", optional: true
-    tuple val("${sample}"), val("${target}"), path("*.tsv"), emit: split_reads_stats
+    tuple val("${sample}"), val("${target}"), path("*.tsv"), optional: true, emit: split_reads_stats
     tuple val("${sample}"), val("${target}"), path("*filtered.${params.output_format}"), optional: true, emit: split_reads_fastx
 
     script:
