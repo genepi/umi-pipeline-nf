@@ -23,11 +23,10 @@ Umi-pipeline-nf is conceptually based on the Snakemake-based UMI analysis pipeli
 nextflow run genepi/umi-pipeline-nf -r v1.0.1 -profile test,docker
 ```
 
-3. Start running your own analysis!
-3.1 Download and adapt the config/custom.config with paths to your data (relative and absolute paths possible).
+3. Start running your own analysis! 
 
 ```bash
-nextflow run genepi/umi-pipeline-nf -r v1.0.1 -c <custom.config> -profile custom,<docker,singularity>
+nextflow run genepi/umi-pipeline-nf -r v1.0.1 -c <nextflow.config> -profile <docker,singularity,slurm>
 ```
 
 ## Workflow
