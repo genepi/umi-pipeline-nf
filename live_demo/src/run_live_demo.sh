@@ -13,6 +13,7 @@ NUM_BARCODES=2
 # ----------------------------------------
 NUM_ITERATIONS=5
 INTERVAL=30
+THREADS=20
 
 # ----------------------------------------
 # Parse arguments
@@ -69,6 +70,7 @@ start_pipeline() {
         --reference_based_polishing \
         --input "$NEXTFLOW_INPUT_DIR" \
         --output "$NEXTFLOW_OUTPUT_DIR" \
+	--threads "$THREADS" \
         -profile test,development
 }
 
