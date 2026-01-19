@@ -64,7 +64,7 @@ simulate_sequencing() {
 start_pipeline() {
     echo "Starting Nextflow pipeline..."
     nextflow run genepi/umi-pipeline-nf \
-        -r Add_test_cases -latest \
+        -r v1.0.1 -latest \
         --live \
         --reference_based_polishing \
         --input "$NEXTFLOW_INPUT_DIR" \
