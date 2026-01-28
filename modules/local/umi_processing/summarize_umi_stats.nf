@@ -1,5 +1,5 @@
 process SUMMARIZE_UMI_STATS {
-    publishDir params.live_mode ? "${params.output}/${sample}/${target}/stats/${type}/${new Date().format('yyyyMMdd_HHmm')}/" : "${params.output}/${sample}/${target}/stats/${type}/", mode: 'copy', pattern: "*.tsv"
+    publishDir params.live ? "${params.output}/${sample}/${target}/stats/${type}/${new Date().format('yyyyMMdd_HHmm')}/" : "${params.output}/${sample}/${target}/stats/${type}/", mode: 'copy', pattern: "*.tsv"
 
     input:
     tuple val(sample), val(target), path(stats_files)

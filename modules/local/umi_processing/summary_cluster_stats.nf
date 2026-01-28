@@ -1,6 +1,6 @@
 process SUMMARY_CLUSTER_STATS {
     maxForks 1
-    publishDir params.live_mode ? "${params.output}/cluster_stats/${new Date().format('yyyyMMdd_HHmm')}/" : "${params.output}/cluster_stats/", mode: 'copy'
+    publishDir params.live ? "${params.output}/cluster_stats/${new Date().format('yyyyMMdd_HHmm')}/" : "${params.output}/cluster_stats/", mode: 'copy'
 
     input:
     tuple val(sample), val(target), path(smolecule_cluster_stats)

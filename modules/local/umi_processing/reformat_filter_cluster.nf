@@ -2,7 +2,7 @@ process REFORMAT_FILTER_CLUSTER {
     beforeScript "rm -f ${params.output}/${sample}/${target}/clustering/${type}/smolecule*"
     tag "${sample}"
     publishDir "${params.output}/${sample}/${target}/clustering/${type}/smolecule", pattern: "smolecule*", mode: 'copy', enabled: "${params.verbose}"
-    publishDir params.live_mode ? "${params.output}/${sample}/${target}/stats/${type}/${new Date().format('yyyyMMdd_HHmm')}/" : "${params.output}/${sample}/${target}/stats/${type}/", pattern: "*tsv", mode: 'copy'
+    publishDir params.live ? "${params.output}/${sample}/${target}/stats/${type}/${new Date().format('yyyyMMdd_HHmm')}/" : "${params.output}/${sample}/${target}/stats/${type}/", pattern: "*tsv", mode: 'copy'
 
     input:
     tuple val(sample), val(target), path(cluster)
