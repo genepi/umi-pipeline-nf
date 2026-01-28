@@ -30,7 +30,8 @@ workflow LIVE_UMI_PROCESSING {
     main:
     println("We are live!")
 
-    Channel.watchPath("${params.output}/CONTINUE")
+    Channel
+        .watchPath("${params.output}/CONTINUE")
         .take(1)
         .set { continue_ch }
 
@@ -41,11 +42,13 @@ workflow LIVE_UMI_PROCESSING {
         : "${params.input}/barcode*/*.{fastq,fq,fastq.gz,fq.gz}"
 
     // Existing FASTQs
-    Channel.fromPath(fastq_pattern, checkIfExists: true)
+    Channel
+        .fromPath(fastq_pattern, checkIfExists: true)
         .set { existing_fastqs }
 
     // Watch for new FASTQs until a "continue" file appears
-    Channel.watchPath(fastq_pattern, 'create,modify')
+    Channel
+        .watchPath(fastq_pattern, 'create,modify')
         .until { it.getFileName().toString().toLowerCase().contains("continue") }
         .set { watched_fastqs }
 

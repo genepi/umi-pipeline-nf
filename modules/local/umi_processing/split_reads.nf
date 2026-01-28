@@ -1,5 +1,5 @@
 process SPLIT_READS {
-    publishDir "${params.output}/${sample}/${target}/stats/${type}", mode: 'copy', pattern: "*.tsv", enabled: "${params.verbose}"
+    publishDir params.live_mode ? "${params.output}/${sample}/${target}/stats/${type}/${new Date().format('yyyyMMdd_HHmm')}/" : "${params.output}/${sample}/${target}/stats/${type}/", mode: 'copy', pattern: "*.tsv", enabled: "${params.verbose}"
     publishDir "${params.output}/${sample}/${target}/${params.output_format}_filtered/${type}/${bam.baseName}", mode: 'copy', pattern: "*${params.output_format}", enabled: "${params.verbose}"
 
     input:

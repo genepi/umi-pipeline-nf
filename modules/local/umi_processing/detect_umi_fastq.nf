@@ -1,5 +1,5 @@
 process DETECT_UMI_FASTQ {
-    publishDir "${params.output}/${sample}/${target}/stats/${type}", pattern: "*.tsv", mode: 'copy', enabled: "${params.verbose}"
+    publishDir params.live_mode ? "${params.output}/${sample}/${target}/stats/${type}/${new Date().format('yyyyMMdd_HHmm')}/" : "${params.output}/${sample}/${target}/stats/${type}/", pattern: "*.tsv", mode: 'copy', enabled: "${params.verbose}"
 
     input:
     tuple val(sample), val(target), path(fastq)

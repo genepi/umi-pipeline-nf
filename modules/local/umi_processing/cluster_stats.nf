@@ -1,6 +1,6 @@
 process CLUSTER_STATS {
     tag "${sample}"
-    publishDir "${params.output}/${sample}/${target}/stats/${type}", mode: 'copy'
+    publishDir params.live_mode ? "${params.output}/${sample}/${target}/stats/${type}/${new Date().format('yyyyMMdd_HHmm')}/" : "${params.output}/${sample}/${target}/stats/${type}/", mode: 'copy'
 
     input:
     tuple val(sample), val(target), path(smolecule_cluster_stats)
