@@ -43,7 +43,7 @@ workflow LIVE_UMI_PROCESSING {
 
     // Existing FASTQs
     Channel
-        .fromPath(fastq_pattern, checkIfExists: true)
+        .fromPath(fastq_pattern)
         .set { existing_fastqs }
 
     // Watch for new FASTQs until a "continue" file appears
