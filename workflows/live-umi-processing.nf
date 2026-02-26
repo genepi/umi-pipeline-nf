@@ -110,12 +110,15 @@ workflow LIVE_UMI_PROCESSING {
     REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
         .combine(continue_ch)
         .map { sample, type, fastqs, task_index, _continue_file ->
-            tuple(sample, type, fastqs, [task_index])
+            tuple(sample, type, fastqs, task_index as Integer)
         }
         .filter { _sample, _type, fastqs, _task_index -> fastqs instanceof List }
-        .groupTuple(by: [0, 1], sort: { it[3] })
-        .map { sample, type, fastqs, _task_index ->
-            tuple(sample, type, fastqs[0])
+        .groupTuple(by: [0, 1])
+        .map { sample, type, records ->
+        
+            def minRecord = records.min { it[3] as Integer }
+        
+            tuple(sample, type, minRecord[2])
         }
         .set { processed_umis }
 
