@@ -15,8 +15,8 @@ process POLISH_CLUSTER {
         medaka smolecule \
         --threads ${task.cpus} \
         --batch_size ${params.clusters_per_polishing_file} \
-        --length 50 \
-        --depth 2 \
+        --length ${params.polish_min_length} \
+        --depth ${params.polish_min_depth} \
         --model ${params.medaka_model} \
         --method spoa . \
         --qualities \
