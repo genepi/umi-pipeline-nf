@@ -90,6 +90,8 @@
         "gpu_memory": { "type": "integer", "default": 16, "description": "Specify available memory of GPU in GB" },
         "gpus": { "type": "string", "default": "all", "description": "Specify number of GPUs to use" },
         "medaka_model": { "type": "string", "default": "r1041_e82_400bps_hac_g615", "description": "Medaka model used for consensus read computation." },
+        "polish_min_length": { "type": "integer", "default": 50, "description": "Minimum consensus length passed to medaka smolecule (--length). Drops shorter consensus calls." },
+        "polish_min_depth": { "type": "integer", "default": 2, "description": "Minimum cluster depth passed to medaka smolecule (--depth). Clusters with fewer reads are skipped." },
         "reference_based_polishing": { "type": "boolean", "default": false, "description": "Enable reference-based polishing step." },
         "fwd_umi": { "type": "string", "default": "TTTVVVVTTVVVVTTVVVVTTVVVVTTT", "description": "Forward UMI sequence pattern." },
         "rev_umi": { "type": "string", "default": "AAABBBBAABBBBAABBBBAABBBBAAA", "description": "Reverse UMI sequence pattern (Reverse complement)." },
