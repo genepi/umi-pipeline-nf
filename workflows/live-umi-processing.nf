@@ -96,7 +96,8 @@ workflow LIVE_UMI_PROCESSING {
     // Filters the clusters to only keep cluser with more or equal than min_reads_per_cluster, but keeps the grouping per sample
     CLUSTER.out.cluster_fastas
         .map { barcode, target, clusters ->
-            def filtered_clusters = clusters.findAll { fasta -> fasta.countFasta() >= params.min_reads_per_cluster }
+            def cluster_list = clusters instanceof List ? clusters : [clusters]
+            def filtered_clusters = cluster_list.findAll { fasta -> fasta.countFasta() >= params.min_reads_per_cluster }
             filtered_clusters ? [barcode, target, filtered_clusters] : null
         }
         .filter { it != null }
@@ -110,9 +111,8 @@ workflow LIVE_UMI_PROCESSING {
     REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
         .combine(continue_ch)
         .map { sample, type, fastqs, task_index, _continue_file ->
-            tuple(sample, type, fastqs, [task_index])
+            tuple(sample, type, fastqs instanceof List ? fastqs : [fastqs], [task_index])
         }
-        .filter { _sample, _type, fastqs, _task_index -> fastqs instanceof List }
         .groupTuple(by: [0, 1], sort: { it[3] })
         .map { sample, type, fastqs, _task_index ->
             tuple(sample, type, fastqs[0])
