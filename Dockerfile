@@ -13,10 +13,10 @@ RUN apt-get update && \
 
 COPY environment.yml /tmp/environment.yml
 
-RUN conda install -y -n base -c conda-forge conda-libmamba-solver && \
-    conda config --set solver libmamba && \
-    conda env update -n base -f /tmp/environment.yml && \
+RUN conda env create -f /tmp/environment.yml && \
     conda clean --all --yes
+
+ENV PATH=/opt/conda/envs/umi-pipeline-nf/bin:$PATH
 
 WORKDIR /opt
 
