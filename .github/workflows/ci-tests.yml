@@ -24,7 +24,7 @@ jobs:
       - name: Setup Nextflow
         uses: nf-core/setup-nextflow@v2
         with:
-          version: "latest-edge"
+          version: "24.10.5"
 
       - name: Install nf-test
         run: |
