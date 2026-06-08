@@ -90,7 +90,8 @@ workflow OFFLINE_UMI_PROCESSING {
     // Filters the clusters to only keep cluser with more or equal than min_reads_per_cluster, but keeps the grouping per sample
     CLUSTER.out.cluster_fastas
         .map { barcode, target, clusters ->
-            def filtered_clusters = clusters.findAll { fasta -> fasta.countFasta() >= params.min_reads_per_cluster }
+            def cluster_list = clusters instanceof List ? clusters : [clusters]
+            def filtered_clusters = cluster_list.findAll { fasta -> fasta.countFasta() >= params.min_reads_per_cluster }
             filtered_clusters ? [barcode, target, filtered_clusters] : null
         }
         .filter { it != null }
@@ -102,9 +103,8 @@ workflow OFFLINE_UMI_PROCESSING {
     SUMMARY_CLUSTER_STATS(REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_stats, cluster_summary_cache_dir_nf, umi_cluster_stats_summary)
 
     REFORMAT_FILTER_CLUSTER.out.smolecule_cluster_fastqs
-        .filter { _sample, _type, fastqs, _task_index -> fastqs instanceof List }
         .map { sample, type, fastqs, _task_index ->
-            tuple(sample, type, fastqs)
+            tuple(sample, type, fastqs instanceof List ? fastqs : [fastqs])
         }
         .set { processed_umis }
 

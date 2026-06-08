@@ -1,5 +1,6 @@
-[![Nextflow](https://img.shields.io/badge/nextflow-25.04.8-brightgreen.svg)](https://www.nextflow.io/)
-[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow-25.04.8-brightgreen?logo=Nextflow&logoColor=white)](https://www.nextflow.io/)
+[![uses conda-forge](https://img.shields.io/badge/uses-conda%20forge-brightgreen?logo=Conda-Forge&logoColor=white)](https://github.com/conda-forge)
+[![uses bioconda](https://img.shields.io/badge/uses-bioconda-brightgreen?logo=Anaconda&logoColor=white)](http://bioconda.github.io/)
 [![CI Tests](https://github.com/genepi/umi-pipeline-nf/actions/workflows/ci-tests.yml/badge.svg)](https://github.com/genepi/umi-pipeline-nf/actions/workflows/ci-tests.yml)
 
 Umi-pipeline-nf
