@@ -180,9 +180,14 @@ nextflow run genepi/umi-pipeline-nf -r v1.0.1 --help
 
 ## Citation
 
-If you use the pipeline please cite [our Paper](https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-024-01391-8):
+If you use the pipeline please cite manuscripts:
 
-Amstler S, Streiter G, Pfurtscheller C, Forer L, Di Maio S, Weissensteiner H, Paulweber B, Schoenherr S, Kronenberg F, Coassin S. Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex lipoprotein(a) KIV-2 VNTR. Genome Med 16, 117 (2024). https://doi.org/10.1186/s13073-024-01391-8
+**Application:** Amstler S, Streiter G, Pfurtscheller C, Forer L, Di Maio S, Weissensteiner H, Paulweber B, Schoenherr S, Kronenberg F, Coassin S. Nanopore sequencing with unique molecular identifiers enables accurate mutation analysis and haplotyping in the complex lipoprotein(a) KIV-2 VNTR. Genome Med 16:117 (2024). https://doi.org/10.1186/s13073-024-01391-8
+
+
+**Software:** Amstler S, Forer L, Escherich L, Schönherr S, Coassin S. Umi-pipeline-nf: a modular and scalable workflow for UMI-tagged nanopore amplicon analysis with real-time sequencing integration and GPU-acceleration. 
+Bioinformatics 42:btag160 (2026). https://doi.org/10.1093/bioinformatics/btag160
+
 
 ### Credits
 
