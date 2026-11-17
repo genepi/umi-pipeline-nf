@@ -3,18 +3,17 @@ name: CI Tests
 on: [push, pull_request]
 
 jobs:
-
   test:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
         shard: [1, 2, 3, 4, 5]
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0
+          
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -31,9 +30,6 @@ jobs:
           wget -qO- https://get.nf-test.com | bash
           sudo mv nf-test /usr/local/bin/
 
-      - name: Run Tests (Shard ${{ matrix.shard }}/${{ strategy.job-total }})
-        run: nf-test test --ci --shard ${{ matrix.shard }}/${{ strategy.job-total }} --changed-since HEAD^
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
@@ -48,4 +44,4 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Run Tests (Shard ${{ matrix.shard }}/${{ strategy.job-total }})
-        run: nf-test test --ci --shard ${{ matrix.shard }}/${{ strategy.job-total }}
+        run: nf-test test --ci --shard ${{ matrix.shard }}/${{ strategy.job-total }} --changed-since HEAD^
