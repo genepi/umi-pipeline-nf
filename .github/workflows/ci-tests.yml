@@ -3,18 +3,17 @@ name: CI Tests
 on: [push, pull_request]
 
 jobs:
-
   test:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
         shard: [1, 2, 3, 4, 5]
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0
+          
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -30,9 +29,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -o pipefail
           for i in 1 2 3 4 5; do
-            wget -qO- get.nf-test.com | bash && break
-            echo "nf-test install attempt $i failed; retrying in 15s"
+            if wget -qO- https://get.nf-test.com | bash; then
+              break
+            fi
+            echo "nf-test install attempt $i failed"
+            if [ "$i" -eq 5 ]; then
+              exit 1
+            fi
             sleep 15
           done
           sudo mv nf-test /usr/local/bin/
@@ -51,4 +56,4 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Run Tests (Shard ${{ matrix.shard }}/${{ strategy.job-total }})
-        run: nf-test test --ci --shard ${{ matrix.shard }}/${{ strategy.job-total }}
+        run: nf-test test --ci --shard ${{ matrix.shard }}/${{ strategy.job-total }} --changed-since HEAD^
