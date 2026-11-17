@@ -26,21 +26,9 @@ jobs:
           version: "24.10.5"
 
       - name: Install nf-test
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -o pipefail
-          for i in 1 2 3 4 5; do
-            if wget -qO- https://get.nf-test.com | bash; then
-              break
-            fi
-            echo "nf-test install attempt $i failed"
-            if [ "$i" -eq 5 ]; then
-              exit 1
-            fi
-            sleep 15
-          done
-          sudo mv nf-test /usr/local/bin/
+          curl -fsSL https://github.com/askimed/nf-test/releases/download/v0.9.5/nf-test-0.9.5.tar.gz | tar -xz
+          sudo mv nf-test nf-test.jar /usr/local/bin/
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
