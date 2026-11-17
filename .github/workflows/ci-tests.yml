@@ -27,15 +27,9 @@ jobs:
           version: "24.10.5"
 
       - name: Install nf-test
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          for i in 1 2 3 4 5; do
-            wget -qO- get.nf-test.com | bash && break
-            echo "nf-test install attempt $i failed; retrying in 15s"
-            sleep 15
-          done
-          sudo mv nf-test /usr/local/bin/
+        uses: nf-core/setup-nf-test@v2.1.0
+        with:
+          version: "0.9.5"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
